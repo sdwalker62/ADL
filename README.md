@@ -1,12 +1,16 @@
-# ADL
+<h1 style="text-align: center;">ADL</h1>
 
+| **`Development Container`**                                                                                |
+|------------------------------------------------------------------------------------------------------------|
+| ![example workflow](https://github.com/sdwalker62/ADL/actions/workflows/build-dev-container.yml/badge.svg) |
 ---
 
 Welcome to the ADL, a project focused on building a modern documentation library that brings together code and mathematics. 
 
 ---
 
-![example workflow](https://github.com/github/docs/actions/workflows/build-dev-container.yml/badge.svg)
+
+
 
 # How To Contribute
 
