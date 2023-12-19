@@ -6,6 +6,8 @@ Welcome to the ADL, a project focused on building a modern documentation library
 
 ---
 
+![example workflow](https://github.com/github/docs/actions/workflows/build-dev-container.yml/badge.svg)
+
 # How To Contribute
 
 We are open to members of the open source community contributing to the project. The master branch will be protected and we will require approval from a project member to merge pull request. All open issues will be reviewed and solutions incorporated into each release. If you wish to help solve any of the open issues, please create a branch with the issue name and then open a PR when you are ready to merge. We will inspect the code and merge if it passes our unit and integration tests. The corresponding issue will then be closed.
