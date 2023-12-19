@@ -1,6 +1,6 @@
 <h1 style="text-align: center;">ADL</h1>
 
-* ![build-dev-container workflow](https://github.com/sdwalker62/ADL/actions/workflows/build-dev-container.yml/badge.svg)
+![build-dev-container workflow](https://github.com/sdwalker62/ADL/actions/workflows/build-dev-container.yml/badge.svg)
 
 ---
 
