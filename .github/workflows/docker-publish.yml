@@ -15,7 +15,7 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: dev-container
-  NAME_SPACE: ADL
+  NAME_SPACE: 'ADL'
 #  IMAGE_NAME: ${{ github.actor }}/dev-container
 
 
