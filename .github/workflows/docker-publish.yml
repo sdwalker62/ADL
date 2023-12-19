@@ -11,11 +11,8 @@ on:
     branches: [ "master" ]
 
 env:
-  # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_NAME: dev-container
-#  IMAGE_NAME: ${{ github.actor }}/dev-container
 
 
 jobs:
@@ -74,7 +71,6 @@ jobs:
           file: ./docker/dev-container/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
-#          tags: latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
