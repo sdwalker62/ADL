@@ -108,7 +108,7 @@
 			sections.forEach((section) => {
 				observer.observe(section);
 			});
-			// ====================== /Intersection Observer =======================
+			// ====================== Intersection Observer =======================
 
 			tippy('.copy-code-button', {
 				content: 'Copy Code',
@@ -265,6 +265,8 @@
 	}
 
 	:global(#document p) {
+		padding-left: 20px;
+		padding-right: 20px;
 		color: var(--font-2);
 		line-height: 1.5;
 		font-family: var(--f-Regular), sans-serif;
@@ -276,6 +278,8 @@
 	}
 
 	:global(#document li) {
+		padding-left: 20px;
+		padding-right: 20px;
 		font-size: 2rem;
 		color: var(--font-2);
 	}
@@ -362,7 +366,7 @@
 		text-overflow: ellipsis;
 		width: calc(320px - 4rem);
 		max-width: calc(320px - 4rem);
-		padding: 20px;
+		padding: 15px;
 	}
 
 	:global(#outline-container *) {

@@ -18,7 +18,7 @@
 		width: 60rem;
 		height: 3rem;
 		gap: 5px;
-		background: var(--background-7);
+		background: var(--background-2);
 		backdrop-filter: blur(5px);
 		-webkit-backdrop-filter: blur(5px);
 		justify-content: center;
@@ -28,12 +28,12 @@
 	input {
 		background-color: transparent;
 		border: none;
-		font-family: var(--f-Regular), sans-serif;
+		font-family: var(--f-Medium), sans-serif;
 		align-self: center;
 	}
 
 	input::placeholder {
-		color: var(--font-4);
+		color: var(--font-5);
 		font-size: 1.5rem;
 	}
 

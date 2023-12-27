@@ -59,9 +59,6 @@
 	.folder-container {
 		background-color: var(--background-2);
 		overflow: scroll;
-		padding-top: 20px;
-		padding-right: 20px;
-		padding-bottom: 20px;
-		padding-left: 20px;
+		padding: 15px;
 	}
 </style>

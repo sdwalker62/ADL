@@ -20,7 +20,7 @@
                 "--headless",
                 "--remote-debugging-port=9222"
             ],
-            "url": "http://localhost:5173", 
+            "url": "http://localhost:5173",
             "presentation": {
                 "hidden": true
             }
