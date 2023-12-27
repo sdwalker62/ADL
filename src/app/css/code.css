@@ -1,0 +1,298 @@
+:global(#code *) {
+  max-width: 20em;
+  background-color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  white-space: nowrap;
+}
+
+/* GitHub Default Dark */
+[data-theme="dark"] {
+  --regular-text: #e6edf3; /* editor.foreground */
+  --background: #141414; /* editor.background */
+  --selection: #3fb95040; /* editor.selectionBackground */
+  --boolean: #79c0ff; /* constant */
+  --class-name: #ffa657; /* entity | entity.name */
+  --comment: #8b949e; /* comment */
+  --constant: #79c0ff; /* constant */
+  --function: #d2a8ff; /* entity | entity.name.function */
+  --keyword: #ff7b72; /* keyword */
+  --number: #79c0ff; /* constant */
+  --operator: #ff7b72; /* keyword */
+  --property: #d2a8ff; /* entity | entity.name.function */
+  --punctuation: #79c0ff; /* variable.other This seems to be volatile */
+  --string: #a5d6ff; /* string */
+  --decorator: #ffa657; /* entity | entity.name */
+  --builtin: #ffa657; /* entity | entity.name */
+}
+
+[data-theme="cb-dark"] {
+  --regular-text: #c9d1d9; /* editor.foreground */
+  --background: #0d1117; /* editor.background */
+  --selection: #58a6ff40; /* editor.selectionBackground */
+  --boolean: #79c0ff; /* constant */
+  --class-name: #fdac54; /* entity | entity.name */
+  --comment: #8b949e; /* comment */
+  --constant: #79c0ff; /* constant */
+  --function: #d2a8ff; /* entity | entity.name.function */
+  --keyword: #ec8e2c; /* keyword */
+  --number: #79c0ff; /* constant */
+  --operator: #ec8e2c; /* keyword */
+  --property: #d2a8ff; /* entity | entity.name.function */
+  --punctuation: #c9d1d9; /* variable.other */
+  --string: #a5d6ff; /* string */
+  --decorator: #fdac54; /* entity | entity.name */
+  --builtin: #fdac54; /* entity | entity.name */
+}
+
+/* Based on GitHub Light */
+[data-theme="light"] {
+  --regular-text: #24292e; /* editor.foreground */
+  --background: #ffffff; /* editor.background */
+  --selection: #0366d625; /* editor.selectionBackground */
+  --boolean: #005cc5; /* constant */
+  --class-name: #6f42c1; /* entity | entity.name */
+  --comment: #6a737d; /* comment */
+  --constant: #005cc5; /* constant */
+  --function: #6f42c1; /* entity | entity.name.function */
+  --keyword: #d73a49; /* keyword */
+  --number: #005cc5; /* constant */
+  --operator: #d73a49; /* keyword */
+  --property: #6f42c1; /* entity | entity.name */
+  --punctuation: #24292e; /* variable.other */
+  --string: #032f62; /* string */
+  --decorator: #6f42c1; /* entity | entity.name */
+  --builtin: #6f42c1; /* entity | entity.name */
+}
+
+[data-theme="cb-light"] {
+  --regular-text: #24292f; /* editor.foreground */
+  --background: #ffffff; /* editor.background */
+  --selection: #54aeff40; /* editor.selectionBackground */
+  --boolean: #0550ae; /* constant */
+  --class-name: #8a4600; /* entity | entity.name */
+  --comment: #6e7781; /* comment */
+  --constant: #005cc5; /* constant */
+  --function: #8250df; /* entity | entity.name.function */
+  --keyword: #b35900; /* keyword */
+  --number: #0550ae; /* constant */
+  --operator: #b35900; /* keyword */
+  --property: #8a4600; /* entity | entity.name */
+  --punctuation: #24292f; /* variable.other */
+  --string: #0a3069; /* string */
+  --decorator: #8a4600; /* entity | entity.name */
+  --builtin: #8a4600; /* entity | entity.name */
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  color: var(--regular-text);
+  background: var(--background);
+  font-family: var(--f-Mono), monospace;
+  font-weight: 500;
+  font-size: 2rem;
+  line-height: 1.5em;
+  border-radius: 10px;
+
+  -moz-tab-size: 4;
+  -o-tab-size: 4;
+  tab-size: 4;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+code[class*="language-"]::-moz-selection,
+pre[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection,
+pre[class*="language-"] ::-moz-selection {
+  background: var(--selection); /* editor.selectionBackground */
+}
+
+code[class*="language-"]::selection,
+pre[class*="language-"]::selection,
+code[class*="language-"] ::selection,
+pre[class*="language-"] ::selection {
+  background: var(--selection); /* editor.selectionBackground */
+}
+
+:not(pre) > code[class*="language-"] {
+  white-space: normal;
+  border-radius: 0.2em;
+  padding: 0.1em;
+}
+
+pre[class*="language-"] {
+  overflow: auto;
+  position: relative;
+  margin: 0.5em 0;
+  padding: 1.25em 1em;
+}
+
+.language-css > code,
+.language-sass > code,
+.language-scss > code {
+  color: #fd9170; /* unset */
+}
+
+[class*="language-"] .namespace {
+  opacity: 0.7; /* unset */
+}
+
+.token.atrule {
+  color: pink; /* unset */
+}
+
+.token.attr-name {
+  color: red; /* unset */
+}
+
+.token.attr-value {
+  color: red; /* unset */
+}
+
+.token.attribute {
+  color: red; /* unset */
+}
+
+.token.boolean {
+  color: var(--boolean); /* constant */
+}
+
+.token.builtin {
+  color: var(--builtin); /* entity.name */
+}
+
+.token.cdata {
+  color: pink; /* unset */
+}
+
+.token.char {
+  color: green; /* unset */
+}
+
+.token.class {
+  color: green; /* unset */
+}
+
+.token.class-name {
+  color: var(--class-name); /* entity */
+}
+
+.token.comment {
+  color: var(--comment); /* comment */
+}
+
+.token.constant {
+  color: var(--constant); /* constant */
+}
+
+.token.deleted {
+  color: pink; /* unset */
+}
+
+.token.doctype {
+  color: green; /* unset */
+}
+
+.token.entity {
+  color: yellow; /* unset */
+}
+
+.token.function {
+  color: var(--function); /* entity */
+}
+
+.token.hexcode {
+  color: green; /* unset */
+}
+
+.token.id {
+  color: red; /* unset */
+  font-weight: bold;
+}
+
+.token.decorator {
+  color: var(--decorator) !important; /* entity | entity.name */
+}
+
+.token.important {
+  color: red; /* unset */
+  font-weight: bold;
+}
+
+.token.inserted {
+  color: red; /* unset */
+}
+
+.token.keyword {
+  color: var(--keyword); /* keyword */
+}
+
+.token.number {
+  color: var(--number); /* constant */
+}
+
+.token.operator {
+  color: var(--operator); /* keyword */
+}
+
+.token.prolog {
+  color: green; /* unset */
+}
+
+.token.property {
+  color: var(--property); /* entity */
+}
+
+.token.pseudo-class {
+  color: pink; /* unset */
+}
+
+.token.pseudo-element {
+  color: pink; /* unset */
+}
+
+.token.punctuation {
+  color: var(--punctuation); /* variable.other */
+}
+
+.token.regex {
+  color: green; /* unset */
+}
+
+.token.selector {
+  color: green; /* unset */
+}
+
+.token.string {
+  color: var(--string); /* string */
+}
+
+.token.symbol {
+  color: green; /* unset */
+}
+
+.token.tag {
+  color: green; /* unset */
+}
+
+.token.unit {
+  color: green; /* unset */
+}
+
+.token.url {
+  color: green; /* unset */
+}
+
+.token.variable {
+  color: green; /* unset */
+}

@@ -1,4 +1,8 @@
-@import url("icon.css");
+@import url("css/code.css");
+@import url("css/colors.css");
+@import url("css/fonts.css");
+@import url("css/geometry.css");
+@import url("css/icon.css");
 
 :root {
   --max-width: 1100px;
