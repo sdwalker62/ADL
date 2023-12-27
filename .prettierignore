@@ -1,0 +1,14 @@
+# Doc Site
+/docs/.DS_Store
+/docs/node_modules
+/docs/build
+/docs/.svelte-kit
+/docs/package
+/docs/.env
+/docs/.env.*
+!.env.example
+
+# Ignore files for PNPM, NPM and YARN
+/docs/pnpm-lock.yaml
+/docs/package-lock.json
+/docs/yarn.lock
