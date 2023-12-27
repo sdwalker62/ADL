@@ -76,7 +76,7 @@
 	 * @param {number} scale
 	 * @param {boolean} [isThumbnail=false]
 	 */
-	async function renderPage(page, scale, isThumbnail = false) {
+	function renderPage(page, scale, isThumbnail = false) {
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
@@ -99,7 +99,7 @@
 			transform: transform
 		};
 		// render page to canvas and return it to caller
-		await page.render(renderParams).promise;
+		page.render(renderParams).promise;
 		return canvas;
 	}
 
@@ -180,7 +180,7 @@
 			let pdfDocument = await pdfjsLib.getDocument({
 				data: pdfData
 			}).promise;
-			renderPages(pdfDocument, observer, 1);
+			renderPages(pdfDocument, observer, 0);
 			pageCount = pdfDocument.numPages;
 		}
 	});
