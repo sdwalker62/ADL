@@ -1,0 +1,67 @@
+<script>
+	import { onMount } from 'svelte';
+	import Folder from '$lib/components/FileTree/Folder.svelte';
+	import stickybits from 'stickybits';
+
+	/** @type {import('./$types').LayoutData} */
+	export let data;
+
+	const library = JSON.parse(data.tree);
+	const props = {
+		name: 'root',
+		files: library.children,
+		active: true
+	};
+	onMount(() => {
+		stickybits('#folder-top-bar-sticky');
+	});
+</script>
+
+<div id="page-container" class="constrained-height">
+	<div id="folder-canvas" class="no-scroll-bar">
+		<div class="folder-container no-scroll-bar constrained-height">
+			<Folder {...props} />
+		</div>
+	</div>
+	<slot />
+</div>
+
+<style>
+	#page-container {
+		display: grid;
+		grid-template-columns: 320px 1fr;
+		overflow: hidden;
+	}
+
+	@media (max-width: 400px) {
+		#page-container {
+			grid-template-columns: none;
+			grid-template-rows: 0 3fr;
+		}
+
+		.folder-container {
+			max-height: 400px;
+			overflow: hidden;
+		}
+	}
+
+	#folder-canvas {
+		display: grid;
+		grid-template-rows: 4rem 1fr;
+		background-color: var(--background-2);
+		width: 100%;
+		max-width: 320px;
+		align-items: start;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+	.folder-container {
+		background-color: var(--background-2);
+		overflow: scroll;
+		padding-top: 20px;
+		padding-right: 20px;
+		padding-bottom: 20px;
+		padding-left: 20px;
+	}
+</style>

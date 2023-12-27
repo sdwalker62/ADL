@@ -1,0 +1,169 @@
+:root {
+	/* ========= MONOSPACE ========= */
+	--f-Mono: 'FiraCode.VF';
+
+	/* ========= NORMAL ========= */
+	--f-Thin: 'Inter.Thin';
+	--f-ExtraLight: 'Inter.ExtraLight';
+	--f-Light: 'Inter.Light';
+	--f-Regular: 'Inter.Regular';
+	--f-Medium: 'Inter.Medium';
+	--f-SemiBold: 'Inter.SemiBold';
+	--f-Bold: 'Inter.Bold';
+	--f-ExtraBold: 'Inter.ExtraBold';
+	--f-Black: 'Inter.Black';
+
+	/* [script='serif'] {
+		--document-font: 'EB Garamond';
+	}
+
+	[script='san-serif'] {
+		--document-font: 'SF-Pro-Text-Regular'
+	} */
+}
+
+/* Fonts */
+
+/* ===================================== INTER ===================================== */
+@font-face {
+	font-family: 'Inter.Thin';
+	src: url('../fonts/Inter-Thin.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.ExtraLight';
+	src: url('../fonts/Inter-ExtraLight.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Light';
+	src: url('../fonts/Inter-Light.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Thin';
+	src: url('../fonts/Inter-Thin.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Regular';
+	src: url('../fonts/Inter-Regular.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Medium';
+	src: url('../fonts/Inter-Medium.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.SemiBold';
+	src: url('../fonts/Inter-SemiBold.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Bold';
+	src: url('../fonts/Inter-Bold.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.ExtraBold';
+	src: url('../fonts/Inter-ExtraBold.woff2');
+}
+
+@font-face {
+	font-family: 'Inter.Black';
+	src: url('../fonts/Inter-Black.woff2');
+}
+
+/* ================================================================================= */
+
+/* FiraCode */
+@font-face {
+	font-family: 'FiraCode.VF';
+	src: url('../fonts/FiraCode-VF.woff2');
+}
+
+@font-face {
+	font-family: 'FiraCode.Light';
+	src: url('../fonts/FiraCode-Light.woff2');
+}
+
+@font-face {
+	font-family: 'FiraCode.Regular';
+	src: url('../fonts/FiraCode-Regular.woff2');
+}
+
+@font-face {
+	font-family: 'FiraCode.Medium';
+	src: url('../fonts/FiraCode-Medium.woff2');
+}
+
+@font-face {
+	font-family: 'FiraCode.SemiBold';
+	src: url('../fonts/FiraCode-SemiBold.woff2');
+}
+
+@font-face {
+	font-family: 'FiraCode.Bold';
+	src: url('../fonts/FiraCode-Bold.woff2');
+}
+
+@font-face {
+	font-family: 'New York';
+	src: url('../fonts/NewYork.ttf');
+}
+
+@font-face {
+	font-family: 'EB Garamond Italic';
+	src: url('../fonts/EBGaramond-Italic-VariableFont_wght.ttf');
+}
+
+@font-face {
+	font-family: 'EB Garamond';
+	src: url('../fonts/EBGaramond-VariableFont_wght.ttf');
+}
+
+@font-face {
+	font-family: 'SF Pro';
+	src: url('../fonts/SF-Pro.ttf');
+}
+
+@font-face {
+	font-family: 'SF Pro Display Thin';
+	src: url('../fonts/SF-Pro-Display-Thin.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Display Black';
+	src: url('../fonts/SF-Pro-Display-Black.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Display Medium';
+	src: url('../fonts/SF-Pro-Display-Medium.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Display Semibold';
+	src: url('../fonts/SF-Pro-Display-Semibold.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Rounded Regular';
+	src: url('../fonts/SF-Pro-Rounded-Regular.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Rounded Medium';
+	src: url('../fonts/SF-Pro-Rounded-Medium.otf');
+}
+
+@font-face {
+	font-family: 'SF Pro Rounded Semibold';
+	src: url('../fonts/SF-Pro-Rounded-Semibold.otf');
+}
+
+@font-face {
+	font-family: 'SF-Pro-Text-Regular';
+	src: url('../fonts/SF-Pro-Text-Regular.otf');
+}

@@ -1,0 +1,47 @@
+@import url('colors.css');
+@import url('geometry.css');
+@import url('fonts.css');
+@import url('code.css');
+
+:root {
+	/* The default font size is 16px */
+	/* Setting 10px = 0.625 * 16px */
+	/* This makes sizing with rem units easier */
+	font-size: 62.5%;
+	background-color: var(--background);
+	--transition: all 0s;
+	--slider-ball: linear-gradient(145deg, #f0f0f0, #cacaca);
+	--button-background: #02006c;
+	--button-box-shadow: inset 5px 5px 3px #02005c, inset -5px -5px 3px #02007c;
+}
+
+.no-scroll-bar::-webkit-scrollbar {
+	display: none;
+}
+
+/* * {
+	transition: background-color 4s linear;
+} */
+
+.tippy-box[data-theme~='athena'] {
+	background-color: var(--menu-background);
+	color: var(--font-4);
+	font-family: 'SF Pro';
+	font-weight: 500;
+}
+
+.tippy-box[data-theme~='athena'][data-placement^='top'] > .tippy-arrow::before {
+	border-top-color: var(--menu-background);
+}
+
+.tippy-box[data-theme~='athena'][data-placement^='bottom'] > .tippy-arrow::before {
+	border-bottom-color: var(--menu-background);
+}
+
+.tippy-box[data-theme~='athena'][data-placement^='left'] > .tippy-arrow::before {
+	border-left-color: var(--menu-background);
+}
+
+.tippy-box[data-theme~='athena'][data-placement^='right'] > .tippy-arrow::before {
+	border-right-color: var(--menu-background);
+}
