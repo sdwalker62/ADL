@@ -1,9 +1,10 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import CodeIcon from "@/components/icons/code_icon.tsx";
 
 export default function Home() {
   return (
-    <main asdf className={styles.main}>
+    <main className={styles.main}>
       <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
@@ -27,17 +28,8 @@ export default function Home() {
           </a>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <CodeIcon active={false} />
+      <div className={styles.center}></div>
 
       <div className={styles.grid}>
         <a

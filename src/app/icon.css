@@ -1,0 +1,11 @@
+.icon path {
+  fill: red;
+  opacity: 0.3;
+  scale: 1.6;
+}
+
+.icon:hover path,
+.active path {
+  fill: green;
+  opacity: 1;
+}
