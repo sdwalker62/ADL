@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import CodeIcon from "@/components/icons/code_icon.tsx";
+import IncreaseFontSizeIcon from "@/components/icons/increase_font_size_icon.tsx";
 
 export default function Home() {
   return (
@@ -28,7 +28,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <CodeIcon active={false} />
+      <IncreaseFontSizeIcon active={false} />
       <div className={styles.center}></div>
 
       <div className={styles.grid}>
