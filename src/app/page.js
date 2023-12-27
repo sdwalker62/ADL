@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import IncreaseFontSizeIcon from "@/components/icons/increase_font_size_icon.tsx";
+import ZoomIcon from "@/components/icons/zoom_icon.tsx";
 
 export default function Home() {
   return (
@@ -28,7 +28,7 @@ export default function Home() {
           </a>
         </div>
       </div>
-      <IncreaseFontSizeIcon active={false} />
+      <ZoomIcon active={false} />
       <div className={styles.center}></div>
 
       <div className={styles.grid}>
