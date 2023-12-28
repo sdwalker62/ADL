@@ -84,9 +84,12 @@
 		outputScale *= scaleFactor;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
+		const outline = document.getElementById('pdf-outline');
+		const outlineWidth = outline.offsetWidth;
+		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
 		if (isThumbnail) {
-			canvas.style.width = Math.floor(viewport.width) + 'px';
-			canvas.style.height = Math.floor(viewport.height) + 'px';
+			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
+			canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		} else {
 			canvas.style.width = Math.floor((viewport.width * outputScale) / scaleFactor - 20) + 'px';
 			canvas.style.height = Math.floor((viewport.height * outputScale) / scaleFactor - 20) + 'px';
@@ -266,6 +269,8 @@
 		overflow: scroll;
 		height: 100%;
 		background-color: var(--background-2);
+		padding: 15px;
+		gap: 10px;
 	}
 
 	.topbar {

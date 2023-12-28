@@ -19,6 +19,7 @@
 	:global(#math-item-canvas span) {
 		color: var(--font-2);
 		font-family: var(--f-Regular), sans-serif;
-		font-size: 1.8rem;
+		font-size: 2rem;
+		line-height: 1.5;
 	}
 </style>

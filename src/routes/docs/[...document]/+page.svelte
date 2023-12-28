@@ -260,8 +260,8 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
-		font-family: var(--f-Regular), sans-serif;
-		font-size: 2rem;
+		/* font-family: var(--f-Regular), sans-serif; */
+		font-size: 2.5rem;
 	}
 
 	:global(#document p) {
