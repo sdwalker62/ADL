@@ -1,8 +1,10 @@
-<script>
+<script lang="ts">
 	import _ from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
+	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
+
 	// This component is responsible for loading, viewing, and controlling
 	// pdfs in the browser. It uses Mozilla's pdf.js library for all of the
 	// pdf parsing. More information on pdf.js can be found here:
@@ -18,25 +20,29 @@
 	//
 	// https://stackoverflow.com/questions/44547585/generating-thumbnail-of-a-pdf-using-pdf-js
 
-	import { afterUpdate, beforeUpdate, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 
-	export let doc;
-	export let root;
+	export let doc: string;
+	export let root: string;
 
 	const thumbnailScale = 0.2,
 		pageScale = 1;
 
-	let mainCanvas,
-		pdf,
+	let mainCanvas: HTMLElement,
+		pdf: any,
 		pageCount = 0,
 		curPage = 1,
-		outline,
+		outline: HTMLElement,
 		curZoom = 100;
 
-	async function pageBuilder(pageNum, pdfDocument, observer) {
+	async function pageBuilder(
+		pageNum: number,
+		pdfDocument: PDFDocumentProxy,
+		observer: IntersectionObserver
+	) {
 		const pdfPage = await pdfDocument.getPage(pageNum);
-		const thumbnailCanvas = await renderPage(pdfPage, thumbnailScale, true);
-		const pageCanvas = await renderPage(pdfPage, pageScale);
+		const thumbnailCanvas = renderPage(pdfPage, thumbnailScale, true);
+		const pageCanvas = renderPage(pdfPage, pageScale);
 
 		// ================= PAGE =================
 		let pageDiv = document.createElement('div');
@@ -71,12 +77,7 @@
 		// mainCanvas.appendChild(pageDiv);
 	}
 
-	/**
-	 * @param {import('pdfjs-dist').PDFPageProxy} page
-	 * @param {number} scale
-	 * @param {boolean} [isThumbnail=false]
-	 */
-	function renderPage(page, scale, isThumbnail = false) {
+	function renderPage(page: PDFPageProxy, scale: number, isThumbnail = false) {
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
@@ -85,10 +86,10 @@
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
 		const render = document.getElementById('pdf-render');
-		const renderWidth = render.offsetWidth;
+		const renderWidth = render!.offsetWidth;
 		const renderScaleCoefficient = renderWidth / Math.floor(viewport.width);
 		const outline = document.getElementById('pdf-outline');
-		const outlineWidth = outline.offsetWidth;
+		const outlineWidth = outline!.offsetWidth;
 		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
 		if (isThumbnail) {
 			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
@@ -106,23 +107,21 @@
 		var context = canvas.getContext('2d');
 		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 		const renderParams = {
-			canvasContext: context,
+			canvasContext: context!,
 			viewport: viewport,
-			transform: transform
+			transform: transform!
 		};
 		// render page to canvas and return it to caller
 		page.render(renderParams).promise;
 		return canvas;
 	}
 
-	/**
-	 * @param {import('pdfjs-dist').PDFDocumentProxy} pdfDocument
-	 * @param {IntersectionObserver} observer
-	 * @param {number} startingPage
-	 * @param {number} [endingPage=null]
-	 * @returns null
-	 */
-	function renderPages(pdfDocument, observer, startingPage, endingPage = null) {
+	function renderPages(
+		pdfDocument: PDFDocumentProxy,
+		observer: IntersectionObserver,
+		startingPage: number,
+		endingPage: number | null = null
+	) {
 		// PDFs are 1-based
 		let lastPage;
 		if (endingPage) {
@@ -143,16 +142,14 @@
 		if (!pdf) {
 			// ======================= Intersection Observer =======================
 			const scannableElement = document.getElementById('pdf-container');
-			const interceptHeight = 40 - 0.99 * scannableElement.clientHeight;
+			const interceptHeight = 40 - 0.99 * scannableElement!.clientHeight;
 			let options = {
 				root: scannableElement,
 				thresholds: _.range(0, 1, 0.1),
 				rootMargin: `40px 0px ${interceptHeight}px 0px`
 			};
-			/**
-			 * @param {Array<IntersectionObserverEntry>} entries
-			 */
-			const sectionIntersectionCallback = (entries) => {
+
+			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
 				let thumbnails = outline.querySelectorAll('a');
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
@@ -185,11 +182,7 @@
 				root + '/node_modules/pdfjs-dist/build/pdf.worker.js';
 
 			// Asynchronous download of PDF
-			/**
-			 * @type {import('pdfjs-dist').PDFDocumentProxy}
-			 */
-			// pdfjsLib.getDocument;
-			let pdfDocument = await pdfjsLib.getDocument({
+			let pdfDocument: PDFDocumentProxy = await pdfjsLib.getDocument({
 				data: pdfData
 			}).promise;
 			renderPages(pdfDocument, observer, 0);
