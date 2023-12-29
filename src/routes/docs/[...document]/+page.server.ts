@@ -21,7 +21,6 @@ const { JSDOM } = jsdom;
 
 export const load: PageServerLoad = async ({ params }) => {
 	dotenv.config();
-	console.log(process.env.INIT_CWD);
 	// Handle PDF documents
 	if (params.document.endsWith('.pdf')) {
 		const contents = fs.readFileSync(params.document, 'base64');
