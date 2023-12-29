@@ -53,36 +53,18 @@
 	});
 
 	$: renderMenu = $showMainMenu;
-
-	const toggleMainMenu = () => {
-		$showMainMenu = true;
-	};
-
-	const toggleLeftPanel = () => {
-		let leftPanel = document.getElementById('page-container');
-		let cols = leftPanel!.style.gridTemplateColumns;
-		if (cols === '320px 1fr' || cols === '') {
-			leftPanel!.style.gridTemplateColumns = '0 1fr';
-		} else {
-			leftPanel!.style.gridTemplateColumns = '320px 1fr';
-		}
-		$leftPanelActive = !$leftPanelActive;
-		Cookies.set('leftPanelActive', $leftPanelActive ? 'true' : 'false');
-	};
-
-	const toggleRightPanel = () => {
-		const rightPanel = document.getElementById('page-canvas');
-		let columnTemplateString = rightPanel!.style.gridTemplateColumns;
-		columnTemplateString = $rightPanelActive ? '1fr 320px' : '1fr 0';
-		$rightPanelActive = !$rightPanelActive;
-		Cookies.set('rightPanelActive', $rightPanelActive ? 'true' : 'false');
-	};
 </script>
 
 <main>
 	<TopBar>
 		<svelte:fragment slot="left-cluster">
-			<ToggleMenuItem active={$leftPanelActive} onClickFunction={toggleLeftPanel}>
+			<ToggleMenuItem
+				active={$leftPanelActive}
+				onClickFunction={() => {
+					$leftPanelActive = !$leftPanelActive;
+					Cookies.set('leftPanelActive', $leftPanelActive ? 'true' : 'false');
+				}}
+			>
 				<LeftPanelIcon active={$leftPanelActive} />
 			</ToggleMenuItem>
 			<ToggleMenuItem active={folderActive}>
@@ -94,7 +76,11 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="left-search">
-			<ActionMenuItem onClickFunction={toggleMainMenu}>
+			<ActionMenuItem
+				onClickFunction={() => {
+					$showMainMenu = true;
+				}}
+			>
 				<MenuIcon />
 			</ActionMenuItem>
 		</svelte:fragment>
@@ -136,7 +122,13 @@
 			>
 				<TableIcon active={$showTableOutlineElements} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={$rightPanelActive} onClickFunction={toggleRightPanel}>
+			<ToggleMenuItem
+				active={$rightPanelActive}
+				onClickFunction={() => {
+					$rightPanelActive = !$rightPanelActive;
+					Cookies.set('rightPanelActive', $rightPanelActive ? 'true' : 'false');
+				}}
+			>
 				<RightPanelIcon active={$rightPanelActive} />
 			</ToggleMenuItem>
 		</svelte:fragment>

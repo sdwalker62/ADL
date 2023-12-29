@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { leftPanelActive } from '$lib/data/shared';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
 	import type { LayoutData } from './$types';
@@ -12,25 +13,31 @@
 		files: library.children,
 		active: true
 	};
+
 	onMount(() => {
 		stickybits('#folder-top-bar-sticky');
 	});
 </script>
 
-<div id="page-container" class="constrained-height">
-	<div id="folder-canvas" class="no-scroll-bar">
-		<div class="folder-container no-scroll-bar constrained-height">
-			<Folder {...props} />
+<div id="page-container" class="constrained-height" class:active={$leftPanelActive}>
+	{#if $leftPanelActive}
+		<div id="folder-canvas" class="no-scroll-bar">
+			<div class="folder-container no-scroll-bar constrained-height">
+				<Folder {...props} />
+			</div>
 		</div>
-	</div>
+	{/if}
 	<slot />
 </div>
 
 <style>
 	#page-container {
 		display: grid;
-		grid-template-columns: 320px 1fr;
 		overflow: hidden;
+	}
+
+	.active {
+		grid-template-columns: 320px 1fr;
 	}
 
 	@media (max-width: 400px) {

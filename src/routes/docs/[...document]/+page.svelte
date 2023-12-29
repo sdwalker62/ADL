@@ -18,8 +18,6 @@
 	export let data: PageData;
 	const root = data.root!;
 
-	$: gridTemplateColumns = $rightPanelActive ? '1fr 320px' : '1fr 0';
-
 	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
 		const target: Element = entry.target;
 		let headingElement: HTMLElement | null = target.querySelector('h1');
@@ -144,7 +142,7 @@
 	<div
 		id="page-canvas"
 		class="no-scroll-bar constrained-height"
-		style:grid-template-columns={gridTemplateColumns}
+		class:rightPanelActive={$rightPanelActive}
 	>
 		<div id="document" class="no-scroll-bar constrained-height flex-col">
 			{@html data.document}
@@ -164,6 +162,10 @@
 {/if}
 
 <style>
+	.rightPanelActive {
+		grid-template-columns: 1fr 320px;
+	}
+
 	#pdf-canvas {
 		width: 100%;
 		overflow: scroll;
@@ -203,7 +205,6 @@
 
 	#page-canvas {
 		display: grid;
-		grid-template-columns: 1fr 320px;
 		align-items: start;
 		justify-content: center;
 		background-color: var(--background-1);
