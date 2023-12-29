@@ -14,6 +14,7 @@ import rehypeRewrite from 'rehype-rewrite';
 import fs from 'fs';
 import jsdom from 'jsdom';
 import dotenv from 'dotenv';
+import type { Element } from 'hast';
 
 const { JSDOM } = jsdom;
 
@@ -24,7 +25,7 @@ export async function load({ params }) {
 	// Handle PDF documents
 	if (params.document.endsWith('.pdf')) {
 		const contents = fs.readFileSync(params.document, 'base64');
-		const outline = [];
+		const outline: Array<any> = [];
 		return {
 			document: contents,
 			outline: outline,
@@ -33,20 +34,11 @@ export async function load({ params }) {
 		};
 	}
 
-	// if (params.document.endsWith('.html')) {
-	// 	const outline = [];
-	// 	return {
-	// 		document: '',
-	// 		outline: outline,
-	// 		isPDF: false
-	// 	};
-	// }
-
 	const contents = fs.readFileSync(params.document, 'utf-8');
 
 	if (!contents) {
 		const doc = '<h1> No Document Found! </h1> <p> You can help by writing me!</p>';
-		const outline = [];
+		const outline: Array<any> = [];
 		return {
 			document: doc,
 			outline: outline,
@@ -73,8 +65,7 @@ export async function load({ params }) {
 			// A list of supported selectors can be found here:
 			// https://github.com/syntax-tree/hast-util-select/blob/main/readme.md#support
 			selector: 'section',
-			/** @param {import("hast").Element} node */
-			rewrite: (node) => {
+			rewrite: (node: Element) => {
 				if (node.children) {
 					for (let child of node.children) {
 						// @ts-ignore
@@ -97,35 +88,37 @@ export async function load({ params }) {
     */
 	const htmlDoc = new JSDOM(docs.toString());
 
-	const isMath = (node) => node.querySelectorAll('span.katex-mathml').length;
-	const isCode = (node) => node.querySelectorAll('code').length;
-	const isTable = (node) => node.querySelectorAll('table').length;
-	// const hasPre = (node) => node.querySelectorAll('PRE').length;
+	const isMath = (node: HTMLElement) => node.querySelectorAll('span.katex-mathml').length;
+	const isCode = (node: HTMLElement) => node.querySelectorAll('code').length;
+	const isTable = (node: HTMLElement) => node.querySelectorAll('table').length;
 
-	/**
-	 *
-	 * @param {HTMLElement | Element} node
-	 * @returns {{children: *[], tagName: string, sectionLevel: (*|number)}}
-	 */
-	function buildOutlineObject(node) {
+	interface Node {
+		name: string;
+		tagName: string;
+		sectionLevel: string | number | null;
+		html: string;
+		children: Array<object>;
+	}
+
+	function buildOutlineObject(node: HTMLElement): Node {
 		let heading = node.querySelector('h1, h2, h3, h4, h5, h6');
 		const sectionLevel = node.getAttribute('data-heading-rank')
 			? node.getAttribute('data-heading-rank')
 			: 0;
-		let newNode = {
-			name: heading.id,
+		let newNode: Node = {
+			name: heading!.id,
 			tagName: node.tagName.toLowerCase(),
 			sectionLevel: sectionLevel,
 			html: node.innerHTML,
-			children: []
+			children: [] as Array<object>
 		};
 		if (node.children) {
 			for (const c of node.children) {
 				if (c.tagName === 'SECTION') {
 					let section = {};
-					section = buildOutlineObject(c);
+					section = buildOutlineObject(c as HTMLElement);
 					newNode.children.push(section);
-				} else if (isCode(c)) {
+				} else if (isCode(c as HTMLElement)) {
 					if (c.tagName === 'PRE') {
 						newNode.children.push({
 							tagName: 'code',
@@ -133,25 +126,28 @@ export async function load({ params }) {
 							html: c.innerHTML
 						});
 					}
-				} else if (isMath(c)) {
+				} else if (isMath(c as HTMLElement)) {
 					newNode.children.push({
 						tagName: 'math',
 						sectionLevel: Number(sectionLevel) + 1,
 						html: c.innerHTML
 					});
-				} else if (isTable(c)) {
+				} else if (isTable(c as HTMLElement)) {
 					newNode.children.push({
 						tagName: 'table',
 						sectionLevel: Number(sectionLevel) + 1,
-						html: c.querySelector('thead').outerHTML
+						html: c.querySelector('thead')!.outerHTML
 					});
 				}
 			}
 			return newNode;
 		}
+		return newNode;
 	}
 
-	const outline = buildOutlineObject(htmlDoc.window.document.children[0].children[1]);
+	const outline = buildOutlineObject(
+		htmlDoc.window.document.children[0]?.children[1] as HTMLElement
+	);
 
 	return {
 		document: docs.toString(),

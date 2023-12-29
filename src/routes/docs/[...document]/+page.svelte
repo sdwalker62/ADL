@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import _ from 'lodash';
 	import OutlineElement from '$lib/components/Outline/OutlineElement.svelte';
@@ -11,29 +11,25 @@
 	import tippy from 'tippy.js';
 	import 'tippy.js/dist/tippy.css';
 	import 'svelte-pdf-viewer/dist/bundle.css';
-	import WebViewer from '../../../lib/components/WebViewer.svelte';
 	import PdfViewer2 from '$lib/components/PDFViewer2.svelte';
+	import type { PageData } from './$types';
 
-	/** @type {import('./$types').PageData} */
-	export let data;
+	export let data: PageData;
 
-	/**
-	 * @param {HTMLElement} dom
-	 * @param {IntersectionObserverEntry} entry
-	 */
-	function getH1Element(dom, entry) {
-		const target = entry.target;
-		let heading = target.querySelector('h1').getAttribute('id');
-		for (const child of dom.children) {
-			const element = child.querySelector(`[href="#${heading}"]`);
-			if (element) {
-				return element;
+	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
+		const target: Element = entry.target;
+		let headingElement: HTMLElement | null = target.querySelector('h1');
+		if (headingElement) {
+			const headingID: string | null = headingElement.getAttribute('id');
+			for (const child of dom.children) {
+				const element = child.querySelector(`[href="#${headingID}"]`);
+				return element ? element : null;
 			}
 		}
+		return null;
 	}
 
-	/** @param {Document} doc*/
-	function wrapCode(doc) {
+	function wrapCode(doc: Document) {
 		// in-line code blocks don't use pre
 		const codeBlocks = doc.querySelectorAll('pre');
 		for (const codeBlock of codeBlocks) {
@@ -58,50 +54,62 @@
 			wrapCode(document);
 			let codeBlocks = document.getElementsByClassName('document-code');
 			for (let i = 0; i < codeBlocks.length; i++) {
-				let preBlock = codeBlocks.item(i).children[0];
-				if (preBlock.classList.contains('language-shell')) {
-					addPrompt(preBlock.children[0]);
+				const preBlockParent: Element | null = codeBlocks.item(i);
+				if (preBlockParent) {
+					const preBlock = preBlockParent.children[0];
+					if (preBlock) {
+						if (preBlock.classList.contains('language-shell')) {
+							if (preBlock.children[0]) {
+								addPrompt(preBlock.children[0]);
+							}
+						}
+					}
 				}
 			}
 
 			let copyCodeButtons = document.getElementsByClassName('copy-code-button');
 			for (let i = 0; i < copyCodeButtons.length; i++) {
-				copyCodeButtons.item(i).addEventListener('click', copyCode, false);
+				copyCodeButtons.item(i)!.addEventListener('click', copyCode, false);
 			}
 
 			// ======================= Intersection Observer =======================
 			const doc = document.getElementById('document');
-			const interceptHeight = 40 - 0.99 * doc.clientHeight;
-			let options = {
-				root: doc,
-				thresholds: _.range(0, 1, 0.1),
-				rootMargin: `40px 0px ${interceptHeight}px 0px`
-			};
+			let options = {};
+			if (doc) {
+				const interceptHeight = 40 - 0.99 * doc.clientHeight;
+				options = {
+					root: doc,
+					thresholds: _.range(0, 1, 0.1),
+					rootMargin: `40px 0px ${interceptHeight}px 0px`
+				};
+			}
 
 			/**
 			 * @param {Array<IntersectionObserverEntry>} entries
 			 */
-			const sectionIntersectionCallback = (entries) => {
+			const sectionIntersectionCallback = (entries: Array<IntersectionObserverEntry>) => {
 				let outline = document.getElementById('outline-container');
-				if (!outline.hasChildNodes()) return;
-				entries.forEach((entry) => {
-					let e = getH1Element(outline, entry);
-					if (e) {
-						if (entry.isIntersecting) {
-							const otherHeadings = document.querySelectorAll('a.observed');
-							if (otherHeadings) {
-								otherHeadings.forEach((heading) => {
-									heading.classList.remove('observed');
-								});
+				if (outline) {
+					if (!outline.hasChildNodes()) return;
+					entries.forEach((entry) => {
+						let e = getH1Element(outline!, entry);
+						if (e) {
+							if (entry.isIntersecting) {
+								const otherHeadings = document.querySelectorAll('a.observed');
+								if (otherHeadings) {
+									otherHeadings.forEach((heading) => {
+										heading.classList.remove('observed');
+									});
+								}
+								e.classList.add('observed');
+								e.classList.remove('non-observed');
+							} else {
+								e.classList.add('non-observed');
+								e.classList.remove('observed');
 							}
-							e.classList.add('observed');
-							e.classList.remove('non-observed');
-						} else {
-							e.classList.add('non-observed');
-							e.classList.remove('observed');
 						}
-					}
-				});
+					});
+				}
 			};
 			let observer = new IntersectionObserver(sectionIntersectionCallback, options);
 			let sections = document.querySelectorAll('[data-heading-rank="1"]');

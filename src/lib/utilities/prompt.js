@@ -9,7 +9,7 @@ export function addPrompt(element) {
 			let codeContainer = element.childNodes[0];
 			let promptElement = document.createElement('span');
 			promptElement.className = 'document-code-prompt';
-			promptElement.textContent = 'user@host$ | ';
+			promptElement.textContent = 'user@host$ ';
 			/* @ts-ignore */
 			codeContainer.prepend(promptElement);
 		}

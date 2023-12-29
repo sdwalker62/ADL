@@ -1,8 +1,4 @@
-/**
- *
- * @param {PointerEvent} event
- */
-export function copyCode(event) {
+export function copyCode(event: Event) {
 	const curTargetElement = event.currentTarget;
 	/* @ts-ignore */
 	const parElement = curTargetElement.parentElement;
@@ -31,4 +27,5 @@ export function copyCode(event) {
 	} else {
 		navigator.clipboard.writeText(code);
 	}
+	return null;
 }

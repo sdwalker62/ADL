@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import errorImg from '$lib/assets/images/error.svg';
 </script>
 
