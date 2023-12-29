@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import athenaLogo from '$lib/assets/images/AthenaLogo.png';
 </script>
 

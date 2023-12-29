@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import constructionImg from '$lib/assets/images/construction.svg';
 </script>
 

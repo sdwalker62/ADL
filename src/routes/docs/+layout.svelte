@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
+	import type { LayoutData } from './$types';
 
-	/** @type {import('./$types').LayoutData} */
-	export let data;
+	export let data: LayoutData;
 
 	const library = JSON.parse(data.tree);
 	const props = {

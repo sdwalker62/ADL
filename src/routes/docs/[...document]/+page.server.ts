@@ -15,11 +15,11 @@ import fs from 'fs';
 import jsdom from 'jsdom';
 import dotenv from 'dotenv';
 import type { Element } from 'hast';
+import type { PageServerLoad } from './$types.js';
 
 const { JSDOM } = jsdom;
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export const load: PageServerLoad = async ({ params }) => {
 	dotenv.config();
 	console.log(process.env.INIT_CWD);
 	// Handle PDF documents
@@ -58,9 +58,7 @@ export async function load({ params }) {
 		.use(rehypeSectionize)
 		.use(rehypeSlug)
 		.use(rehypeAutolinkHeadings)
-		// @ts-ignore
 		.use(rehypeWrap, { selector: 'table', wrapper: 'div.table-block' })
-		// @ts-ignore
 		.use(rehypeRewrite, {
 			// A list of supported selectors can be found here:
 			// https://github.com/syntax-tree/hast-util-select/blob/main/readme.md#support
@@ -154,4 +152,4 @@ export async function load({ params }) {
 		outline: outline.children,
 		isPDF: false
 	};
-}
+};

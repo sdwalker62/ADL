@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { beforeUpdate } from 'svelte';
 	import { colorTheme, showMainMenu } from '$lib/data/shared';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
@@ -21,9 +21,9 @@
 	import HomeIcon from '$lib/assets/icons/HomeIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
+	import type { LayoutData } from './$types';
 
-	/** @type {import('./$types').LayoutData} */
-	export let data;
+	export let data: LayoutData;
 
 	$colorTheme = data.colorMode;
 
@@ -51,22 +51,22 @@
 
 	const toggleLeftPanel = () => {
 		let leftPanel = document.getElementById('page-container');
-		let cols = leftPanel.style.gridTemplateColumns;
+		let cols = leftPanel!.style.gridTemplateColumns;
 		if (cols === '320px 1fr' || cols === '') {
-			leftPanel.style.gridTemplateColumns = '0 1fr';
+			leftPanel!.style.gridTemplateColumns = '0 1fr';
 		} else {
-			leftPanel.style.gridTemplateColumns = '320px 1fr';
+			leftPanel!.style.gridTemplateColumns = '320px 1fr';
 		}
 		leftPanelActive = !leftPanelActive;
 	};
 
 	const toggleRightPanel = () => {
 		let rightPanel = document.getElementById('page-canvas');
-		let cols = rightPanel.style.gridTemplateColumns;
+		let cols = rightPanel!.style.gridTemplateColumns;
 		if (cols === '1fr 320px' || cols === '') {
-			rightPanel.style.gridTemplateColumns = '1fr 0';
+			rightPanel!.style.gridTemplateColumns = '1fr 0';
 		} else {
-			rightPanel.style.gridTemplateColumns = '1fr 320px';
+			rightPanel!.style.gridTemplateColumns = '1fr 320px';
 		}
 	};
 </script>
