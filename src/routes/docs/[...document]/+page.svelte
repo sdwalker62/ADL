@@ -15,6 +15,7 @@
 	import type { PageData } from './$types';
 
 	export let data: PageData;
+	const root = data.root!;
 
 	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
 		const target: Element = entry.target;
@@ -60,7 +61,7 @@
 					if (preBlock) {
 						if (preBlock.classList.contains('language-shell')) {
 							if (preBlock.children[0]) {
-								addPrompt(preBlock.children[0]);
+								addPrompt(preBlock.children[0] as HTMLElement);
 							}
 						}
 					}
@@ -84,10 +85,7 @@
 				};
 			}
 
-			/**
-			 * @param {Array<IntersectionObserverEntry>} entries
-			 */
-			const sectionIntersectionCallback = (entries: Array<IntersectionObserverEntry>) => {
+			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
 				let outline = document.getElementById('outline-container');
 				if (outline) {
 					if (!outline.hasChildNodes()) return;
@@ -153,7 +151,7 @@
 	</div>
 {:else}
 	<div id="pdf-canvas">
-		<PdfViewer2 doc={data.document} root={data.root} />
+		<PdfViewer2 doc={data.document} {root} />
 	</div>
 {/if}
 

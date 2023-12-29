@@ -1,6 +1,6 @@
 import * as PDFJS from 'pdfjs-dist';
 
-export default async function loadPDF(node, data) {
+export default async function loadPDF(node: HTMLCanvasElement, data: any) {
 	const loadingTask = PDFJS.getDocument(data.url);
 	const pdf = await loadingTask.promise;
 	const page = await pdf.getPage(1);
@@ -11,8 +11,7 @@ export default async function loadPDF(node, data) {
 	canvas.height = viewport.height;
 	canvas.width = viewport.width;
 	const renderContext = {
-		canvasContext: context,
-
+		canvasContext: context!,
 		viewport: viewport
 	};
 
