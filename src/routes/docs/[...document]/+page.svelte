@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { rightPanelActive } from '$lib/data/shared';
 	import _ from 'lodash';
 	import OutlineElement from '$lib/components/Outline/OutlineElement.svelte';
 	import stickybits from 'stickybits';
@@ -16,6 +17,8 @@
 
 	export let data: PageData;
 	const root = data.root!;
+
+	$: gridTemplateColumns = $rightPanelActive ? '1fr 320px' : '1fr 0';
 
 	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
 		const target: Element = entry.target;
@@ -138,16 +141,21 @@
 </script>
 
 {#if !data.isPDF}
-	<div id="page-canvas" class="no-scroll-bar constrained-height">
+	<div
+		id="page-canvas"
+		class="no-scroll-bar constrained-height"
+		style:grid-template-columns={gridTemplateColumns}
+	>
 		<div id="document" class="no-scroll-bar constrained-height flex-col">
-			<!-- eslint-disable-next-line -->
 			{@html data.document}
 		</div>
-		<div id="outline" class="no-scroll-bar constrained-height flex-col">
-			<div id="outline-container" class="no-scroll-bar">
-				<OutlineElement name="root" children={data.outline} />
+		{#if $rightPanelActive}
+			<div id="outline" class="no-scroll-bar constrained-height flex-col">
+				<div id="outline-container" class="no-scroll-bar">
+					<OutlineElement children={data.outline} />
+				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 {:else}
 	<div id="pdf-canvas">

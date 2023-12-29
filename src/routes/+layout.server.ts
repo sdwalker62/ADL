@@ -15,10 +15,18 @@ export const load: LayoutServerLoad = async ({ cookies }) => {
 		? true
 		: showTableOutlineCookie === 'true';
 
+	const leftPanelActiveCookie = cookies.get('leftPanelActive');
+	const leftPanelActive = !leftPanelActiveCookie ? true : leftPanelActiveCookie === 'true';
+
+	const rightPanelActiveCookie = cookies.get('rightPanelActive');
+	const rightPanelActive = !rightPanelActiveCookie ? true : rightPanelActiveCookie === 'true';
+
 	return {
 		colorMode: colorMode,
 		showCodeOutlineElements: showCodeOutlineElements,
 		showMathOutlineElements: showMathOutlineElements,
-		showTableOutlineElements: showTableOutlineElements
+		showTableOutlineElements: showTableOutlineElements,
+		leftPanelActive: leftPanelActive,
+		rightPanelActive: rightPanelActive
 	};
 };

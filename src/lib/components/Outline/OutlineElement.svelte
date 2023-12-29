@@ -15,11 +15,11 @@
 		tagName: string;
 		sectionLevel: number;
 		html: string;
-		children: Array<object>;
+		children: object[];
 	}
 
 	export let children: Node[];
-	export let name: string;
+	export let name: string = 'root';
 	export let innerHTML = '';
 	export let sectionLevel = 0;
 	let skip = name.includes('root') ? true : false;
@@ -42,9 +42,9 @@
 						sectionLevel={child.sectionLevel}
 					/>
 				{:else if child.tagName === 'code'}
-					{#if $showCodeOutlineElements}
-						<CodeListItem innerHTMLString={child.html} />
-					{/if}
+					{#key $showCodeOutlineElements}
+						<CodeListItem innerHTMLString={child.html} shouldRender={$showCodeOutlineElements} />
+					{/key}
 				{:else if child.tagName === 'math'}
 					{#if $showMathOutlineElements}
 						<MathListItem innerHTMLString={child.html} />

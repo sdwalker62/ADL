@@ -15,6 +15,9 @@ export let colorThemeOptions = readable([
 
 export let documentationPath = writable('../AthenaDocs');
 
+// Toggles
+export let leftPanelActive = writable(true);
+export let rightPanelActive = writable(true);
 export let showCodeOutlineElements = writable(true);
 export let showMathOutlineElements = writable(true);
 export let showTableOutlineElements = writable(true);

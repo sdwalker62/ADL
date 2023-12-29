@@ -5,7 +5,9 @@
 		showMainMenu,
 		showCodeOutlineElements,
 		showMathOutlineElements,
-		showTableOutlineElements
+		showTableOutlineElements,
+		leftPanelActive,
+		rightPanelActive
 	} from '$lib/data/shared';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
 	import SiteNavigationLink from '$lib/components/MainModalMenu/SiteNavigationLink.svelte';
@@ -36,14 +38,11 @@
 	$showCodeOutlineElements = data.showCodeOutlineElements;
 	$showMathOutlineElements = data.showMathOutlineElements;
 	$showTableOutlineElements = data.showTableOutlineElements;
+	$leftPanelActive = data.leftPanelActive;
+	$rightPanelActive = data.rightPanelActive;
 
-	let leftPanelActive = true;
 	let folderActive = true;
 	let serverActive = false;
-	let codeActive = true;
-	let mathActive = true;
-	let tableActive = true;
-	let rightPanelActive = true;
 
 	let pageHome = false;
 	let pageDocs = false;
@@ -67,25 +66,24 @@
 		} else {
 			leftPanel!.style.gridTemplateColumns = '320px 1fr';
 		}
-		leftPanelActive = !leftPanelActive;
+		$leftPanelActive = !$leftPanelActive;
+		Cookies.set('leftPanelActive', $leftPanelActive ? 'true' : 'false');
 	};
 
 	const toggleRightPanel = () => {
-		let rightPanel = document.getElementById('page-canvas');
-		let cols = rightPanel!.style.gridTemplateColumns;
-		if (cols === '1fr 320px' || cols === '') {
-			rightPanel!.style.gridTemplateColumns = '1fr 0';
-		} else {
-			rightPanel!.style.gridTemplateColumns = '1fr 320px';
-		}
+		const rightPanel = document.getElementById('page-canvas');
+		let columnTemplateString = rightPanel!.style.gridTemplateColumns;
+		columnTemplateString = $rightPanelActive ? '1fr 320px' : '1fr 0';
+		$rightPanelActive = !$rightPanelActive;
+		Cookies.set('rightPanelActive', $rightPanelActive ? 'true' : 'false');
 	};
 </script>
 
 <main>
 	<TopBar>
 		<svelte:fragment slot="left-cluster">
-			<ToggleMenuItem active={leftPanelActive} onClickFunction={toggleLeftPanel}>
-				<LeftPanelIcon active={leftPanelActive} />
+			<ToggleMenuItem active={$leftPanelActive} onClickFunction={toggleLeftPanel}>
+				<LeftPanelIcon active={$leftPanelActive} />
 			</ToggleMenuItem>
 			<ToggleMenuItem active={folderActive}>
 				<DriveIcon active={folderActive} />
@@ -112,29 +110,34 @@
 
 		<svelte:fragment slot="right-cluster">
 			<ToggleMenuItem
-				active={codeActive}
-				on:click={() => {
-					Cookie.set('showCodeOutlineElements', (!$showCodeOutlineElements).toString());
+				active={$showCodeOutlineElements}
+				onClickFunction={() => {
 					$showCodeOutlineElements = !$showCodeOutlineElements;
-					console.log($showCodeOutlineElements);
+					Cookies.set('showCodeOutlineElements', $showCodeOutlineElements ? 'true' : 'false');
 				}}
 			>
 				<CodeIcon active={$showCodeOutlineElements} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={mathActive}>
-				<MathIcon
-					active={$showMathOutlineElements}
-					on:click={() => {
-						Cookie.set('showMathOutlineElements', (!$showMathOutlineElements).toString());
-						$showMathOutlineElements = !$showMathOutlineElements;
-					}}
-				/>
+			<ToggleMenuItem
+				active={$showMathOutlineElements}
+				onClickFunction={() => {
+					$showMathOutlineElements = !$showMathOutlineElements;
+					Cookies.set('showMathOutlineElements', $showMathOutlineElements ? 'true' : 'false');
+				}}
+			>
+				<MathIcon active={$showMathOutlineElements} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={tableActive}>
+			<ToggleMenuItem
+				active={$showTableOutlineElements}
+				onClickFunction={() => {
+					$showTableOutlineElements = !$showTableOutlineElements;
+					Cookies.set('showTableOutlineElements', $showTableOutlineElements ? 'true' : 'false');
+				}}
+			>
 				<TableIcon active={$showTableOutlineElements} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={rightPanelActive} onClickFunction={toggleRightPanel}>
-				<RightPanelIcon active={rightPanelActive} />
+			<ToggleMenuItem active={$rightPanelActive} onClickFunction={toggleRightPanel}>
+				<RightPanelIcon active={$rightPanelActive} />
 			</ToggleMenuItem>
 		</svelte:fragment>
 	</TopBar>
