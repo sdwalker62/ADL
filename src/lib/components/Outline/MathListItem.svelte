@@ -1,9 +1,9 @@
-<script>
-	export let innerHTML = '';
+<script lang="ts">
+	export let innerHTMLString = '';
 </script>
 
 <div id="math-item-canvas">
-	{@html innerHTML}
+	{@html innerHTMLString}
 </div>
 
 <style>

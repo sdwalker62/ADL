@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
 	import { beforeUpdate, onMount } from 'svelte';
 	import Modal from '../Modal.svelte';
 	import { colorThemeOptions, colorTheme } from '$lib/data/shared';
 	import Cookies from 'js-cookie';
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 
-	let themeMenu;
+	let themeMenu: HTMLElement;
 	let themeGroup = $colorTheme;
 	let showModal = false;
 	let dark = true;

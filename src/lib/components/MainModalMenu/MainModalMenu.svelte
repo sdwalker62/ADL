@@ -1,12 +1,11 @@
-<script>
+<script lang="ts">
 	import { showMainMenu } from '$lib/data/shared';
 	import ThemeSwitcher from './ThemeSwitcher.svelte';
 	import logo from '$lib/assets/images/AthenaLogo.png';
 
-	/** @type {boolean} */
-	export let renderMenu; // boolean
+	export let renderMenu: boolean;
 
-	let dialog; // HTMLDialogElement
+	let dialog: HTMLDialogElement;
 
 	$: if (dialog && renderMenu) {
 		dialog.showModal();

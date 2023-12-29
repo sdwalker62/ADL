@@ -1,12 +1,20 @@
-<script>
+<script lang="ts">
 	import CodeListItem from '$lib/components/Outline/CodeListItem.svelte';
 	import HeadingListItem from '$lib/components/Outline/HeadingListItem.svelte';
 	import MathListItem from '$lib/components/Outline/MathListItem.svelte';
 	import TableListItem from '$lib/components/Outline/TableListItem.svelte';
 	import H1ListItem from '$lib/components/Outline/H1ListItem.svelte';
 
-	export let children;
-	export let name;
+	interface Node {
+		name: string;
+		tagName: string;
+		sectionLevel: number;
+		html: string;
+		children: Array<object>;
+	}
+
+	export let children: Node[];
+	export let name: string;
 	export let innerHTML = '';
 	export let sectionLevel = 0;
 	let skip = name.includes('root') ? true : false;
@@ -29,11 +37,11 @@
 						sectionLevel={child.sectionLevel}
 					/>
 				{:else if child.tagName === 'code'}
-					<CodeListItem innerHTML={child.html} />
+					<CodeListItem innerHTMLString={child.html} />
 				{:else if child.tagName === 'math'}
-					<MathListItem innerHTML={child.html} />
+					<MathListItem innerHTMLString={child.html} />
 				{:else if child.tagName === 'table'}
-					<TableListItem innerHTML={child.html} />
+					<TableListItem innerHTMLString={child.html} />
 				{:else if child.tagName.startsWith('s')}
 					<HeadingListItem name={child.name} rank={child.sectionLevel} html={child.html} />
 				{/if}
@@ -52,11 +60,11 @@
 						sectionLevel={child.sectionLevel}
 					/>
 				{:else if child.tagName === 'code'}
-					<CodeListItem innerHTML={child.html} />
+					<CodeListItem innerHTMLString={child.html} />
 				{:else if child.tagName === 'math'}
-					<MathListItem innerHTML={child.html} />
+					<MathListItem innerHTMLString={child.html} />
 				{:else if child.tagName === 'table'}
-					<TableListItem innerHTML={child.html} />
+					<TableListItem innerHTMLString={child.html} />
 				{/if}
 			</li>
 		{/each}

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { afterUpdate, onMount } from 'svelte';
 	import { createEventDispatcher } from 'svelte';
 	import tippy from 'tippy.js';
@@ -8,7 +8,7 @@
 	export let onClickFunction = () => {};
 	const dispatch = createEventDispatcher();
 
-	let component;
+	let component: HTMLElement;
 
 	onMount(() => {
 		tippy(component, {

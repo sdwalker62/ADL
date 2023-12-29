@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import { currentPage } from '$lib/data/shared';
 	import { beforeUpdate, onMount } from 'svelte';
 	import { page } from '$app/stores';
 
-	export let link;
-	export let name;
-	export let active;
+	export let link: string;
+	export let name: string;
+	export let active: boolean;
 
-	let component;
+	let component: HTMLElement;
 
 	beforeUpdate(() => {
 		if (link === $page.url.pathname) {

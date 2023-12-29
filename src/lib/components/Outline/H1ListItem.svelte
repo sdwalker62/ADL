@@ -1,11 +1,8 @@
-<script>
-	/** @type {string} */
-	export let name;
+<script lang="ts">
+	export let name: string;
+	export let html: string;
 
-	/** @type {string} */
-	export let html;
-
-	const displayName = html.split('</a>')[1].split('</h')[0];
+	const displayName = html.split('</a>')[1]?.split('</h')[0];
 </script>
 
 <a id="heading-wrapper" href={`#${name}`} class={`h1`}>

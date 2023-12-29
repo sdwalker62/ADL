@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
 	import { currentPage } from '$lib/data/shared';
 	import { afterUpdate } from 'svelte';
 
-	export let link;
-	export let site;
-	export let name;
+	export let link: string;
+	export let site: string;
+	export let name: string;
 
-	let component;
+	let component: HTMLElement;
 
 	afterUpdate(() => {
 		component.addEventListener('click', () => {

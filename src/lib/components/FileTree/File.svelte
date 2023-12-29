@@ -1,31 +1,25 @@
-<script>
+<script lang="ts">
 	import markdownLogo from '$lib/assets/images/markdown.svg';
 	import fileLogo from '$lib/assets/icons/doc.richtext.fill.svg';
 	import { page } from '$app/stores';
 
 	// https://codepen.io/sosuke/pen/Pjoqqp
-	export let filePath;
-	export let name;
+	export let filePath: string;
+	export let name: string;
 	const docPath = `${$page.url.origin}/docs/${filePath}`;
 	let highlight = '';
 	if (filePath == $page.params.document) {
 		highlight = 'highlight';
 	}
 
-	/**
-	 * @param {string} word
-	 */
-	function capitalizeFirstLetter(word) {
+	function capitalizeFirstLetter(word: string) {
 		const firstLetter = word.charAt(0);
 		const firstLetterCap = firstLetter.toUpperCase();
 		const restOfWord = word.slice(1);
 		return firstLetterCap + restOfWord;
 	}
 
-	/**
-	 * @param {string} inStr
-	 */
-	function formatName(inStr) {
+	function formatName(inStr: string) {
 		inStr = inStr.replace('_', ' ');
 		const inStrSplit = inStr.split(' ');
 		if (inStrSplit.length > 1) {

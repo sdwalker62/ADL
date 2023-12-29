@@ -1,10 +1,9 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 
 	let mountedFunction = () => {};
 
-	/** @type {HTMLElement}*/
-	let component;
+	let component: HTMLElement;
 	onMount(() => {
 		component.addEventListener('click', mountedFunction);
 	});

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import SearchInput from './SearchInput.svelte';
 	import stickybits from 'stickybits';
 	import { onMount } from 'svelte';

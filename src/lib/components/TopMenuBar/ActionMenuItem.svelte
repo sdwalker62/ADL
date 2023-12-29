@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import tippy from 'tippy.js';
 
-	let component;
+	let component: HTMLElement;
 	export let tip = '';
 	export let onClickFunction = () => {};
 

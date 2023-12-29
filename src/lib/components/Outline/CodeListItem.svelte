@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 	import updateImg from '$lib/assets/images/code-pull-request-solid.svg';
 	import copyImg from '$lib/assets/images/copy-solid.svg';
 	import downloadImg from '$lib/assets/images/file-code-regular.svg';
 
-	export let innerHTML;
+	export let innerHTMLString: string;
 </script>
 
 <div id="code-item-canvas">
@@ -13,7 +13,7 @@
 		<img src={updateImg} alt="update-icon" class="update-version" />
 	</div>
 	<div id="code">
-		{@html innerHTML}
+		{@html innerHTMLString}
 	</div>
 </div>
 

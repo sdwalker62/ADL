@@ -1,11 +1,11 @@
-<script>
-	export let innerHTML = '';
+<script lang="ts">
+	export let innerHTMLString = '';
 
-	innerHTML = `<table>${innerHTML}</table>`;
+	innerHTMLString = `<table>${innerHTMLString}</table>`;
 </script>
 
 <div id="table-item-canvas">
-	{@html innerHTML}
+	{@html innerHTMLString}
 </div>
 
 <style>

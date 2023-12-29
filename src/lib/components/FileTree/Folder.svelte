@@ -1,26 +1,26 @@
-<script>
+<script lang="ts">
 	import File from './File.svelte';
 	import FolderIcon from '$lib/assets/icons/FolderIcon.svelte';
 
+	interface File {
+		name: string;
+		path: string;
+		children?: Array<File>;
+	}
+
 	export let active = true;
-	export let name;
-	export let files;
+	export let name: string;
+	export let files: Array<File>;
 	let hovering = false;
 
-	/**
-	 * @param {string} word
-	 */
-	function capitalizeFirstLetter(word) {
+	function capitalizeFirstLetter(word: string) {
 		const firstLetter = word.charAt(0);
 		const firstLetterCap = firstLetter.toUpperCase();
 		const restOfWord = word.slice(1);
 		return firstLetterCap + restOfWord;
 	}
 
-	/**
-	 * @param {string} inStr
-	 */
-	function formatName(inStr) {
+	function formatName(inStr: string) {
 		inStr = inStr.replace('_', ' ');
 		const inStrSplit = inStr.split(' ');
 		if (inStrSplit.length > 1) {

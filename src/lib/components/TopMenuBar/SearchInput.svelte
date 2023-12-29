@@ -1,6 +1,5 @@
-<script>
+<script lang="ts">
 	import SearchIcon from '$lib/assets/icons/SearchIcon.svelte';
-	import searchIcon from '$lib/assets/images/search.svg';
 </script>
 
 <div id="search-canvas">
