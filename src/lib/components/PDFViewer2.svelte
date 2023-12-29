@@ -80,10 +80,13 @@
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
-		let scaleFactor = 2;
+		let scaleFactor = 4;
 		outputScale *= scaleFactor;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
+		const render = document.getElementById('pdf-render');
+		const renderWidth = render.offsetWidth;
+		const renderScaleCoefficient = renderWidth / Math.floor(viewport.width);
 		const outline = document.getElementById('pdf-outline');
 		const outlineWidth = outline.offsetWidth;
 		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
@@ -91,8 +94,14 @@
 			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
 			canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		} else {
-			canvas.style.width = Math.floor((viewport.width * outputScale) / scaleFactor - 20) + 'px';
-			canvas.style.height = Math.floor((viewport.height * outputScale) / scaleFactor - 20) + 'px';
+			canvas.style.width =
+				renderScaleCoefficient * Math.floor((viewport.width * outputScale) / scaleFactor - 20) -
+				40 +
+				'px';
+			canvas.style.height =
+				renderScaleCoefficient * Math.floor((viewport.height * outputScale) / scaleFactor - 20) -
+				40 +
+				'px';
 		}
 		var context = canvas.getContext('2d');
 		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
@@ -260,6 +269,7 @@
 		width: 100%;
 		align-items: center;
 		background-color: var(--background-1);
+		padding: 15px;
 	}
 
 	#pdf-outline {
@@ -274,9 +284,9 @@
 	}
 
 	.topbar {
-		display: flex;
-		flex-direction: row;
-		width: calc(100%-10px);
+		display: grid;
+		grid-template-columns: auto auto 200px;
+		width: 100%;
 		justify-content: space-between;
 		align-items: center;
 		font-family: var(--f-Medium);
@@ -297,6 +307,7 @@
 		display: flex;
 		flex-direction: row;
 		gap: 10px;
+		justify-content: center;
 	}
 
 	.cur-page-num {

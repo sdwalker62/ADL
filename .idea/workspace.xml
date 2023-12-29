@@ -6,7 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b64e5a3a-193f-469c-8209-15f493c3e32d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/components/Outline/MathListItem.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/Outline/MathListItem.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/docs/[...document]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/docs/[...document]/+page.svelte" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +75,7 @@
       <updated>1702950420953</updated>
       <workItem from="1702950422003" duration="4186000" />
       <workItem from="1703738549438" duration="215000" />
-      <workItem from="1703738762041" duration="2308000" />
+      <workItem from="1703738762041" duration="2309000" />
     </task>
     <servers />
   </component>
