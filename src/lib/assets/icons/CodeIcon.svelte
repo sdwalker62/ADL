@@ -1,5 +1,8 @@
-<script>
-	export let active = false;
+<script lang="ts">
+	import Cookie from 'js-cookie';
+	export let active = true;
+
+	Cookie.set('show-code-outline', active.toString());
 </script>
 
 <svg

@@ -1,8 +1,8 @@
 <script lang="ts">
+	import Cookie from 'js-cookie';
 	import updateImg from '$lib/assets/images/code-pull-request-solid.svg';
 	import copyImg from '$lib/assets/images/copy-solid.svg';
 	import downloadImg from '$lib/assets/images/file-code-regular.svg';
-
 	export let innerHTMLString: string;
 </script>
 

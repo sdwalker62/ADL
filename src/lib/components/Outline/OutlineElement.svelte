@@ -4,6 +4,11 @@
 	import MathListItem from '$lib/components/Outline/MathListItem.svelte';
 	import TableListItem from '$lib/components/Outline/TableListItem.svelte';
 	import H1ListItem from '$lib/components/Outline/H1ListItem.svelte';
+	import {
+		showCodeOutlineElements,
+		showMathOutlineElements,
+		showTableOutlineElements
+	} from '$lib/data/shared';
 
 	interface Node {
 		name: string;
@@ -37,11 +42,17 @@
 						sectionLevel={child.sectionLevel}
 					/>
 				{:else if child.tagName === 'code'}
-					<CodeListItem innerHTMLString={child.html} />
+					{#if $showCodeOutlineElements}
+						<CodeListItem innerHTMLString={child.html} />
+					{/if}
 				{:else if child.tagName === 'math'}
-					<MathListItem innerHTMLString={child.html} />
+					{#if $showMathOutlineElements}
+						<MathListItem innerHTMLString={child.html} />
+					{/if}
 				{:else if child.tagName === 'table'}
-					<TableListItem innerHTMLString={child.html} />
+					{#if $showTableOutlineElements}
+						<TableListItem innerHTMLString={child.html} />
+					{/if}
 				{:else if child.tagName.startsWith('s')}
 					<HeadingListItem name={child.name} rank={child.sectionLevel} html={child.html} />
 				{/if}

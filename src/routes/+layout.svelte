@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { beforeUpdate } from 'svelte';
-	import { colorTheme, showMainMenu } from '$lib/data/shared';
+	import {
+		colorTheme,
+		showMainMenu,
+		showCodeOutlineElements,
+		showMathOutlineElements,
+		showTableOutlineElements
+	} from '$lib/data/shared';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
 	import SiteNavigationLink from '$lib/components/MainModalMenu/SiteNavigationLink.svelte';
 	import ExternalNavigationLink from '$lib/components/MainModalMenu/ExternalNavigationLink.svelte';
@@ -21,11 +27,15 @@
 	import HomeIcon from '$lib/assets/icons/HomeIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
+	import Cookie from 'js-cookie';
 	import type { LayoutData } from './$types';
 
 	export let data: LayoutData;
 
 	$colorTheme = data.colorMode;
+	$showCodeOutlineElements = data.showCodeOutlineElements;
+	$showMathOutlineElements = data.showMathOutlineElements;
+	$showTableOutlineElements = data.showTableOutlineElements;
 
 	let leftPanelActive = true;
 	let folderActive = true;
@@ -101,14 +111,27 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="right-cluster">
-			<ToggleMenuItem active={codeActive}>
-				<CodeIcon active={codeActive} />
+			<ToggleMenuItem
+				active={codeActive}
+				on:click={() => {
+					Cookie.set('showCodeOutlineElements', (!$showCodeOutlineElements).toString());
+					$showCodeOutlineElements = !$showCodeOutlineElements;
+					console.log($showCodeOutlineElements);
+				}}
+			>
+				<CodeIcon active={$showCodeOutlineElements} />
 			</ToggleMenuItem>
 			<ToggleMenuItem active={mathActive}>
-				<MathIcon active={mathActive} />
+				<MathIcon
+					active={$showMathOutlineElements}
+					on:click={() => {
+						Cookie.set('showMathOutlineElements', (!$showMathOutlineElements).toString());
+						$showMathOutlineElements = !$showMathOutlineElements;
+					}}
+				/>
 			</ToggleMenuItem>
 			<ToggleMenuItem active={tableActive}>
-				<TableIcon active={tableActive} />
+				<TableIcon active={$showTableOutlineElements} />
 			</ToggleMenuItem>
 			<ToggleMenuItem active={rightPanelActive} onClickFunction={toggleRightPanel}>
 				<RightPanelIcon active={rightPanelActive} />
