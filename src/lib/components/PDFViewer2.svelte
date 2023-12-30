@@ -5,6 +5,7 @@
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
 	import stickybits from 'stickybits';
+	import { pdfScale } from '$lib/data/shared';
 
 	// This component is responsible for loading, viewing, and controlling
 	// pdfs in the browser. It uses Mozilla's pdf.js library for all of the
@@ -21,10 +22,14 @@
 	//
 	// https://stackoverflow.com/questions/44547585/generating-thumbnail-of-a-pdf-using-pdf-js
 
-	import { onMount } from 'svelte';
+	import { onMount, afterUpdate } from 'svelte';
 
 	export let doc: string;
 	export let root: string;
+	let pdfDoc: PDFDocumentProxy;
+	let observer: IntersectionObserver;
+
+	$: pdfScaleFactor = $pdfScale;
 
 	const thumbnailScale = 0.2,
 		pageScale = 2;
@@ -33,8 +38,7 @@
 		pdf: any,
 		pageCount = 0,
 		curPage = 1,
-		outline: HTMLElement,
-		curZoom = 100;
+		outline: HTMLElement;
 
 	async function pageBuilder(
 		pageNum: number,
@@ -93,11 +97,9 @@
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
 		let scaleFactor = 2;
-		let pdfScale = 1;
 		outputScale *= scaleFactor;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
-		const render = document.getElementById('pdf-render');
 		const renderWidth = mainCanvas!.offsetWidth - 30;
 
 		const outline = document.getElementById('pdf-outline');
@@ -107,16 +109,15 @@
 			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
 			canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		} else {
-			console.log(Math.floor((viewport.width * outputScale) / scaleFactor));
 			const renderScaleCoefficient =
 				renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
 			canvas.style.width =
-				pdfScale *
+				pdfScaleFactor *
 					renderScaleCoefficient *
 					Math.floor((viewport.width * outputScale) / scaleFactor) +
 				'px';
 			canvas.style.height =
-				pdfScale *
+				pdfScaleFactor *
 					renderScaleCoefficient *
 					Math.floor((viewport.height * outputScale) / scaleFactor) +
 				'px';
@@ -154,9 +155,9 @@
 		});
 	}
 
-	onMount(async () => {
+	afterUpdate(async () => {
 		// Keep certain elements in view for interaction
-		stickybits('pdf-top-bar');
+		// stickybits('pdf-top-bar');
 
 		// If the PDF is already rendered we do not need to re-render
 		if (!pdf) {
@@ -186,7 +187,7 @@
 					}
 				});
 			};
-			let observer = new IntersectionObserver(sectionIntersectionCallback, options);
+			observer = new IntersectionObserver(sectionIntersectionCallback, options);
 
 			// Load PDF from base64 encoding
 			const pdfData = window.atob(doc);
@@ -196,11 +197,11 @@
 				root + '/node_modules/pdfjs-dist/build/pdf.worker.js';
 
 			// Asynchronous download of PDF
-			let pdfDocument: PDFDocumentProxy = await pdfjsLib.getDocument({
+			pdfDoc = await pdfjsLib.getDocument({
 				data: pdfData
 			}).promise;
-			renderPages(pdfDocument, observer, 1);
-			pageCount = pdfDocument.numPages;
+			renderPages(pdfDoc, observer, 1);
+			pageCount = pdfDoc.numPages;
 
 			// page input event handler
 			let pageNumInput = document.getElementById('pdf-cur-page-num-input')! as HTMLInputElement;
@@ -240,12 +241,24 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
-			<button class="zoom-button">-</button>
+			<button
+				class="zoom-button"
+				on:click={() => {
+					if (pdfScaleFactor > 0.2) {
+						$pdfScale -= 0.1;
+					}
+				}}>-</button
+			>
 			<div class="zoom-level-row">
 				<ZoomIcon />
-				<span class="cur-zoom">{curZoom}%</span>
+				<span class="cur-zoom">{(100 * pdfScaleFactor).toFixed(1)}%</span>
 			</div>
-			<button class="zoom-button">+</button>
+			<button
+				class="zoom-button"
+				on:click={() => {
+					$pdfScale += 0.1;
+				}}>+</button
+			>
 		</div>
 		<div id="pdf-page-num-row">
 			<input type="text" id="pdf-cur-page-num-input" value={curPage} />
@@ -254,7 +267,9 @@
 		</div>
 	</div>
 	<div id="pdf-render-container">
-		<div id="pdf-render" bind:this={mainCanvas} />
+		{#key $pdfScale}
+			<div id="pdf-render" bind:this={mainCanvas} style="transform: scale(${pdfScaleFactor});" />
+		{/key}
 		<!-- <Outline  /> -->
 		<div id="pdf-outline" bind:this={outline} />
 	</div>
