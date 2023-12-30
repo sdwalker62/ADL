@@ -107,7 +107,7 @@ export const load: PageServerLoad = async ({ params }) => {
 			tagName: node.tagName.toLowerCase(),
 			sectionLevel: sectionLevel,
 			html: node.innerHTML,
-			children: [] as Array<object>
+			children: [] as object[]
 		};
 		if (node.children) {
 			for (const c of node.children) {

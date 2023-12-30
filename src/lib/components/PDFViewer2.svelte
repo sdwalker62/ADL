@@ -4,6 +4,7 @@
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
+	import stickybits from 'stickybits';
 
 	// This component is responsible for loading, viewing, and controlling
 	// pdfs in the browser. It uses Mozilla's pdf.js library for all of the
@@ -69,6 +70,16 @@
 		aRef.classList.add('pdf-thumbnail-link');
 		aRef.appendChild(thumbnailDiv);
 
+		aRef.addEventListener('click', (e: MouseEvent) => {
+			e.preventDefault();
+			pageDiv.scrollIntoView();
+			if (pageNum === 1) {
+				mainCanvas.scrollBy({ top: -55 });
+			} else {
+				mainCanvas.scrollBy({ top: -40 });
+			}
+		});
+
 		return {
 			aRef: aRef,
 			pageDiv: pageDiv
@@ -81,7 +92,7 @@
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
-		let scaleFactor = 4;
+		let scaleFactor = 2;
 		outputScale *= scaleFactor;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
@@ -138,6 +149,9 @@
 	}
 
 	onMount(async () => {
+		// Keep certain elements in view for interaction
+		stickybits('pdf-top-bar');
+
 		// If the PDF is already rendered we do not need to re-render
 		if (!pdf) {
 			// ======================= Intersection Observer =======================
@@ -155,20 +169,14 @@
 					if (entry.isIntersecting) {
 						const pageIndex = entry.target.id;
 						curPage = Number(pageIndex);
-						thumbnails.forEach(
-							/**
-							 * @param {HTMLElement} thumbnail
-							 */
-							(thumbnail) => {
-								const thumbnailIndex = thumbnail.id.split('-')[1];
-								if (thumbnailIndex === pageIndex) {
-									thumbnail.classList.add('active');
-								} else {
-									thumbnail.classList.remove('active');
-								}
+						thumbnails.forEach((thumbnail: HTMLElement) => {
+							const thumbnailIndex = thumbnail.id.split('-')[1];
+							if (thumbnailIndex === pageIndex) {
+								thumbnail.classList.add('active');
+							} else {
+								thumbnail.classList.remove('active');
 							}
-						);
-					} else {
+						});
 					}
 				});
 			};
@@ -185,15 +193,41 @@
 			let pdfDocument: PDFDocumentProxy = await pdfjsLib.getDocument({
 				data: pdfData
 			}).promise;
-			renderPages(pdfDocument, observer, 0);
+			renderPages(pdfDocument, observer, 1);
 			pageCount = pdfDocument.numPages;
+
+			// page input event handler
+			let pageNumInput = document.getElementById('pdf-cur-page-num-input')! as HTMLInputElement;
+			pageNumInput.addEventListener('keypress', (event) => {
+				if (event.key === 'Enter') {
+					event.preventDefault(); // cancel default action if one exists
+					const pageNumber = pageNumInput.value;
+					const pdfPage = document.getElementById(pageNumber.toString()) as HTMLDivElement;
+					pdfPage.scrollIntoView();
+					/*
+					I don't like this solution. There are numerous reasons this is a bad solution:
+						1. We cannot always expect this value to be correct as it will change with other 
+						changes to the geometry of the screen.
+						2. The value should be based on the element of the DOM, not arbitrary pixel values
+
+					For now this solution will stay, but we should come back and correct this!
+					TODO: FIX
+					THIS ALSO HAS TO BE DONE TO THE CLICK METHODS =(
+					*/
+					if (pageNumber === '1') {
+						mainCanvas.scrollBy({ top: -55 });
+					} else {
+						mainCanvas.scrollBy({ top: -40 });
+					}
+				}
+			});
 		}
 	});
 </script>
 
 <div id="pdf-container">
 	<!-- PDF Topbar -->
-	<div class="topbar">
+	<div id="pdf-top-bar">
 		<!-- Download -->
 		<DownloadIcon />
 		<!-- Page Zoom -->
@@ -205,22 +239,58 @@
 			</div>
 			<button class="zoom-button">+</button>
 		</div>
-
-		<!-- Page Navigation -->
-		<div class="page-num-row">
-			<span class="cur-page-num">{curPage}</span>
+		<div id="pdf-page-num-row">
+			<input type="text" id="pdf-cur-page-num-input" value={curPage} />
 			<span class="slash">/</span>
 			<span class="total-page-num">{pageCount}</span>
 		</div>
 	</div>
 	<div id="pdf-render-container">
 		<div id="pdf-render" bind:this={mainCanvas} />
-		<!-- <canvas  /> -->
+		<!-- <Outline  /> -->
 		<div id="pdf-outline" bind:this={outline} />
 	</div>
 </div>
 
 <style>
+	#pdf-top-bar {
+		/* Grid */
+		display: grid;
+		grid-template-columns: auto auto 200px;
+
+		/* Layout */
+		position: fixed;
+		width: calc(100% - 320px);
+		height: 1.5em;
+		padding: 10px;
+		justify-content: space-between;
+		align-items: center;
+
+		/* Text */
+		font-family: var(--f-Medium);
+		font-size: 1.5em;
+
+		/* Appearance */
+		background-color: var(--background-2);
+		border-top: 0;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 1px;
+		border-color: var(--font-1);
+		border-style: solid;
+	}
+
+	/* :global(.pdf-page canvas) {
+		border-radius: 40px;
+	} */
+
+	#pdf-cur-page-num-input {
+		width: 40px;
+		background: transparent;
+		color: var(--font-1);
+		border: none;
+	}
+
 	:global(.pdf-thumbnail-link) {
 		padding: 10px;
 		border-radius: 5px;
@@ -244,6 +314,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		overflow: hidden;
 	}
 
 	#pdf-render-container {
@@ -262,7 +333,10 @@
 		width: 100%;
 		align-items: center;
 		background-color: var(--background-1);
-		padding: 15px;
+		padding-top: 55px;
+		padding-right: 15px;
+		padding-bottom: 15px;
+		padding-left: 15px;
 	}
 
 	#pdf-outline {
@@ -274,25 +348,7 @@
 		background-color: var(--background-2);
 		padding: 15px;
 		gap: 10px;
-	}
-
-	.topbar {
-		display: grid;
-		grid-template-columns: auto auto 200px;
-		width: 100%;
-		justify-content: space-between;
-		align-items: center;
-		font-family: var(--f-Medium);
-		font-size: 1.5em;
-		border-top: 0;
-		border-left: 0;
-		border-right: 0;
-		border-bottom: 1px;
-		border-color: var(--font-1);
-		border-style: solid;
-		padding: 10px;
-		background-color: var(--background-2);
-		height: 1.5em;
+		margin-top: 40px;
 	}
 
 	/* ============= PAGE NUMS ============= */
@@ -305,6 +361,8 @@
 
 	.cur-page-num {
 		color: var(--font-2);
+		width: 20px;
+		border: 0;
 	}
 
 	.slash {

@@ -167,3 +167,10 @@
 	font-family: 'SF-Pro-Text-Regular';
 	src: url('../fonts/SF-Pro-Text-Regular.otf');
 }
+
+/* ================================================================================= */
+
+@font-face {
+	font-family: 'KaTeX_Main';
+	src: url('../fonts/KaTeX_Main-Regular.woff2');
+}

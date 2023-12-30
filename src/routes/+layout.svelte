@@ -70,9 +70,9 @@
 			<ToggleMenuItem active={folderActive}>
 				<DriveIcon active={folderActive} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={serverActive}>
+			<!-- <ToggleMenuItem active={serverActive}>
 				<ServerIcon active={serverActive} />
-			</ToggleMenuItem>
+			</ToggleMenuItem> -->
 		</svelte:fragment>
 
 		<svelte:fragment slot="left-search">
@@ -86,12 +86,12 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="right-search">
-			<ActionMenuItem tip="Decrease Document Font Size">
+			<!-- <ActionMenuItem tip="Decrease Document Font Size">
 				<DecreaseFontIcon />
 			</ActionMenuItem>
 			<ActionMenuItem tip="Increase Document Font Size">
 				<IncreaseFontIcon />
-			</ActionMenuItem>
+			</ActionMenuItem> -->
 		</svelte:fragment>
 
 		<svelte:fragment slot="right-cluster">
