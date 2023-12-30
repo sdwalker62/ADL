@@ -229,7 +229,9 @@
 	<!-- PDF Topbar -->
 	<div id="pdf-top-bar">
 		<!-- Download -->
-		<DownloadIcon />
+		<div id="pdf-download-icon">
+			<DownloadIcon />
+		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
 			<button class="zoom-button">-</button>
@@ -256,13 +258,13 @@
 	#pdf-top-bar {
 		/* Grid */
 		display: grid;
-		grid-template-columns: auto auto 200px;
+		grid-template-columns: 60px calc(100% - 240px) 180px;
 
 		/* Layout */
 		position: fixed;
 		width: calc(100% - 320px);
-		height: 1.5em;
-		padding: 10px;
+		/* height: 1.5em; */
+		padding: 0px;
 		justify-content: space-between;
 		align-items: center;
 
@@ -280,9 +282,15 @@
 		border-style: solid;
 	}
 
-	/* :global(.pdf-page canvas) {
-		border-radius: 40px;
-	} */
+	#pdf-download-icon {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+	}
+
+	:global(.pdf-page canvas) {
+		border-radius: 4px;
+	}
 
 	#pdf-cur-page-num-input {
 		width: 40px;
@@ -352,7 +360,7 @@
 	}
 
 	/* ============= PAGE NUMS ============= */
-	.page-num-row {
+	#pdf-page-num-row {
 		display: flex;
 		flex-direction: row;
 		gap: 10px;
@@ -380,7 +388,9 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		justify-content: center;
 		gap: 5px;
+		margin-left: -60px;
 	}
 
 	.zoom-level-row {
