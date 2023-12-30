@@ -27,7 +27,7 @@
 	export let root: string;
 
 	const thumbnailScale = 0.2,
-		pageScale = 1;
+		pageScale = 2;
 
 	let mainCanvas: HTMLElement,
 		pdf: any,
@@ -93,12 +93,13 @@
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
 		let scaleFactor = 2;
+		let pdfScale = 1;
 		outputScale *= scaleFactor;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
 		const render = document.getElementById('pdf-render');
-		const renderWidth = render!.offsetWidth;
-		const renderScaleCoefficient = renderWidth / Math.floor(viewport.width);
+		const renderWidth = mainCanvas!.offsetWidth - 30;
+
 		const outline = document.getElementById('pdf-outline');
 		const outlineWidth = outline!.offsetWidth;
 		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
@@ -106,13 +107,18 @@
 			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
 			canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		} else {
+			console.log(Math.floor((viewport.width * outputScale) / scaleFactor));
+			const renderScaleCoefficient =
+				renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
 			canvas.style.width =
-				renderScaleCoefficient * Math.floor((viewport.width * outputScale) / scaleFactor - 20) -
-				40 +
+				pdfScale *
+					renderScaleCoefficient *
+					Math.floor((viewport.width * outputScale) / scaleFactor) +
 				'px';
 			canvas.style.height =
-				renderScaleCoefficient * Math.floor((viewport.height * outputScale) / scaleFactor - 20) -
-				40 +
+				pdfScale *
+					renderScaleCoefficient *
+					Math.floor((viewport.height * outputScale) / scaleFactor) +
 				'px';
 		}
 		var context = canvas.getContext('2d');
@@ -340,7 +346,7 @@
 		flex-direction: column;
 		overflow: scroll;
 		height: 100%;
-		width: 100%;
+		width: calc(100% - 30px);
 		align-items: center;
 		background-color: var(--background-1);
 		padding-top: 55px;
