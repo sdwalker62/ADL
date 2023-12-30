@@ -295,8 +295,10 @@
 	#pdf-cur-page-num-input {
 		width: 40px;
 		background: transparent;
-		color: var(--font-1);
+		color: var(--font-2);
 		border: none;
+		text-align: end;
+		margin-left: -30px;
 	}
 
 	:global(.pdf-thumbnail-link) {
@@ -367,11 +369,11 @@
 		justify-content: center;
 	}
 
-	.cur-page-num {
+	/* .cur-page-num {
 		color: var(--font-2);
 		width: 20px;
 		border: 0;
-	}
+	} */
 
 	.slash {
 		color: var(--font-2);
