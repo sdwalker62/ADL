@@ -1,5 +1,5 @@
 <script lang="ts">
-	import _ from 'lodash';
+	import _, { set } from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
@@ -28,6 +28,12 @@
 	export let root: string;
 	let pdfDoc: PDFDocumentProxy;
 	let observer: IntersectionObserver;
+	let alreadyRenderedIndices: Set<number> = new Set();
+
+	// PDF Rendering Settings
+	const renderNeighborhoodRadius = 2;
+	const renderInFocusScale = 2;
+	const renderOutOfFocusScale = 0.01;
 
 	$: pdfScaleFactor = $pdfScale;
 
@@ -239,6 +245,39 @@
 		});
 	}
 
+	async function drawPage(page: HTMLDivElement, pageNum: number, scalingFactor = 1) {
+		// console.log('rendering page: ' + pageNum);
+		let canvas = page.querySelector('canvas')!;
+		const pdfPage = await pdfDoc.getPage(pageNum);
+		let viewport = pdfPage.getViewport({ scale: 1 });
+		var context = canvas.getContext('2d');
+		let outputScale = window.devicePixelRatio || 1;
+		outputScale *= scalingFactor;
+		canvas.width = Math.floor(viewport.width * outputScale);
+		canvas.height = Math.floor(viewport.height * outputScale);
+		const renderWidth = mainCanvas!.offsetWidth - 30;
+		const renderScaleCoefficient =
+			renderWidth / Math.floor((viewport.width * outputScale) / outputScale);
+		canvas.style.width =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.width * outputScale) / outputScale) +
+			'px';
+		canvas.style.height =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.height * outputScale) / outputScale) +
+			'px';
+
+		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+		const renderParams = {
+			canvasContext: context!,
+			viewport: viewport,
+			transform: transform!
+		};
+		pdfPage.render(renderParams).promise;
+	}
+
 	onMount(async () => {
 		// Keep certain elements in view for interaction
 		// stickybits('pdf-top-bar');
@@ -261,49 +300,46 @@
 					if (entry.isIntersecting) {
 						const pageIndex = entry.target.id;
 						curPage = Number(pageIndex);
+						/*
+						   To optimize rendering performance we will only render pages within a
+						   radius of the currently viewed page. This radius value can be changed
+						   at the top of this file (renderNeighborhoodRadius). All pages outside
+						   of this neighborhood will be rendered at a reduced scale. Without this
+						   optimization large PDFs will crash the browser. The scale at whic the
+						   in-focus pages are rendered can also be changed at the top of this file
+						   under the variable renderInFocusScale. Similarly, the scale at which
+						   out-of-focus pages are rendered can be changed under the variable
+						   renderOutOfFocusScale.
+						*/
 						pdfPages.forEach(async (page: HTMLDivElement) => {
-							// console.log(pageIndex);
-							const pageNum = page.id;
-							const nextPageNumber = Number(pageIndex) + 1;
-							const nextPageString = nextPageNumber.toString();
-							if (pageIndex === pageNum || pageNum === nextPageString) {
-								console.log('rendering page: ' + pageNum);
-								let canvas = page.querySelector('canvas')!;
-								const pdfPage = await pdfDoc.getPage(Number(pageNum));
-								let viewport = pdfPage.getViewport({ scale: 1 });
-								var context = canvas.getContext('2d');
-								let scalingFactor = 1;
-								let outputScale = window.devicePixelRatio || 1;
-								outputScale *= scalingFactor;
-								canvas.width = Math.floor(viewport.width * outputScale);
-								canvas.height = Math.floor(viewport.height * outputScale);
-								const renderWidth = mainCanvas!.offsetWidth - 30;
-								const renderScaleCoefficient =
-									renderWidth / Math.floor((viewport.width * outputScale) / outputScale);
-								canvas.style.width =
-									pdfScaleFactor *
-										renderScaleCoefficient *
-										Math.floor((viewport.width * outputScale) / outputScale) +
-									'px';
-								canvas.style.height =
-									pdfScaleFactor *
-										renderScaleCoefficient *
-										Math.floor((viewport.height * outputScale) / outputScale) +
-									'px';
+							const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
+							const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
+							const checkIfInNeighborhood = (pageNum: number) => {
+								if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
+									return true;
+								} else {
+									return false;
+								}
+							};
 
-								let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-								const renderParams = {
-									canvasContext: context!,
-									viewport: viewport,
-									transform: transform!
-								};
-								pdfPage.render(renderParams).promise;
+							const pageNum = Number(page.id);
+							if (checkIfInNeighborhood(pageNum)) {
+								if (!alreadyRenderedIndices.has(pageNum)) {
+									alreadyRenderedIndices.add(pageNum);
+									drawPage(page, pageNum, renderInFocusScale);
+								}
+							} else {
+								if (alreadyRenderedIndices.has(pageNum)) {
+									drawPage(page, pageNum, renderOutOfFocusScale);
+									alreadyRenderedIndices.delete(pageNum);
+								}
 							}
 						});
 						thumbnails.forEach((thumbnail: HTMLElement) => {
 							const thumbnailIndex = thumbnail.id.split('-')[1];
 							if (thumbnailIndex === pageIndex) {
 								thumbnail.classList.add('active');
+								thumbnail.scrollIntoView();
 							} else {
 								thumbnail.classList.remove('active');
 							}
