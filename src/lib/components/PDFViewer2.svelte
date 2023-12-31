@@ -43,12 +43,17 @@
 	async function pageBuilder(
 		pageNum: number,
 		pdfDocument: PDFDocumentProxy,
-		observer: IntersectionObserver
+		observer: IntersectionObserver,
+		highQuality: boolean
 	) {
 		const pdfPage = await pdfDocument.getPage(pageNum);
-		const thumbnailCanvas = renderPage(pdfPage, thumbnailScale, true);
-		const pageCanvas = renderPage(pdfPage, pageScale);
-
+		const thumbnailCanvas = renderThumbnail(pdfPage, thumbnailScale);
+		let pageCanvas;
+		if (highQuality) {
+			pageCanvas = renderPage(pdfPage, pageScale, 1);
+		} else {
+			pageCanvas = renderPage(pdfPage, pageScale);
+		}
 		// ================= PAGE =================
 		let pageDiv = document.createElement('div');
 		pageDiv.append(pageCanvas);
@@ -88,40 +93,24 @@
 			aRef: aRef,
 			pageDiv: pageDiv
 		};
-		// outline.appendChild(aRef);
-		// mainCanvas.appendChild(pageDiv);
 	}
 
-	function renderPage(page: PDFPageProxy, scale: number, isThumbnail = false) {
+	/*
+		This function renders a single PDF page thumbnail to a canvas element.
+	*/
+	function renderThumbnail(page: PDFPageProxy, scale: number) {
+		// set up canvas for rendering
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
 		let outputScale = window.devicePixelRatio || 1;
-		let scaleFactor = 2;
-		outputScale *= scaleFactor;
+		outputScale *= 1;
 		canvas.width = Math.floor(viewport.width * outputScale);
 		canvas.height = Math.floor(viewport.height * outputScale);
-		const renderWidth = mainCanvas!.offsetWidth - 30;
-
 		const outline = document.getElementById('pdf-outline');
 		const outlineWidth = outline!.offsetWidth;
 		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
-		if (isThumbnail) {
-			canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
-			canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
-		} else {
-			const renderScaleCoefficient =
-				renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
-			canvas.style.width =
-				pdfScaleFactor *
-					renderScaleCoefficient *
-					Math.floor((viewport.width * outputScale) / scaleFactor) +
-				'px';
-			canvas.style.height =
-				pdfScaleFactor *
-					renderScaleCoefficient *
-					Math.floor((viewport.height * outputScale) / scaleFactor) +
-				'px';
-		}
+		canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
+		canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		var context = canvas.getContext('2d');
 		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 		const renderParams = {
@@ -134,9 +123,103 @@
 		return canvas;
 	}
 
+	// function adjustWidthAndHeight(
+	// 	canvas: HTMLCanvasElement,
+	// 	scaleCoefficient: number = 0.1
+	// ) {
+	// 	const viewport = page.getViewport({ scale: scale });
+	// 	let outputScale = window.devicePixelRatio || 1;
+	// 	let scaleFactor = scaleCoefficient;
+	// 	outputScale *= scaleFactor;
+	// 	canvas.width = Math.floor(viewport.width * outputScale);
+	// 	canvas.height = Math.floor(viewport.height * outputScale);
+	// 	const renderWidth = mainCanvas!.offsetWidth - 30;
+	// 	const renderScaleCoefficient =
+	// 		renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
+	// 	canvas.style.width =
+	// 		pdfScaleFactor *
+	// 			renderScaleCoefficient *
+	// 			Math.floor((viewport.width * outputScale) / scaleFactor) +
+	// 		'px';
+	// 	canvas.style.height =
+	// 		pdfScaleFactor *
+	// 			renderScaleCoefficient *
+	// 			Math.floor((viewport.height * outputScale) / scaleFactor) +
+	// 		'px';
+	// }
+
+	function setWidthAndHeight(
+		canvas: HTMLCanvasElement,
+		page: PDFPageProxy,
+		scale: number,
+		scaleCoefficient: number = 0.1
+	) {
+		const viewport = page.getViewport({ scale: scale });
+		let outputScale = window.devicePixelRatio || 1;
+		let scaleFactor = scaleCoefficient;
+		outputScale *= scaleFactor;
+		canvas.width = Math.floor(viewport.width * outputScale);
+		canvas.height = Math.floor(viewport.height * outputScale);
+		const renderWidth = mainCanvas!.offsetWidth - 30;
+		const renderScaleCoefficient =
+			renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
+		canvas.style.width =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.width * outputScale) / scaleFactor) +
+			'px';
+		canvas.style.height =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.height * outputScale) / scaleFactor) +
+			'px';
+	}
+
+	/*
+		This function renders a single PDF page to a canvas element.
+	*/
+	function renderPage(page: PDFPageProxy, scale: number, scaleCoefficient: number = 0.1) {
+		// set up canvas for rendering
+		let viewport = page.getViewport({ scale: scale });
+		let canvas = document.createElement('canvas');
+		let outputScale = window.devicePixelRatio || 1;
+		let scaleFactor = scaleCoefficient;
+		outputScale *= scaleFactor;
+		canvas.width = Math.floor(viewport.width * outputScale);
+		canvas.height = Math.floor(viewport.height * outputScale);
+		const renderWidth = mainCanvas!.offsetWidth - 30;
+		const renderScaleCoefficient =
+			renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
+		canvas.style.width =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.width * outputScale) / scaleFactor) +
+			'px';
+		canvas.style.height =
+			pdfScaleFactor *
+				renderScaleCoefficient *
+				Math.floor((viewport.height * outputScale) / scaleFactor) +
+			'px';
+		// setWidthAndHeight(canvas, page, scale, scaleCoefficient);
+		var context = canvas.getContext('2d');
+		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+		const renderParams = {
+			canvasContext: context!,
+			viewport: viewport,
+			transform: transform!
+		};
+		// render page to canvas and return it to caller
+		page.render(renderParams).promise;
+		return canvas;
+	}
+
+	/*
+		This function renders all pages of a PDF document to the DOM.
+	*/
 	function renderPages(
 		pdfDocument: PDFDocumentProxy,
 		observer: IntersectionObserver,
+		mainPage: number = 1,
 		startingPage: number,
 		endingPage: number | null = null
 	) {
@@ -149,13 +232,14 @@
 		}
 		let documentPages = _.range(startingPage, lastPage);
 		documentPages.forEach(async (pageNum) => {
-			const renderObjects = await pageBuilder(pageNum, pdfDocument, observer);
+			const highQuality = pageNum === mainPage ? true : false;
+			const renderObjects = await pageBuilder(pageNum, pdfDocument, observer, highQuality);
 			outline.appendChild(renderObjects.aRef);
 			mainCanvas.appendChild(renderObjects.pageDiv);
 		});
 	}
 
-	afterUpdate(async () => {
+	onMount(async () => {
 		// Keep certain elements in view for interaction
 		// stickybits('pdf-top-bar');
 
@@ -172,10 +256,50 @@
 
 			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
 				let thumbnails = outline.querySelectorAll('a');
+				let pdfPages: NodeListOf<HTMLDivElement> = mainCanvas.querySelectorAll('.pdf-page');
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						const pageIndex = entry.target.id;
 						curPage = Number(pageIndex);
+						pdfPages.forEach(async (page: HTMLDivElement) => {
+							// console.log(pageIndex);
+							const pageNum = page.id;
+							const nextPageNumber = Number(pageIndex) + 1;
+							const nextPageString = nextPageNumber.toString();
+							if (pageIndex === pageNum || pageNum === nextPageString) {
+								console.log('rendering page: ' + pageNum);
+								let canvas = page.querySelector('canvas')!;
+								const pdfPage = await pdfDoc.getPage(Number(pageNum));
+								let viewport = pdfPage.getViewport({ scale: 1 });
+								var context = canvas.getContext('2d');
+								let scalingFactor = 1;
+								let outputScale = window.devicePixelRatio || 1;
+								outputScale *= scalingFactor;
+								canvas.width = Math.floor(viewport.width * outputScale);
+								canvas.height = Math.floor(viewport.height * outputScale);
+								const renderWidth = mainCanvas!.offsetWidth - 30;
+								const renderScaleCoefficient =
+									renderWidth / Math.floor((viewport.width * outputScale) / outputScale);
+								canvas.style.width =
+									pdfScaleFactor *
+										renderScaleCoefficient *
+										Math.floor((viewport.width * outputScale) / outputScale) +
+									'px';
+								canvas.style.height =
+									pdfScaleFactor *
+										renderScaleCoefficient *
+										Math.floor((viewport.height * outputScale) / outputScale) +
+									'px';
+
+								let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+								const renderParams = {
+									canvasContext: context!,
+									viewport: viewport,
+									transform: transform!
+								};
+								pdfPage.render(renderParams).promise;
+							}
+						});
 						thumbnails.forEach((thumbnail: HTMLElement) => {
 							const thumbnailIndex = thumbnail.id.split('-')[1];
 							if (thumbnailIndex === pageIndex) {
@@ -200,7 +324,8 @@
 			pdfDoc = await pdfjsLib.getDocument({
 				data: pdfData
 			}).promise;
-			renderPages(pdfDoc, observer, 1);
+
+			renderPages(pdfDoc, observer, 1, 1);
 			pageCount = pdfDoc.numPages;
 
 			// page input event handler
