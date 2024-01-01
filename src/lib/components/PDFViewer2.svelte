@@ -1,10 +1,9 @@
 <script lang="ts">
-	import _, { set } from 'lodash';
+	import _ from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
-	import stickybits from 'stickybits';
 	import { pdfScale } from '$lib/data/shared';
 
 	// This component is responsible for loading, viewing, and controlling
@@ -22,10 +21,18 @@
 	//
 	// https://stackoverflow.com/questions/44547585/generating-thumbnail-of-a-pdf-using-pdf-js
 
-	import { onMount, afterUpdate } from 'svelte';
+	import { onMount } from 'svelte';
 
+	// #region Props
 	export let doc: string;
 	export let root: string;
+	// #endregion
+
+	// #region Reactive Declarations
+	$: pdfScaleFactor = $pdfScale;
+	// #endregion
+
+	// #region Local Variables
 	let pdfDoc: PDFDocumentProxy;
 	let observer: IntersectionObserver;
 	let alreadyRenderedIndices: Set<number> = new Set();
@@ -34,49 +41,40 @@
 	const renderNeighborhoodRadius = 2;
 	const renderInFocusScale = 2;
 	const renderOutOfFocusScale = 0.01;
-
-	$: pdfScaleFactor = $pdfScale;
+	let isFirstPageLoad = true;
 
 	const thumbnailScale = 0.2,
 		pageScale = 2;
 
 	let mainCanvas: HTMLElement,
-		pdf: any,
 		pageCount = 0,
 		curPage = 1,
 		outline: HTMLElement;
+	let pdfContainer: HTMLDivElement;
+	let pdfCurPageInput: HTMLInputElement;
+	// #endregion
 
-	async function pageBuilder(
+	/**
+	 * This function is responsible for rendering the thumbnail preview of a PDF page.
+	 *
+	 * CALLS: {renderThumbnailCanvas}
+	 */
+	function thumbnailHTMLFactory(
 		pageNum: number,
-		pdfDocument: PDFDocumentProxy,
-		observer: IntersectionObserver,
-		highQuality: boolean
-	) {
-		const pdfPage = await pdfDocument.getPage(pageNum);
-		const thumbnailCanvas = renderThumbnail(pdfPage, thumbnailScale);
-		let pageCanvas;
-		if (highQuality) {
-			pageCanvas = renderPage(pdfPage, pageScale, 1);
-		} else {
-			pageCanvas = renderPage(pdfPage, pageScale);
-		}
-		// ================= PAGE =================
-		let pageDiv = document.createElement('div');
-		pageDiv.append(pageCanvas);
-		pageDiv.classList.add('pdf-page');
-		pageDiv.id = `${pageNum}`;
-		observer.observe(pageDiv);
+		pdfPage: PDFPageProxy,
+		pdfPageDiv: HTMLDivElement
+	): HTMLAnchorElement {
+		const thumbnailCanvas = renderThumbnailCanvas(pdfPage, thumbnailScale);
 
-		// ================= THUMBNAIL =================
-		// create division element for page number
-		let pageIndicator = document.createElement('div');
-		pageIndicator.classList.add('pdf-thumbnail-pageIndex');
-		pageIndicator.innerHTML = `<span>${pageNum}</span>`;
+		// create a div to hold the page number
+		let pageIndicatorDiv = document.createElement('div');
+		pageIndicatorDiv.classList.add('pdf-thumbnail-pageIndex');
+		pageIndicatorDiv.innerHTML = `<span>${pageNum}</span>`;
 
-		// create division element to hold thumbnail contents
+		// create a div to hold the canvas and page number
 		let thumbnailDiv = document.createElement('div');
 		thumbnailDiv.appendChild(thumbnailCanvas);
-		thumbnailDiv.appendChild(pageIndicator);
+		thumbnailDiv.appendChild(pageIndicatorDiv);
 
 		// create an anchor element to link to page
 		let aRef = document.createElement('a');
@@ -87,7 +85,7 @@
 
 		aRef.addEventListener('click', (e: MouseEvent) => {
 			e.preventDefault();
-			pageDiv.scrollIntoView();
+			pdfPageDiv.scrollIntoView();
 			if (pageNum === 1) {
 				mainCanvas.scrollBy({ top: -55 });
 			} else {
@@ -95,16 +93,109 @@
 			}
 		});
 
-		return {
-			aRef: aRef,
-			pageDiv: pageDiv
-		};
+		return aRef;
 	}
+
+	/**
+	 * This function is responsible for rendering the main PDF page.
+	 *
+	 * CALLS: {renderPDFPageCanvas}
+	 */
+	function pdfPageHTMLFactory(
+		pageNum: number,
+		pdfPage: PDFPageProxy,
+		observer: IntersectionObserver,
+		highQuality: boolean
+	): HTMLDivElement {
+		let pageCanvas;
+		if (highQuality) {
+			pageCanvas = renderPDFPageCanvas(pdfPage, pageScale, 1);
+		} else {
+			pageCanvas = renderPDFPageCanvas(pdfPage, pageScale);
+		}
+
+		// create a div to hold the canvas
+		let pageDiv = document.createElement('div');
+		pageDiv.append(pageCanvas);
+		pageDiv.classList.add('pdf-page');
+		pageDiv.id = `${pageNum}`;
+		observer.observe(pageDiv);
+
+		return pageDiv;
+	}
+
+	/**
+	 * Callback that is triggered whenever a new PDF page is scrolled into view.
+	 *
+	 * CALLS: {drawPage}
+	 */
+	const pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
+		let thumbnails = outline.querySelectorAll('a');
+		let pdfPages: NodeListOf<HTMLDivElement> =
+			mainCanvas.querySelectorAll('.pdf-page');
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				const pageIndex = entry.target.id;
+				curPage = Number(pageIndex);
+				/*
+					To optimize rendering performance we will only render pages within a
+					radius of the currently viewed page. This radius value can be changed
+					at the top of this file (renderNeighborhoodRadius). All pages outside
+					of this neighborhood will be rendered at a reduced scale. Without this
+					optimization large PDFs will crash the browser. The scale at whic the
+					in-focus pages are rendered can also be changed at the top of this file
+					under the variable renderInFocusScale. Similarly, the scale at which
+					out-of-focus pages are rendered can be changed under the variable
+					renderOutOfFocusScale.
+				*/
+				const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
+				const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
+				if (isFirstPageLoad) {
+					for (let i = 1; i <= neighborHoodUB; i++) {
+						alreadyRenderedIndices.add(i);
+					}
+					isFirstPageLoad = false;
+				} else {
+					pdfPages.forEach(async (page: HTMLDivElement) => {
+						const pageNum = Number(page.id);
+						const checkIfInNeighborhood = (pageNum: number) => {
+							if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
+								return true;
+							} else {
+								return false;
+							}
+						};
+						if (checkIfInNeighborhood(pageNum)) {
+							if (!alreadyRenderedIndices.has(pageNum)) {
+								alreadyRenderedIndices.add(pageNum);
+								drawPage(page, pageNum, renderInFocusScale);
+							}
+						} else {
+							if (alreadyRenderedIndices.has(pageNum)) {
+								drawPage(page, pageNum, renderOutOfFocusScale);
+								alreadyRenderedIndices.delete(pageNum);
+							}
+						}
+					});
+				}
+
+				thumbnails.forEach((thumbnail: HTMLElement) => {
+					const thumbnailIndex = thumbnail.id.split('-')[1];
+					if (thumbnailIndex === pageIndex) {
+						thumbnail.classList.add('active');
+						thumbnail.scrollIntoView();
+					} else {
+						thumbnail.classList.remove('active');
+					}
+				});
+			}
+		});
+	};
 
 	/*
 		This function renders a single PDF page thumbnail to a canvas element.
 	*/
-	function renderThumbnail(page: PDFPageProxy, scale: number) {
+	function renderThumbnailCanvas(page: PDFPageProxy, scale: number) {
 		// set up canvas for rendering
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
@@ -115,10 +206,13 @@
 		const outline = document.getElementById('pdf-outline');
 		const outlineWidth = outline!.offsetWidth;
 		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
-		canvas.style.width = outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
-		canvas.style.height = outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
+		canvas.style.width =
+			outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
+		canvas.style.height =
+			outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
 		var context = canvas.getContext('2d');
-		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+		let transform =
+			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 		const renderParams = {
 			canvasContext: context!,
 			viewport: viewport,
@@ -129,62 +223,14 @@
 		return canvas;
 	}
 
-	// function adjustWidthAndHeight(
-	// 	canvas: HTMLCanvasElement,
-	// 	scaleCoefficient: number = 0.1
-	// ) {
-	// 	const viewport = page.getViewport({ scale: scale });
-	// 	let outputScale = window.devicePixelRatio || 1;
-	// 	let scaleFactor = scaleCoefficient;
-	// 	outputScale *= scaleFactor;
-	// 	canvas.width = Math.floor(viewport.width * outputScale);
-	// 	canvas.height = Math.floor(viewport.height * outputScale);
-	// 	const renderWidth = mainCanvas!.offsetWidth - 30;
-	// 	const renderScaleCoefficient =
-	// 		renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
-	// 	canvas.style.width =
-	// 		pdfScaleFactor *
-	// 			renderScaleCoefficient *
-	// 			Math.floor((viewport.width * outputScale) / scaleFactor) +
-	// 		'px';
-	// 	canvas.style.height =
-	// 		pdfScaleFactor *
-	// 			renderScaleCoefficient *
-	// 			Math.floor((viewport.height * outputScale) / scaleFactor) +
-	// 		'px';
-	// }
-
-	function setWidthAndHeight(
-		canvas: HTMLCanvasElement,
+	/*
+		This function renders a single PDF page to a canvas element.
+	*/
+	function renderPDFPageCanvas(
 		page: PDFPageProxy,
 		scale: number,
 		scaleCoefficient: number = 0.1
 	) {
-		const viewport = page.getViewport({ scale: scale });
-		let outputScale = window.devicePixelRatio || 1;
-		let scaleFactor = scaleCoefficient;
-		outputScale *= scaleFactor;
-		canvas.width = Math.floor(viewport.width * outputScale);
-		canvas.height = Math.floor(viewport.height * outputScale);
-		const renderWidth = mainCanvas!.offsetWidth - 30;
-		const renderScaleCoefficient =
-			renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
-		canvas.style.width =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.width * outputScale) / scaleFactor) +
-			'px';
-		canvas.style.height =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.height * outputScale) / scaleFactor) +
-			'px';
-	}
-
-	/*
-		This function renders a single PDF page to a canvas element.
-	*/
-	function renderPage(page: PDFPageProxy, scale: number, scaleCoefficient: number = 0.1) {
 		// set up canvas for rendering
 		let viewport = page.getViewport({ scale: scale });
 		let canvas = document.createElement('canvas');
@@ -208,7 +254,8 @@
 			'px';
 		// setWidthAndHeight(canvas, page, scale, scaleCoefficient);
 		var context = canvas.getContext('2d');
-		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+		let transform =
+			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 		const renderParams = {
 			canvasContext: context!,
 			viewport: viewport,
@@ -222,13 +269,13 @@
 	/*
 		This function renders all pages of a PDF document to the DOM.
 	*/
-	function renderPages(
+	async function renderPages(
 		pdfDocument: PDFDocumentProxy,
 		observer: IntersectionObserver,
 		mainPage: number = 1,
 		startingPage: number,
 		endingPage: number | null = null
-	) {
+	): Promise<void> {
 		// PDFs are 1-based
 		let lastPage;
 		if (endingPage) {
@@ -238,15 +285,20 @@
 		}
 		let documentPages = _.range(startingPage, lastPage);
 		documentPages.forEach(async (pageNum) => {
+			const page = await pdfDocument.getPage(pageNum);
 			const highQuality = pageNum === mainPage ? true : false;
-			const renderObjects = await pageBuilder(pageNum, pdfDocument, observer, highQuality);
-			outline.appendChild(renderObjects.aRef);
-			mainCanvas.appendChild(renderObjects.pageDiv);
+			const pageDiv = pdfPageHTMLFactory(pageNum, page, observer, highQuality);
+			const thumbnailDiv = thumbnailHTMLFactory(pageNum, page, pageDiv);
+			outline.appendChild(thumbnailDiv);
+			mainCanvas.appendChild(pageDiv);
 		});
 	}
 
-	async function drawPage(page: HTMLDivElement, pageNum: number, scalingFactor = 1) {
-		// console.log('rendering page: ' + pageNum);
+	async function drawPage(
+		page: HTMLDivElement,
+		pageNum: number,
+		scalingFactor = 1
+	) {
 		let canvas = page.querySelector('canvas')!;
 		const pdfPage = await pdfDoc.getPage(pageNum);
 		let viewport = pdfPage.getViewport({ scale: 1 });
@@ -269,7 +321,8 @@
 				Math.floor((viewport.height * outputScale) / outputScale) +
 			'px';
 
-		let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+		let transform =
+			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 		const renderParams = {
 			canvasContext: context!,
 			viewport: viewport,
@@ -279,100 +332,37 @@
 	}
 
 	onMount(async () => {
-		// Keep certain elements in view for interaction
-		// stickybits('pdf-top-bar');
+		// #region Itersection Observer Setup
+		const interceptHeight = 40 - 0.99 * pdfContainer.clientHeight;
+		let options = {
+			root: pdfContainer,
+			thresholds: _.range(0, 1, 0.1),
+			rootMargin: `40px 0px ${interceptHeight}px 0px`
+		};
 
-		// If the PDF is already rendered we do not need to re-render
-		if (!pdf) {
-			// ======================= Intersection Observer =======================
-			const scannableElement = document.getElementById('pdf-container');
-			const interceptHeight = 40 - 0.99 * scannableElement!.clientHeight;
-			let options = {
-				root: scannableElement,
-				thresholds: _.range(0, 1, 0.1),
-				rootMargin: `40px 0px ${interceptHeight}px 0px`
-			};
+		observer = new IntersectionObserver(pageVisibilityCallback, options);
+		// #endregion
 
-			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
-				let thumbnails = outline.querySelectorAll('a');
-				let pdfPages: NodeListOf<HTMLDivElement> = mainCanvas.querySelectorAll('.pdf-page');
-				entries.forEach((entry) => {
-					if (entry.isIntersecting) {
-						const pageIndex = entry.target.id;
-						curPage = Number(pageIndex);
-						/*
-						   To optimize rendering performance we will only render pages within a
-						   radius of the currently viewed page. This radius value can be changed
-						   at the top of this file (renderNeighborhoodRadius). All pages outside
-						   of this neighborhood will be rendered at a reduced scale. Without this
-						   optimization large PDFs will crash the browser. The scale at whic the
-						   in-focus pages are rendered can also be changed at the top of this file
-						   under the variable renderInFocusScale. Similarly, the scale at which
-						   out-of-focus pages are rendered can be changed under the variable
-						   renderOutOfFocusScale.
-						*/
-						pdfPages.forEach(async (page: HTMLDivElement) => {
-							const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
-							const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
-							const checkIfInNeighborhood = (pageNum: number) => {
-								if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
-									return true;
-								} else {
-									return false;
-								}
-							};
+		// #region PDF Load and Render Logic
+		const pdfData = window.atob(doc); // Load PDF from base64 encoding
+		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.js';
+		pdfjsLib.GlobalWorkerOptions.workerSrc = root + pdfWorkerPath;
+		pdfDoc = await pdfjsLib.getDocument({
+			data: pdfData
+		}).promise;
+		pageCount = pdfDoc.numPages;
+		// #endregion
 
-							const pageNum = Number(page.id);
-							if (checkIfInNeighborhood(pageNum)) {
-								if (!alreadyRenderedIndices.has(pageNum)) {
-									alreadyRenderedIndices.add(pageNum);
-									drawPage(page, pageNum, renderInFocusScale);
-								}
-							} else {
-								if (alreadyRenderedIndices.has(pageNum)) {
-									drawPage(page, pageNum, renderOutOfFocusScale);
-									alreadyRenderedIndices.delete(pageNum);
-								}
-							}
-						});
-						thumbnails.forEach((thumbnail: HTMLElement) => {
-							const thumbnailIndex = thumbnail.id.split('-')[1];
-							if (thumbnailIndex === pageIndex) {
-								thumbnail.classList.add('active');
-								thumbnail.scrollIntoView();
-							} else {
-								thumbnail.classList.remove('active');
-							}
-						});
-					}
-				});
-			};
-			observer = new IntersectionObserver(sectionIntersectionCallback, options);
-
-			// Load PDF from base64 encoding
-			const pdfData = window.atob(doc);
-
-			// The workerSrc property shall be specified.
-			pdfjsLib.GlobalWorkerOptions.workerSrc =
-				root + '/node_modules/pdfjs-dist/build/pdf.worker.js';
-
-			// Asynchronous download of PDF
-			pdfDoc = await pdfjsLib.getDocument({
-				data: pdfData
-			}).promise;
-
-			renderPages(pdfDoc, observer, 1, 1);
-			pageCount = pdfDoc.numPages;
-
-			// page input event handler
-			let pageNumInput = document.getElementById('pdf-cur-page-num-input')! as HTMLInputElement;
-			pageNumInput.addEventListener('keypress', (event) => {
-				if (event.key === 'Enter') {
-					event.preventDefault(); // cancel default action if one exists
-					const pageNumber = pageNumInput.value;
-					const pdfPage = document.getElementById(pageNumber.toString()) as HTMLDivElement;
-					pdfPage.scrollIntoView();
-					/*
+		// #region Page Input Keypress Handler
+		pdfCurPageInput.addEventListener('keypress', (event) => {
+			if (event.key === 'Enter') {
+				event.preventDefault();
+				const pageNumber = pdfCurPageInput.value;
+				const pdfPage = document.getElementById(
+					pageNumber.toString()
+				) as HTMLDivElement;
+				pdfPage.scrollIntoView();
+				/*
 					I don't like this solution. There are numerous reasons this is a bad solution:
 						1. We cannot always expect this value to be correct as it will change with other 
 						changes to the geometry of the screen.
@@ -382,18 +372,22 @@
 					TODO: FIX
 					THIS ALSO HAS TO BE DONE TO THE CLICK METHODS =(
 					*/
-					if (pageNumber === '1') {
-						mainCanvas.scrollBy({ top: -55 });
-					} else {
-						mainCanvas.scrollBy({ top: -40 });
-					}
+				if (pageNumber === '1') {
+					mainCanvas.scrollBy({ top: -55 });
+				} else {
+					mainCanvas.scrollBy({ top: -40 });
 				}
-			});
-		}
+			}
+		});
+		// #endregion
+
+		// #region Initial Render
+		renderPages(pdfDoc, observer, 1, 1);
+		// #endregion
 	});
 </script>
 
-<div id="pdf-container">
+<div bind:this={pdfContainer} id="pdf-container">
 	<!-- PDF Topbar -->
 	<div id="pdf-top-bar">
 		<!-- Download -->
@@ -422,14 +416,23 @@
 			>
 		</div>
 		<div id="pdf-page-num-row">
-			<input type="text" id="pdf-cur-page-num-input" value={curPage} />
+			<input
+				bind:this={pdfCurPageInput}
+				type="text"
+				id="pdfCurPageInput"
+				value={curPage}
+			/>
 			<span class="slash">/</span>
 			<span class="total-page-num">{pageCount}</span>
 		</div>
 	</div>
 	<div id="pdf-render-container">
 		{#key $pdfScale}
-			<div id="pdf-render" bind:this={mainCanvas} style="transform: scale(${pdfScaleFactor});" />
+			<div
+				id="pdf-render"
+				bind:this={mainCanvas}
+				style="transform: scale(${pdfScaleFactor});"
+			/>
 		{/key}
 		<!-- <Outline  /> -->
 		<div id="pdf-outline" bind:this={outline} />
@@ -474,7 +477,7 @@
 		border-radius: 4px;
 	}
 
-	#pdf-cur-page-num-input {
+	#pdfCurPageInput {
 		width: 40px;
 		background: transparent;
 		color: var(--font-2);
