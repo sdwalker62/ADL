@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b64e5a3a-193f-469c-8209-15f493c3e32d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/components/Outline/MathListItem.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/Outline/MathListItem.svelte" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/docs/[...document]/+page.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/docs/[...document]/+page.svelte" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,16 +39,16 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
-    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/dwalker/dev/adl",
+    "git-widget-placeholder": "develop-pdf",
+    "last_opened_file_path": "/Users/dalton/Development/ADL",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "settings.editor.splitter.proportion": "0.24925816",
-    "ts.external.directory.path": "\\\\wsl.localhost\\Ubuntu\\home\\dwalker\\dev\\adl\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "/Users/dalton/Development/ADL/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -76,6 +72,8 @@
       <workItem from="1702950422003" duration="4186000" />
       <workItem from="1703738549438" duration="215000" />
       <workItem from="1703738762041" duration="2309000" />
+      <workItem from="1704149531550" duration="485000" />
+      <workItem from="1704150034597" duration="415000" />
     </task>
     <servers />
   </component>

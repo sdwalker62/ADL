@@ -1,11 +1,4 @@
 <script lang="ts">
-	import _ from 'lodash';
-	import * as pdfjsLib from 'pdfjs-dist';
-	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
-	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
-	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
-	import { pdfScale } from '$lib/data/shared';
-
 	// This component is responsible for loading, viewing, and controlling
 	// pdfs in the browser. It uses Mozilla's pdf.js library for all of the
 	// pdf parsing. More information on pdf.js can be found here:
@@ -21,7 +14,16 @@
 	//
 	// https://stackoverflow.com/questions/44547585/generating-thumbnail-of-a-pdf-using-pdf-js
 
+	// #region Imports
+	import _ from 'lodash';
+	import * as pdfjsLib from 'pdfjs-dist';
+	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
+	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
+	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
+	import { pdfScale } from '$lib/data/shared';
 	import { onMount } from 'svelte';
+	import { page } from '$app/stores';
+	// #endregion
 
 	// #region Props
 	export let doc: string;
@@ -34,17 +36,11 @@
 
 	// #region Local Variables
 	let pdfDoc: PDFDocumentProxy;
-	let observer: IntersectionObserver;
 	let alreadyRenderedIndices: Set<number> = new Set();
 
 	// PDF Rendering Settings
 	const renderNeighborhoodRadius = 2;
-	const renderInFocusScale = 2;
-	const renderOutOfFocusScale = 0.01;
 	let isFirstPageLoad = true;
-
-	const thumbnailScale = 0.2,
-		pageScale = 2;
 
 	let mainCanvas: HTMLElement,
 		pageCount = 0,
@@ -52,92 +48,190 @@
 		outline: HTMLElement;
 	let pdfContainer: HTMLDivElement;
 	let pdfCurPageInput: HTMLInputElement;
+	let pdfRenderer: PDFRenderer;
 	// #endregion
 
-	/**
-	 * This function is responsible for rendering the thumbnail preview of a PDF page.
-	 *
-	 * CALLS: {renderThumbnailCanvas}
-	 */
-	function thumbnailHTMLFactory(
-		pageNum: number,
-		pdfPage: PDFPageProxy,
-		pdfPageDiv: HTMLDivElement
-	): HTMLAnchorElement {
-		const thumbnailCanvas = renderThumbnailCanvas(pdfPage, thumbnailScale);
+	class PDFRenderer {
+		private pdfDocument: PDFDocumentProxy;
+		private observer: IntersectionObserver;
+		public numPages: number;
+		private documentPageRange: number[];
+		private highQualityScale: number = 1;
+		private lowQualityScale: number = 0.01;
+		private thumbnailScale: number = 0.2;
+		private pageScale: number = 2;
+		private pixelRatio: number;
+		private paddingSize: number = 15;
+		private rootElement: HTMLElement;
+		private outlineElement: HTMLElement;
+		private paddingWidth: number;
+		private pdfPageRenderWidth: number;
+		private outlineRenderWidth: number;
+		private interceptHeight: number;
 
-		// create a div to hold the page number
-		let pageIndicatorDiv = document.createElement('div');
-		pageIndicatorDiv.classList.add('pdf-thumbnail-pageIndex');
-		pageIndicatorDiv.innerHTML = `<span>${pageNum}</span>`;
-
-		// create a div to hold the canvas and page number
-		let thumbnailDiv = document.createElement('div');
-		thumbnailDiv.appendChild(thumbnailCanvas);
-		thumbnailDiv.appendChild(pageIndicatorDiv);
-
-		// create an anchor element to link to page
-		let aRef = document.createElement('a');
-		aRef.href = `#${pageNum}`;
-		aRef.id = `thumbnail-${pageNum}`;
-		aRef.classList.add('pdf-thumbnail-link');
-		aRef.appendChild(thumbnailDiv);
-
-		aRef.addEventListener('click', (e: MouseEvent) => {
-			e.preventDefault();
-			pdfPageDiv.scrollIntoView();
-			if (pageNum === 1) {
-				mainCanvas.scrollBy({ top: -55 });
-			} else {
-				mainCanvas.scrollBy({ top: -40 });
-			}
-		});
-
-		return aRef;
-	}
-
-	/**
-	 * This function is responsible for rendering the main PDF page.
-	 *
-	 * CALLS: {renderPDFPageCanvas}
-	 */
-	function pdfPageHTMLFactory(
-		pageNum: number,
-		pdfPage: PDFPageProxy,
-		observer: IntersectionObserver,
-		highQuality: boolean
-	): HTMLDivElement {
-		let pageCanvas;
-		if (highQuality) {
-			pageCanvas = renderPDFPageCanvas(pdfPage, pageScale, 1);
-		} else {
-			pageCanvas = renderPDFPageCanvas(pdfPage, pageScale);
+		constructor(
+			pdfDocument: PDFDocumentProxy,
+			rootElement: HTMLElement,
+			outlineElement: HTMLElement
+		) {
+			this.pdfDocument = pdfDocument;
+			this.numPages = pdfDocument.numPages;
+			this.documentPageRange = _.range(1, this.numPages);
+			this.interceptHeight = 40 - 0.99 * pdfContainer.clientHeight;
+			this.observer = new IntersectionObserver(this.pageVisibilityCallback, {
+				root: pdfContainer,
+				threshold: _.range(0, 1, 0.1),
+				rootMargin: `40px 0px ${this.interceptHeight}px 0px`
+			});
+			this.pixelRatio = window.devicePixelRatio || 1;
+			this.rootElement = rootElement;
+			this.outlineElement = outlineElement;
+			this.paddingWidth = this.paddingSize * 2;
+			this.pdfPageRenderWidth =
+				this.rootElement.offsetWidth - this.paddingWidth;
+			this.outlineRenderWidth =
+				this.outlineElement.offsetWidth - this.paddingWidth;
 		}
 
-		// create a div to hold the canvas
-		let pageDiv = document.createElement('div');
-		pageDiv.append(pageCanvas);
-		pageDiv.classList.add('pdf-page');
-		pageDiv.id = `${pageNum}`;
-		observer.observe(pageDiv);
+		/**
+		 * This function is responsible for rendering the main PDF page.
+		 */
+		pdfPageHTMLFactory(pageNum: number): HTMLDivElement {
+			let canvas = document.createElement('canvas');
+			let pageDiv = document.createElement('div');
+			pageDiv.append(canvas);
+			pageDiv.classList.add('pdf-page');
+			pageDiv.id = `${pageNum}`;
+			this.observer.observe(pageDiv);
 
-		return pageDiv;
-	}
+			return pageDiv;
+		}
 
-	/**
-	 * Callback that is triggered whenever a new PDF page is scrolled into view.
-	 *
-	 * CALLS: {drawPage}
-	 */
-	const pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
-		let thumbnails = outline.querySelectorAll('a');
-		let pdfPages: NodeListOf<HTMLDivElement> =
-			mainCanvas.querySelectorAll('.pdf-page');
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				const pageIndex = entry.target.id;
-				curPage = Number(pageIndex);
-				/*
+		/**
+		 * This function is responsible for rendering the thumbnail preview of a PDF page.
+		 */
+		thumbnailHTMLFactory(
+			pageNum: number,
+			pdfPageDiv: HTMLDivElement
+		): HTMLAnchorElement {
+			// const thumbnailCanvas = renderThumbnailCanvas(pdfPage, thumbnailScale);
+			let canvas = document.createElement('canvas');
+
+			// create a div to hold the page number
+			let pageIndicatorDiv = document.createElement('div');
+			pageIndicatorDiv.classList.add('pdf-thumbnail-pageIndex');
+			pageIndicatorDiv.innerHTML = `<span>${pageNum}</span>`;
+
+			// create a div to hold the canvas and page number
+			let thumbnailDiv = document.createElement('div');
+			thumbnailDiv.appendChild(canvas);
+			thumbnailDiv.appendChild(pageIndicatorDiv);
+
+			// create an anchor element to link to page
+			let aRef = document.createElement('a');
+			aRef.href = `#${pageNum}`;
+			aRef.id = `thumbnail-${pageNum}`;
+			aRef.classList.add('pdf-thumbnail-link');
+			aRef.appendChild(thumbnailDiv);
+
+			aRef.addEventListener('click', (e: MouseEvent) => {
+				e.preventDefault();
+				pdfPageDiv.scrollIntoView();
+				if (pageNum === 1) {
+					mainCanvas.scrollBy({ top: -55 });
+				} else {
+					mainCanvas.scrollBy({ top: -40 });
+				}
+			});
+
+			return aRef;
+		}
+
+		/**
+		 * Renders all pages of the PDF document.
+		 */
+		buildHTMLElements(): void {
+			this.documentPageRange.forEach((pageNum) => {
+				const pageDiv = this.pdfPageHTMLFactory(pageNum);
+				const thumbnailDiv = this.thumbnailHTMLFactory(pageNum, pageDiv);
+				outline.appendChild(thumbnailDiv);
+				mainCanvas.appendChild(pageDiv);
+			});
+		}
+
+		/**
+		 * Renders the canvas element for a PDF page.
+		 */
+		renderCanvas(
+			canvas: HTMLCanvasElement,
+			page: PDFPageProxy,
+			scale: number = 1,
+			scalingFactor: number = 0.1,
+			rootWidth: number
+		): void {
+			const viewport = page.getViewport({ scale: scale });
+			const context = canvas.getContext('2d');
+
+			const outputScale = this.pixelRatio * scalingFactor;
+			const renderScaleCoefficient = rootWidth / viewport.width;
+			const styleCoefficient = pdfScaleFactor * renderScaleCoefficient;
+
+			canvas.width = Math.floor(viewport.width * outputScale);
+			canvas.height = Math.floor(viewport.height * outputScale);
+			canvas.style.width = Math.floor(styleCoefficient * viewport.width) + 'px';
+			canvas.style.height =
+				Math.floor(styleCoefficient * viewport.height) + 'px';
+
+			let transform =
+				outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+			const renderParams = {
+				canvasContext: context!,
+				viewport: viewport,
+				transform: transform!
+			};
+			page.render(renderParams).promise;
+		}
+
+		/**
+		 * Renders all canvases for the PDF document.
+		 */
+		renderAllCanvases(): void {
+			this.documentPageRange.forEach(async (pageNum) => {
+				const page = await this.pdfDocument.getPage(pageNum);
+				const pageDiv = document.getElementById(`${pageNum}`)!;
+				const canvas = pageDiv.querySelector('canvas')!;
+				this.renderCanvas(
+					canvas,
+					page,
+					this.pageScale,
+					1,
+					this.pdfPageRenderWidth
+				);
+
+				const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
+				const thumbnailCanvas = thumbnail.querySelector('canvas')!;
+				this.renderCanvas(
+					thumbnailCanvas,
+					page,
+					this.thumbnailScale,
+					1,
+					this.outlineRenderWidth
+				);
+			});
+		}
+
+		/**
+		 * Callback that is triggered whenever a new PDF page is scrolled into view.
+		 */
+		pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
+			let thumbnails = outline.querySelectorAll('a');
+			let pdfPages: NodeListOf<HTMLDivElement> =
+				mainCanvas.querySelectorAll('.pdf-page');
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					const pageIndex = entry.target.id;
+					curPage = Number(pageIndex);
+					/*
 					To optimize rendering performance we will only render pages within a
 					radius of the currently viewed page. This radius value can be changed
 					at the top of this file (renderNeighborhoodRadius). All pages outside
@@ -148,201 +242,67 @@
 					out-of-focus pages are rendered can be changed under the variable
 					renderOutOfFocusScale.
 				*/
-				const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
-				const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
-				if (isFirstPageLoad) {
-					for (let i = 1; i <= neighborHoodUB; i++) {
-						alreadyRenderedIndices.add(i);
-					}
-					isFirstPageLoad = false;
-				} else {
-					pdfPages.forEach(async (page: HTMLDivElement) => {
-						const pageNum = Number(page.id);
-						const checkIfInNeighborhood = (pageNum: number) => {
-							if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
-								return true;
+					const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
+					const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
+					if (isFirstPageLoad) {
+						for (let i = 1; i <= neighborHoodUB; i++) {
+							alreadyRenderedIndices.add(i);
+						}
+						isFirstPageLoad = false;
+					} else {
+						pdfPages.forEach(async (page: HTMLDivElement) => {
+							const pageNum = Number(page.id);
+							const checkIfInNeighborhood = (pageNum: number) => {
+								if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
+									return true;
+								} else {
+									return false;
+								}
+							};
+							const pdfPage = await this.pdfDocument.getPage(pageNum);
+							if (checkIfInNeighborhood(pageNum)) {
+								if (!alreadyRenderedIndices.has(pageNum)) {
+									alreadyRenderedIndices.add(pageNum);
+									let canvas = page.querySelector('canvas')!;
+									this.renderCanvas(
+										canvas,
+										pdfPage,
+										this.pageScale,
+										this.highQualityScale,
+										this.pdfPageRenderWidth
+									);
+								}
 							} else {
-								return false;
+								if (alreadyRenderedIndices.has(pageNum)) {
+									let canvas = page.querySelector('canvas')!;
+									this.renderCanvas(
+										canvas,
+										pdfPage,
+										this.pageScale,
+										this.lowQualityScale,
+										this.pdfPageRenderWidth
+									);
+									alreadyRenderedIndices.delete(pageNum);
+								}
 							}
-						};
-						if (checkIfInNeighborhood(pageNum)) {
-							if (!alreadyRenderedIndices.has(pageNum)) {
-								alreadyRenderedIndices.add(pageNum);
-								drawPage(page, pageNum, renderInFocusScale);
-							}
+						});
+					}
+
+					thumbnails.forEach((thumbnail: HTMLElement) => {
+						const thumbnailIndex = thumbnail.id.split('-')[1];
+						if (thumbnailIndex === pageIndex) {
+							thumbnail.classList.add('active');
+							thumbnail.scrollIntoView();
 						} else {
-							if (alreadyRenderedIndices.has(pageNum)) {
-								drawPage(page, pageNum, renderOutOfFocusScale);
-								alreadyRenderedIndices.delete(pageNum);
-							}
+							thumbnail.classList.remove('active');
 						}
 					});
 				}
-
-				thumbnails.forEach((thumbnail: HTMLElement) => {
-					const thumbnailIndex = thumbnail.id.split('-')[1];
-					if (thumbnailIndex === pageIndex) {
-						thumbnail.classList.add('active');
-						thumbnail.scrollIntoView();
-					} else {
-						thumbnail.classList.remove('active');
-					}
-				});
-			}
-		});
-	};
-
-	/*
-		This function renders a single PDF page thumbnail to a canvas element.
-	*/
-	function renderThumbnailCanvas(page: PDFPageProxy, scale: number) {
-		// set up canvas for rendering
-		let viewport = page.getViewport({ scale: scale });
-		let canvas = document.createElement('canvas');
-		let outputScale = window.devicePixelRatio || 1;
-		outputScale *= 1;
-		canvas.width = Math.floor(viewport.width * outputScale);
-		canvas.height = Math.floor(viewport.height * outputScale);
-		const outline = document.getElementById('pdf-outline');
-		const outlineWidth = outline!.offsetWidth;
-		const outlineScaleCoefficient = outlineWidth / Math.floor(viewport.width);
-		canvas.style.width =
-			outlineScaleCoefficient * Math.floor(viewport.width) - 40 + 'px';
-		canvas.style.height =
-			outlineScaleCoefficient * Math.floor(viewport.height) - 40 + 'px';
-		var context = canvas.getContext('2d');
-		let transform =
-			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-		const renderParams = {
-			canvasContext: context!,
-			viewport: viewport,
-			transform: transform!
+			});
 		};
-		// render page to canvas and return it to caller
-		page.render(renderParams).promise;
-		return canvas;
-	}
-
-	/*
-		This function renders a single PDF page to a canvas element.
-	*/
-	function renderPDFPageCanvas(
-		page: PDFPageProxy,
-		scale: number,
-		scaleCoefficient: number = 0.1
-	) {
-		// set up canvas for rendering
-		let viewport = page.getViewport({ scale: scale });
-		let canvas = document.createElement('canvas');
-		let outputScale = window.devicePixelRatio || 1;
-		let scaleFactor = scaleCoefficient;
-		outputScale *= scaleFactor;
-		canvas.width = Math.floor(viewport.width * outputScale);
-		canvas.height = Math.floor(viewport.height * outputScale);
-		const renderWidth = mainCanvas!.offsetWidth - 30;
-		const renderScaleCoefficient =
-			renderWidth / Math.floor((viewport.width * outputScale) / scaleFactor);
-		canvas.style.width =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.width * outputScale) / scaleFactor) +
-			'px';
-		canvas.style.height =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.height * outputScale) / scaleFactor) +
-			'px';
-		// setWidthAndHeight(canvas, page, scale, scaleCoefficient);
-		var context = canvas.getContext('2d');
-		let transform =
-			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-		const renderParams = {
-			canvasContext: context!,
-			viewport: viewport,
-			transform: transform!
-		};
-		// render page to canvas and return it to caller
-		page.render(renderParams).promise;
-		return canvas;
-	}
-
-	/*
-		This function renders all pages of a PDF document to the DOM.
-	*/
-	async function renderPages(
-		pdfDocument: PDFDocumentProxy,
-		observer: IntersectionObserver,
-		mainPage: number = 1,
-		startingPage: number,
-		endingPage: number | null = null
-	): Promise<void> {
-		// PDFs are 1-based
-		let lastPage;
-		if (endingPage) {
-			lastPage = Math.min(endingPage, pdfDocument.numPages);
-		} else {
-			lastPage = pdfDocument.numPages;
-		}
-		let documentPages = _.range(startingPage, lastPage);
-		documentPages.forEach(async (pageNum) => {
-			const page = await pdfDocument.getPage(pageNum);
-			const highQuality = pageNum === mainPage ? true : false;
-			const pageDiv = pdfPageHTMLFactory(pageNum, page, observer, highQuality);
-			const thumbnailDiv = thumbnailHTMLFactory(pageNum, page, pageDiv);
-			outline.appendChild(thumbnailDiv);
-			mainCanvas.appendChild(pageDiv);
-		});
-	}
-
-	async function drawPage(
-		page: HTMLDivElement,
-		pageNum: number,
-		scalingFactor = 1
-	) {
-		let canvas = page.querySelector('canvas')!;
-		const pdfPage = await pdfDoc.getPage(pageNum);
-		let viewport = pdfPage.getViewport({ scale: 1 });
-		var context = canvas.getContext('2d');
-		let outputScale = window.devicePixelRatio || 1;
-		outputScale *= scalingFactor;
-		canvas.width = Math.floor(viewport.width * outputScale);
-		canvas.height = Math.floor(viewport.height * outputScale);
-		const renderWidth = mainCanvas!.offsetWidth - 30;
-		const renderScaleCoefficient =
-			renderWidth / Math.floor((viewport.width * outputScale) / outputScale);
-		canvas.style.width =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.width * outputScale) / outputScale) +
-			'px';
-		canvas.style.height =
-			pdfScaleFactor *
-				renderScaleCoefficient *
-				Math.floor((viewport.height * outputScale) / outputScale) +
-			'px';
-
-		let transform =
-			outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-		const renderParams = {
-			canvasContext: context!,
-			viewport: viewport,
-			transform: transform!
-		};
-		pdfPage.render(renderParams).promise;
 	}
 
 	onMount(async () => {
-		// #region Itersection Observer Setup
-		const interceptHeight = 40 - 0.99 * pdfContainer.clientHeight;
-		let options = {
-			root: pdfContainer,
-			thresholds: _.range(0, 1, 0.1),
-			rootMargin: `40px 0px ${interceptHeight}px 0px`
-		};
-
-		observer = new IntersectionObserver(pageVisibilityCallback, options);
-		// #endregion
-
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
 		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.js';
@@ -350,7 +310,6 @@
 		pdfDoc = await pdfjsLib.getDocument({
 			data: pdfData
 		}).promise;
-		pageCount = pdfDoc.numPages;
 		// #endregion
 
 		// #region Page Input Keypress Handler
@@ -381,9 +340,10 @@
 		});
 		// #endregion
 
-		// #region Initial Render
-		renderPages(pdfDoc, observer, 1, 1);
-		// #endregion
+		pdfRenderer = new PDFRenderer(pdfDoc, mainCanvas, outline);
+		pdfRenderer.buildHTMLElements();
+		pdfRenderer.renderAllCanvases();
+		pageCount = pdfRenderer.numPages;
 	});
 </script>
 
