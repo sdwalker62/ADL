@@ -43,7 +43,8 @@
 	let pdfContainer: HTMLDivElement;
 	let pdfCurPageInput: HTMLInputElement;
 	let pdfRenderer: PDFRenderer;
-	let zoom = 1;
+	let zoomInput: HTMLInputElement;
+	let zoom = 100;
 	// #endregion
 
 	class PDFRenderer {
@@ -181,8 +182,8 @@
 
 			canvas.width = Math.floor(viewport.width * outputScale);
 			canvas.height = Math.floor(viewport.height * outputScale);
-			let styleWidth = zoom * styleCoefficient * viewport.width;
-			let styleHeight = zoom * styleCoefficient * viewport.height;
+			let styleWidth = (zoom * styleCoefficient * viewport.width) / 100;
+			let styleHeight = (zoom * styleCoefficient * viewport.height) / 100;
 			if (styleWidth > this.rootElement.offsetWidth) {
 				styleWidth = this.rootElement.offsetWidth - 15;
 				styleHeight = (styleWidth * viewport.height) / viewport.width;
@@ -352,6 +353,15 @@
 		});
 		// #endregion
 
+		// #region Zoom Input Keypress Handler
+		zoomInput.addEventListener('keypress', (event) => {
+			if (event.key === 'Enter') {
+				zoom = Number(zoomInput.value);
+				pdfRenderer.renderAllCanvases(false);
+			}
+		});
+		// #endregion
+
 		pdfRenderer = new PDFRenderer(pdfDoc, mainCanvas, outline);
 		pdfRenderer.buildHTMLElements();
 		pdfRenderer.renderAllCanvases();
@@ -372,19 +382,25 @@
 				class="zoom-button"
 				on:click={() => {
 					if (pdfScaleFactor > 0.2) {
-						zoom -= 0.1;
+						zoom -= 10;
 						pdfRenderer.renderAllCanvases(false);
 					}
 				}}>-</button
 			>
 			<div class="zoom-level-row">
 				<ZoomIcon />
-				<span class="cur-zoom">{(100 * zoom).toFixed(1)}%</span>
+				<input
+					bind:this={zoomInput}
+					type="text"
+					class="cur-zoom"
+					value={zoom}
+				/>
+				<span class="cur-zoom">%</span>
 			</div>
 			<button
 				class="zoom-button"
 				on:click={() => {
-					zoom += 0.1;
+					zoom += 10;
 					pdfRenderer.renderAllCanvases(false);
 				}}>+</button
 			>
