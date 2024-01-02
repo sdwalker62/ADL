@@ -36,19 +36,14 @@
 
 	// #region Local Variables
 	let pdfDoc: PDFDocumentProxy;
-	let alreadyRenderedIndices: Set<number> = new Set();
-
-	// PDF Rendering Settings
-	const renderNeighborhoodRadius = 2;
-	let isFirstPageLoad = true;
-
-	let mainCanvas: HTMLElement,
-		pageCount = 0,
-		curPage = 1,
-		outline: HTMLElement;
+	let mainCanvas: HTMLElement;
+	let outline: HTMLElement;
+	let pageCount: number;
+	let curPage = 1;
 	let pdfContainer: HTMLDivElement;
 	let pdfCurPageInput: HTMLInputElement;
 	let pdfRenderer: PDFRenderer;
+	let zoom = 1;
 	// #endregion
 
 	class PDFRenderer {
@@ -61,13 +56,18 @@
 		private thumbnailScale: number = 0.2;
 		private pageScale: number = 2;
 		private pixelRatio: number;
-		private paddingSize: number = 15;
 		private rootElement: HTMLElement;
 		private outlineElement: HTMLElement;
-		private paddingWidth: number;
 		private pdfPageRenderWidth: number;
 		private outlineRenderWidth: number;
 		private interceptHeight: number;
+		private renderNeighborhoodRadius: number = 2;
+		private isFirstPageLoad = true;
+		private alreadyRenderedIndices: Set<number> = new Set();
+		private outlinePadding: number;
+		private rootPadding: number;
+		private rootPaddingWidth: number;
+		private outlinePaddingWidth: number;
 
 		constructor(
 			pdfDocument: PDFDocumentProxy,
@@ -86,17 +86,20 @@
 			this.pixelRatio = window.devicePixelRatio || 1;
 			this.rootElement = rootElement;
 			this.outlineElement = outlineElement;
-			this.paddingWidth = this.paddingSize * 2;
+			this.outlinePadding = Number(outlineElement.style.padding.slice(0, -2));
+			this.rootPadding = Number(rootElement.style.padding.slice(0, -2));
+			this.rootPaddingWidth = 10 * 2;
+			this.outlinePaddingWidth = 10 * 2;
 			this.pdfPageRenderWidth =
-				this.rootElement.offsetWidth - this.paddingWidth;
+				this.rootElement.offsetWidth - this.rootPaddingWidth;
 			this.outlineRenderWidth =
-				this.outlineElement.offsetWidth - this.paddingWidth;
+				this.outlineElement.offsetWidth - this.outlinePaddingWidth;
 		}
 
 		/**
 		 * This function is responsible for rendering the main PDF page.
 		 */
-		pdfPageHTMLFactory(pageNum: number): HTMLDivElement {
+		private pdfPageHTMLFactory(pageNum: number): HTMLDivElement {
 			let canvas = document.createElement('canvas');
 			let pageDiv = document.createElement('div');
 			pageDiv.append(canvas);
@@ -110,7 +113,7 @@
 		/**
 		 * This function is responsible for rendering the thumbnail preview of a PDF page.
 		 */
-		thumbnailHTMLFactory(
+		private thumbnailHTMLFactory(
 			pageNum: number,
 			pdfPageDiv: HTMLDivElement
 		): HTMLAnchorElement {
@@ -150,7 +153,7 @@
 		/**
 		 * Renders all pages of the PDF document.
 		 */
-		buildHTMLElements(): void {
+		public buildHTMLElements(): void {
 			this.documentPageRange.forEach((pageNum) => {
 				const pageDiv = this.pdfPageHTMLFactory(pageNum);
 				const thumbnailDiv = this.thumbnailHTMLFactory(pageNum, pageDiv);
@@ -162,7 +165,7 @@
 		/**
 		 * Renders the canvas element for a PDF page.
 		 */
-		renderCanvas(
+		private renderCanvas(
 			canvas: HTMLCanvasElement,
 			page: PDFPageProxy,
 			scale: number = 1,
@@ -178,9 +181,14 @@
 
 			canvas.width = Math.floor(viewport.width * outputScale);
 			canvas.height = Math.floor(viewport.height * outputScale);
-			canvas.style.width = Math.floor(styleCoefficient * viewport.width) + 'px';
-			canvas.style.height =
-				Math.floor(styleCoefficient * viewport.height) + 'px';
+			let styleWidth = zoom * styleCoefficient * viewport.width;
+			let styleHeight = zoom * styleCoefficient * viewport.height;
+			if (styleWidth > this.rootElement.offsetWidth) {
+				styleWidth = this.rootElement.offsetWidth - 15;
+				styleHeight = (styleWidth * viewport.height) / viewport.width;
+			}
+			canvas.style.width = Math.floor(styleWidth) + 'px';
+			canvas.style.height = Math.floor(styleHeight) + 'px';
 
 			let transform =
 				outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
@@ -195,7 +203,7 @@
 		/**
 		 * Renders all canvases for the PDF document.
 		 */
-		renderAllCanvases(): void {
+		public renderAllCanvases(renderThumbnails = true): void {
 			this.documentPageRange.forEach(async (pageNum) => {
 				const page = await this.pdfDocument.getPage(pageNum);
 				const pageDiv = document.getElementById(`${pageNum}`)!;
@@ -207,23 +215,24 @@
 					1,
 					this.pdfPageRenderWidth
 				);
-
-				const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
-				const thumbnailCanvas = thumbnail.querySelector('canvas')!;
-				this.renderCanvas(
-					thumbnailCanvas,
-					page,
-					this.thumbnailScale,
-					1,
-					this.outlineRenderWidth
-				);
+				if (renderThumbnails) {
+					const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
+					const thumbnailCanvas = thumbnail.querySelector('canvas')!;
+					this.renderCanvas(
+						thumbnailCanvas,
+						page,
+						this.thumbnailScale,
+						1,
+						this.outlineRenderWidth
+					);
+				}
 			});
 		}
 
 		/**
 		 * Callback that is triggered whenever a new PDF page is scrolled into view.
 		 */
-		pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
+		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
 			let thumbnails = outline.querySelectorAll('a');
 			let pdfPages: NodeListOf<HTMLDivElement> =
 				mainCanvas.querySelectorAll('.pdf-page');
@@ -242,13 +251,15 @@
 					out-of-focus pages are rendered can be changed under the variable
 					renderOutOfFocusScale.
 				*/
-					const neighborHoodLB = Number(pageIndex) - renderNeighborhoodRadius;
-					const neighborHoodUB = Number(pageIndex) + renderNeighborhoodRadius;
-					if (isFirstPageLoad) {
+					const neighborHoodLB =
+						Number(pageIndex) - this.renderNeighborhoodRadius;
+					const neighborHoodUB =
+						Number(pageIndex) + this.renderNeighborhoodRadius;
+					if (this.isFirstPageLoad) {
 						for (let i = 1; i <= neighborHoodUB; i++) {
-							alreadyRenderedIndices.add(i);
+							this.alreadyRenderedIndices.add(i);
 						}
-						isFirstPageLoad = false;
+						this.isFirstPageLoad = false;
 					} else {
 						pdfPages.forEach(async (page: HTMLDivElement) => {
 							const pageNum = Number(page.id);
@@ -261,8 +272,8 @@
 							};
 							const pdfPage = await this.pdfDocument.getPage(pageNum);
 							if (checkIfInNeighborhood(pageNum)) {
-								if (!alreadyRenderedIndices.has(pageNum)) {
-									alreadyRenderedIndices.add(pageNum);
+								if (!this.alreadyRenderedIndices.has(pageNum)) {
+									this.alreadyRenderedIndices.add(pageNum);
 									let canvas = page.querySelector('canvas')!;
 									this.renderCanvas(
 										canvas,
@@ -273,7 +284,7 @@
 									);
 								}
 							} else {
-								if (alreadyRenderedIndices.has(pageNum)) {
+								if (this.alreadyRenderedIndices.has(pageNum)) {
 									let canvas = page.querySelector('canvas')!;
 									this.renderCanvas(
 										canvas,
@@ -282,7 +293,7 @@
 										this.lowQualityScale,
 										this.pdfPageRenderWidth
 									);
-									alreadyRenderedIndices.delete(pageNum);
+									this.alreadyRenderedIndices.delete(pageNum);
 								}
 							}
 						});
@@ -293,6 +304,7 @@
 						if (thumbnailIndex === pageIndex) {
 							thumbnail.classList.add('active');
 							thumbnail.scrollIntoView();
+							outline.scrollBy({ top: -55 });
 						} else {
 							thumbnail.classList.remove('active');
 						}
@@ -360,18 +372,20 @@
 				class="zoom-button"
 				on:click={() => {
 					if (pdfScaleFactor > 0.2) {
-						$pdfScale -= 0.1;
+						zoom -= 0.1;
+						pdfRenderer.renderAllCanvases(false);
 					}
 				}}>-</button
 			>
 			<div class="zoom-level-row">
 				<ZoomIcon />
-				<span class="cur-zoom">{(100 * pdfScaleFactor).toFixed(1)}%</span>
+				<span class="cur-zoom">{(100 * zoom).toFixed(1)}%</span>
 			</div>
 			<button
 				class="zoom-button"
 				on:click={() => {
-					$pdfScale += 0.1;
+					zoom += 0.1;
+					pdfRenderer.renderAllCanvases(false);
 				}}>+</button
 			>
 		</div>
@@ -387,13 +401,11 @@
 		</div>
 	</div>
 	<div id="pdf-render-container">
-		{#key $pdfScale}
-			<div
-				id="pdf-render"
-				bind:this={mainCanvas}
-				style="transform: scale(${pdfScaleFactor});"
-			/>
-		{/key}
+		<div
+			id="pdf-render"
+			bind:this={mainCanvas}
+			style="transform: scale(${pdfScaleFactor});"
+		/>
 		<!-- <Outline  /> -->
 		<div id="pdf-outline" bind:this={outline} />
 	</div>
@@ -498,7 +510,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		overflow: scroll;
+		overflow-y: scroll;
+		overflow-x: hidden;
 		height: 100%;
 		background-color: var(--background-2);
 		padding: 15px;
