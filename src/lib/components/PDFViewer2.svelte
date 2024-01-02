@@ -19,10 +19,11 @@
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
 	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
+	import ZoomMinus from '$lib/assets/icons/ZoomMinus.svelte';
+	import ZoomPlus from '$lib/assets/icons/ZoomPlus.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
-	import { pdfScale } from '$lib/data/shared';
+	import { pdfZoom } from '$lib/data/shared';
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	// #endregion
 
 	// #region Props
@@ -31,7 +32,7 @@
 	// #endregion
 
 	// #region Reactive Declarations
-	$: pdfScaleFactor = $pdfScale;
+	// $: pdfScaleFactor = $pdfScale;
 	// #endregion
 
 	// #region Local Variables
@@ -178,12 +179,11 @@
 
 			const outputScale = this.pixelRatio * scalingFactor;
 			const renderScaleCoefficient = rootWidth / viewport.width;
-			const styleCoefficient = pdfScaleFactor * renderScaleCoefficient;
 
 			canvas.width = Math.floor(viewport.width * outputScale);
 			canvas.height = Math.floor(viewport.height * outputScale);
-			let styleWidth = (zoom * styleCoefficient * viewport.width) / 100;
-			let styleHeight = (zoom * styleCoefficient * viewport.height) / 100;
+			let styleWidth = (zoom * renderScaleCoefficient * viewport.width) / 100;
+			let styleHeight = (zoom * renderScaleCoefficient * viewport.height) / 100;
 			if (styleWidth > this.rootElement.offsetWidth) {
 				styleWidth = this.rootElement.offsetWidth - 15;
 				styleHeight = (styleWidth * viewport.height) / viewport.width;
@@ -355,9 +355,14 @@
 
 		// #region Zoom Input Keypress Handler
 		zoomInput.addEventListener('keypress', (event) => {
+			const zoomInputValue = Number(zoomInput.value);
 			if (event.key === 'Enter') {
-				zoom = Number(zoomInput.value);
-				pdfRenderer.renderAllCanvases(false);
+				if (!isFinite(zoomInputValue)) {
+					alert('Please enter a valid number');
+				} else {
+					zoom = Number(zoomInput.value);
+					pdfRenderer.renderAllCanvases(false);
+				}
 			}
 		});
 		// #endregion
@@ -378,32 +383,30 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
-			<button
-				class="zoom-button"
-				on:click={() => {
-					if (pdfScaleFactor > 0.2) {
-						zoom -= 10;
-						pdfRenderer.renderAllCanvases(false);
-					}
-				}}>-</button
-			>
 			<div class="zoom-level-row">
-				<ZoomIcon />
+				<ZoomMinus
+					on:click={() => {
+						if ($pdfZoom > 0.2) {
+							zoom -= 10;
+							pdfRenderer.renderAllCanvases(false);
+						}
+					}}
+				/>
+
 				<input
 					bind:this={zoomInput}
 					type="text"
-					class="cur-zoom"
+					class="curZoomInput"
 					value={zoom}
 				/>
 				<span class="cur-zoom">%</span>
 			</div>
-			<button
-				class="zoom-button"
+			<ZoomPlus
 				on:click={() => {
 					zoom += 10;
 					pdfRenderer.renderAllCanvases(false);
-				}}>+</button
-			>
+				}}
+			/>
 		</div>
 		<div id="pdf-page-num-row">
 			<input
@@ -420,7 +423,7 @@
 		<div
 			id="pdf-render"
 			bind:this={mainCanvas}
-			style="transform: scale(${pdfScaleFactor});"
+			style="transform: scale(${pdfZoom});"
 		/>
 		<!-- <Outline  /> -->
 		<div id="pdf-outline" bind:this={outline} />
@@ -579,20 +582,12 @@
 		color: var(--font-2);
 	}
 
-	.zoom-button {
-		width: 50px;
-		font-size: 1.5em;
-		font-family: var(--f-Medium);
-		border: 0;
-		color: var(--font-1);
-		background-color: transparent;
-		text-align: center;
-		padding: 5px;
-		border-radius: 10px;
-	}
-
-	.zoom-button:hover {
-		cursor: pointer;
-		background-color: var(--background-4);
+	.curZoomInput {
+		width: 40px;
+		background: transparent;
+		color: var(--font-2);
+		font-size: 1.5rem;
+		border: none;
+		text-align: end;
 	}
 </style>

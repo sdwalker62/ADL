@@ -22,4 +22,4 @@ export let showCodeOutlineElements = writable(true);
 export let showMathOutlineElements = writable(true);
 export let showTableOutlineElements = writable(true);
 
-export let pdfScale = writable(1.0);
+export let pdfZoom = writable(100);
