@@ -31,6 +31,10 @@
 </div>
 
 <style>
+	:global(.katex span) {
+		overflow: visible!important;
+	}
+
 	.math-item-canvas {
 		display: flex;
 		align-items: center;
