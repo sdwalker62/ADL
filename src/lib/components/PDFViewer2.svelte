@@ -24,6 +24,8 @@
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
 	import { pdfZoom } from '$lib/data/shared';
 	import { onMount } from 'svelte';
+	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
+	import { rightPanelActive } from '$lib/data/shared';
 	// #endregion
 
 	// #region Props
@@ -32,7 +34,11 @@
 	// #endregion
 
 	// #region Reactive Declarations
-	// $: pdfScaleFactor = $pdfScale;
+	$: if ($rightPanelActive) {
+		templateString = '1fr 180px';
+	} else {
+		templateString = '1fr 0';
+	}
 	// #endregion
 
 	// #region Local Variables
@@ -46,6 +52,10 @@
 	let pdfRenderer: PDFRenderer;
 	let zoomInput: HTMLInputElement;
 	let zoom = 100;
+	let background3Color: string;
+	let font1Color: string;
+	let templateString: string;
+
 	// #endregion
 
 	class PDFRenderer {
@@ -142,11 +152,11 @@
 			aRef.addEventListener('click', (e: MouseEvent) => {
 				e.preventDefault();
 				pdfPageDiv.scrollIntoView();
-				if (pageNum === 1) {
-					mainCanvas.scrollBy({ top: -55 });
-				} else {
-					mainCanvas.scrollBy({ top: -40 });
-				}
+				// if (pageNum === 1) {
+				// 	mainCanvas.scrollBy({ top: -55 });
+				// } else {
+				// 	mainCanvas.scrollBy({ top: -40 });
+				// }
 			});
 
 			return aRef;
@@ -175,8 +185,8 @@
 			rootWidth: number
 		): void {
 			const viewport = page.getViewport({ scale: scale });
-			const context = canvas.getContext('2d');
-
+			let context = canvas.getContext('2d')!;
+			// context.filter = 'invert(1)';
 			const outputScale = this.pixelRatio * scalingFactor;
 			const renderScaleCoefficient = rootWidth / viewport.width;
 
@@ -196,7 +206,11 @@
 			const renderParams = {
 				canvasContext: context!,
 				viewport: viewport,
-				transform: transform!
+				transform: transform!,
+				pageColors: {
+					background: background3Color,
+					foreground: font1Color
+				}
 			};
 			page.render(renderParams).promise;
 		}
@@ -300,16 +314,18 @@
 						});
 					}
 
-					thumbnails.forEach((thumbnail: HTMLElement) => {
-						const thumbnailIndex = thumbnail.id.split('-')[1];
-						if (thumbnailIndex === pageIndex) {
-							thumbnail.classList.add('active');
-							thumbnail.scrollIntoView();
-							outline.scrollBy({ top: -55 });
-						} else {
-							thumbnail.classList.remove('active');
-						}
-					});
+					if ($rightPanelActive) {
+						thumbnails.forEach((thumbnail: HTMLElement) => {
+							const thumbnailIndex = thumbnail.id.split('-')[1];
+							if (thumbnailIndex === pageIndex) {
+								thumbnail.classList.add('active');
+								thumbnail.scrollIntoView(false);
+								// outline.scrollBy({ top: -55 });
+							} else {
+								thumbnail.classList.remove('active');
+							}
+						});
+					}
 				}
 			});
 		};
@@ -344,11 +360,11 @@
 					TODO: FIX
 					THIS ALSO HAS TO BE DONE TO THE CLICK METHODS =(
 					*/
-				if (pageNumber === '1') {
-					mainCanvas.scrollBy({ top: -55 });
-				} else {
-					mainCanvas.scrollBy({ top: -40 });
-				}
+				// if (pageNumber === '1') {
+				// 	mainCanvas.scrollBy({ top: -55 });
+				// } else {
+				// 	mainCanvas.scrollBy({ top: -40 });
+				// }
 			}
 		});
 		// #endregion
@@ -367,6 +383,14 @@
 		});
 		// #endregion
 
+		font1Color = getComputedStyle(document.documentElement).getPropertyValue(
+			'--font-2'
+		);
+
+		background3Color = getComputedStyle(
+			document.documentElement
+		).getPropertyValue('--background-3');
+
 		pdfRenderer = new PDFRenderer(pdfDoc, mainCanvas, outline);
 		pdfRenderer.buildHTMLElements();
 		pdfRenderer.renderAllCanvases();
@@ -380,6 +404,9 @@
 		<!-- Download -->
 		<div id="pdf-download-icon">
 			<DownloadIcon />
+		</div>
+		<div id="pdf-theme-switcher">
+			<ThemeSwitcherIcon />
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
@@ -418,7 +445,8 @@
 			<span class="total-page-num">{pageCount}</span>
 		</div>
 	</div>
-	<div id="pdf-render-container">
+
+	<div id="pdf-render-container" style:grid-template-columns={templateString}>
 		<div
 			id="pdf-render"
 			bind:this={mainCanvas}
@@ -433,7 +461,7 @@
 	#pdf-top-bar {
 		/* Grid */
 		display: grid;
-		grid-template-columns: 60px calc(100% - 240px) 180px;
+		grid-template-columns: 60px 60px 1fr 180px;
 
 		/* Layout */
 		width: 100%;
@@ -502,7 +530,7 @@
 
 	#pdf-render-container {
 		display: grid;
-		grid-template-columns: 1fr 180px;
+		/* grid-template-columns: 1fr 180px; */
 		justify-content: space-between;
 		align-items: start;
 		height: 100%;
@@ -585,5 +613,14 @@
 		font-size: 1.5rem;
 		border: none;
 		text-align: end;
+	}
+
+	#pdf-theme-switcher {
+		height: 35px;
+		width: 35px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		scale: 0.8;
 	}
 </style>

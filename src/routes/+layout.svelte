@@ -31,6 +31,9 @@
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
 	import Cookie from 'js-cookie';
 	import type { LayoutData } from './$types';
+	import { page } from '$app/stores';
+
+	console.log($page.url.pathname);
 
 	export let data: LayoutData;
 
@@ -47,6 +50,11 @@
 	let pageHome = false;
 	let pageDocs = false;
 	let pageBoard = false;
+	let showOutLineButtons = true;
+
+	if ($page.url.pathname.endsWith('.pdf')) {
+		showOutLineButtons = false;
+	}
 
 	beforeUpdate(() => {
 		document.documentElement.setAttribute('data-theme', $colorTheme);
@@ -95,33 +103,44 @@
 		</svelte:fragment>
 
 		<svelte:fragment slot="right-cluster">
-			<ToggleMenuItem
-				active={$showCodeOutlineElements}
-				onClickFunction={() => {
-					$showCodeOutlineElements = !$showCodeOutlineElements;
-					Cookies.set('showCodeOutlineElements', $showCodeOutlineElements ? 'true' : 'false');
-				}}
-			>
-				<CodeIcon active={$showCodeOutlineElements} />
-			</ToggleMenuItem>
-			<ToggleMenuItem
-				active={$showMathOutlineElements}
-				onClickFunction={() => {
-					$showMathOutlineElements = !$showMathOutlineElements;
-					Cookies.set('showMathOutlineElements', $showMathOutlineElements ? 'true' : 'false');
-				}}
-			>
-				<MathIcon active={$showMathOutlineElements} />
-			</ToggleMenuItem>
-			<ToggleMenuItem
-				active={$showTableOutlineElements}
-				onClickFunction={() => {
-					$showTableOutlineElements = !$showTableOutlineElements;
-					Cookies.set('showTableOutlineElements', $showTableOutlineElements ? 'true' : 'false');
-				}}
-			>
-				<TableIcon active={$showTableOutlineElements} />
-			</ToggleMenuItem>
+			{#if showOutLineButtons}
+				<ToggleMenuItem
+					active={$showCodeOutlineElements}
+					onClickFunction={() => {
+						$showCodeOutlineElements = !$showCodeOutlineElements;
+						Cookies.set(
+							'showCodeOutlineElements',
+							$showCodeOutlineElements ? 'true' : 'false'
+						);
+					}}
+				>
+					<CodeIcon active={$showCodeOutlineElements} />
+				</ToggleMenuItem>
+				<ToggleMenuItem
+					active={$showMathOutlineElements}
+					onClickFunction={() => {
+						$showMathOutlineElements = !$showMathOutlineElements;
+						Cookies.set(
+							'showMathOutlineElements',
+							$showMathOutlineElements ? 'true' : 'false'
+						);
+					}}
+				>
+					<MathIcon active={$showMathOutlineElements} />
+				</ToggleMenuItem>
+				<ToggleMenuItem
+					active={$showTableOutlineElements}
+					onClickFunction={() => {
+						$showTableOutlineElements = !$showTableOutlineElements;
+						Cookies.set(
+							'showTableOutlineElements',
+							$showTableOutlineElements ? 'true' : 'false'
+						);
+					}}
+				>
+					<TableIcon active={$showTableOutlineElements} />
+				</ToggleMenuItem>
+			{/if}
 			<ToggleMenuItem
 				active={$rightPanelActive}
 				onClickFunction={() => {
@@ -144,13 +163,25 @@
 		<SiteNavigationLink bind:active={pageDocs} link={'/docs'} name={'Docs'}>
 			<LibraryIcon active={pageDocs} />
 		</SiteNavigationLink>
-		<SiteNavigationLink bind:active={pageBoard} link={'/whiteboard'} name={'Board'}>
+		<SiteNavigationLink
+			bind:active={pageBoard}
+			link={'/whiteboard'}
+			name={'Board'}
+		>
 			<WhiteboardIcon active={pageBoard} />
 		</SiteNavigationLink>
 	</svelte:fragment>
 	<svelte:fragment slot="links">
-		<ExternalNavigationLink link={'https://github.com/sigil-ml'} site={'github'} name={'GitHub'} />
-		<ExternalNavigationLink link={'https://hub.docker.com/'} site={'docker'} name={'Docker Hub'} />
+		<ExternalNavigationLink
+			link={'https://github.com/sigil-ml'}
+			site={'github'}
+			name={'GitHub'}
+		/>
+		<ExternalNavigationLink
+			link={'https://hub.docker.com/'}
+			site={'docker'}
+			name={'Docker Hub'}
+		/>
 	</svelte:fragment>
 </MainModalMenu>
 
