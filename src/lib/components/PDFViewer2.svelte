@@ -383,16 +383,15 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
+			<ZoomMinus
+				on:click={() => {
+					if ($pdfZoom > 0.2) {
+						zoom -= 10;
+						pdfRenderer.renderAllCanvases(false);
+					}
+				}}
+			/>
 			<div class="zoom-level-row">
-				<ZoomMinus
-					on:click={() => {
-						if ($pdfZoom > 0.2) {
-							zoom -= 10;
-							pdfRenderer.renderAllCanvases(false);
-						}
-					}}
-				/>
-
 				<input
 					bind:this={zoomInput}
 					type="text"
@@ -437,9 +436,7 @@
 		grid-template-columns: 60px calc(100% - 240px) 180px;
 
 		/* Layout */
-		position: fixed;
-		width: calc(100% - 320px);
-		/* height: 1.5em; */
+		width: 100%;
 		padding: 0px;
 		justify-content: space-between;
 		align-items: center;
@@ -454,7 +451,7 @@
 		border-left: 0;
 		border-right: 0;
 		border-bottom: 1px;
-		border-color: var(--font-1);
+		border-color: var(--font-1-50);
 		border-style: solid;
 	}
 
@@ -497,8 +494,8 @@
 	}
 
 	#pdf-container {
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-rows: 35px 1fr;
 		height: 100%;
 		overflow: hidden;
 	}
@@ -509,6 +506,7 @@
 		justify-content: space-between;
 		align-items: start;
 		height: 100%;
+		overflow: scroll;
 	}
 
 	#pdf-render {
@@ -519,10 +517,7 @@
 		width: calc(100% - 30px);
 		align-items: center;
 		background-color: var(--background-1);
-		padding-top: 55px;
-		padding-right: 15px;
-		padding-bottom: 15px;
-		padding-left: 15px;
+		padding: 15px;
 	}
 
 	#pdf-outline {
@@ -535,7 +530,6 @@
 		background-color: var(--background-2);
 		padding: 15px;
 		gap: 10px;
-		margin-top: 40px;
 	}
 
 	/* ============= PAGE NUMS ============= */
@@ -568,14 +562,16 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		gap: 5px;
+		gap: 15px;
 		margin-left: -60px;
 	}
 
 	.zoom-level-row {
-		display: flex;
-		flex-direction: row;
+		display: grid;
+		grid-template-columns: 25px 25px;
 		align-items: center;
+		gap: 5px;
+		/* margin-left: -5px; */
 	}
 
 	.cur-zoom {
@@ -583,7 +579,7 @@
 	}
 
 	.curZoomInput {
-		width: 40px;
+		width: 25px;
 		background: transparent;
 		color: var(--font-2);
 		font-size: 1.5rem;

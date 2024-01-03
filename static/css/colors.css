@@ -39,7 +39,11 @@
 	--white-purple-1: linear-gradient(90deg, #d2a8ff 0%, #515ada 100%);
 	--white-purple-2: linear-gradient(90deg, #515ada 0%, #d2a8ff 100%);
 	--white-purple-1-rotated: linear-gradient(0deg, #d2a8ff 0%, #515ada 100%);
-	--white-red-1: linear-gradient(90deg, rgba(254, 202, 202, 1) 0%, #d73a49 100%);
+	--white-red-1: linear-gradient(
+		90deg,
+		rgba(254, 202, 202, 1) 0%,
+		#d73a49 100%
+	);
 	--red-red-1: linear-gradient(90deg, rgba(239, 68, 68, 1) 0%, #d73a49 100%);
 }
 
@@ -57,6 +61,7 @@
 
 	/* Typography */
 	--font-1: black;
+	--font-1-50: #00000050;
 	--font-2: var(--black-2);
 	--font-3: var(--black-2);
 	--font-4: black;
@@ -70,12 +75,12 @@
 	--highlight-20: #efd5ff20;
 
 	/* SVG Filters */
-	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
-	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg) brightness(88%)
-		contrast(86%);
-	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
+	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
 }
 
 [data-theme='cb-light'] {
@@ -92,6 +97,7 @@
 
 	/* Typography */
 	--font-1: black;
+	--font-1-50: #00000050;
 	--font-2: var(--black-2);
 	--font-3: var(--black-2);
 	--font-4: black;
@@ -105,12 +111,12 @@
 	--highlight-20: #efd5ff20;
 
 	/* SVG Filters */
-	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
-	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg) brightness(88%)
-		contrast(86%);
-	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
+	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
 }
 
 [data-theme='dark'] {
@@ -128,6 +134,7 @@
 	/* Typography */
 	--font-1: white;
 	--font-1-10: #ffffff10;
+	--font-1-50: #ffffff50;
 	--font-2: var(--white-1);
 	--font-3: var(--grey-2);
 	--font-4: black;
@@ -144,12 +151,12 @@
 	--highlight-20: #efd5ff20;
 
 	/* SVG Filters */
-	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg) brightness(112%)
-		contrast(102%);
-	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg) brightness(88%)
-		contrast(86%);
-	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
+	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg)
+		brightness(112%) contrast(102%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
 }
 
 [data-theme='cb-dark'] {
@@ -167,6 +174,7 @@
 	/* Typography */
 	--font-1: white;
 	--font-1-10: #ffffff10;
+	--font-1-50: #ffffff50;
 	--font-2: var(--white-1);
 	--font-3: var(--grey-2);
 	--font-4: black;
@@ -182,10 +190,10 @@
 	--highlight-20: #efd5ff20;
 
 	/* SVG Filters */
-	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg) brightness(112%)
-		contrast(102%);
-	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg) brightness(88%)
-		contrast(86%);
-	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg) brightness(115%)
-		contrast(84%);
+	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg)
+		brightness(112%) contrast(102%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
 }
