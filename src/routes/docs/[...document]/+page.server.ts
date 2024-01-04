@@ -1,4 +1,5 @@
 import { unified } from 'unified';
+import remarkFrontmatter from 'remark-frontmatter';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
@@ -51,6 +52,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		.use(remarkMath)
 		.use(remarkRehype)
 		.use(remarkGfm)
+		.use(remarkFrontmatter)
 		.use(rehypeStringify)
 		.use(rehypeKatex)
 		.use(rehypePrism)
