@@ -10,5 +10,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .idea
 package-lock.json
-http_ca.crt
+elastic/http_ca.crt
 __pycache__/
