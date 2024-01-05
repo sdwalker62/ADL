@@ -1,10 +1,11 @@
 import requests
+import pprint
 
-url = "http://localhost:8200/upload"
+url = "http://localhost:8200/query"
 
-response = requests.post(
+response = requests.get(
     url,
     params={"query": "1"}
 )
 
-print(response.json())
+pprint.pprint(response.json())

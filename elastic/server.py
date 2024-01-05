@@ -2,10 +2,10 @@ import os
 import json
 import fitz
 import uvicorn
-import markdown
+import frontmatter
 
+from pprint import pprint
 from pathlib import Path
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from fastapi import FastAPI
@@ -24,22 +24,49 @@ client = Elasticsearch(
     )
 )
 
+def organize_pdf_metadata(data, file):
+    new_data = dict()
+    if not data["title"]:
+        new_data["title"] = Path(file).stem
+    if data["author"]:
+        new_data["author"] = data["author"]
+    if data["creationDate"]:
+        date = data["creationDate"]
+        new_data["date_created"] = "-".join([date[2:6], date[6:8], date[8:10]])
+    if data["modDate"]:
+        date = data["modDate"]
+        new_data["date_modified"] = "-".join([date[2:6], date[6:8], date[8:10]])
+    if data["content"]:
+        new_data["content"] = data["content"]
+    new_data["file_type"] = Path(file).suffix
+
+    return new_data
+
 def extract_text(file):
     ext = Path(file).suffix
 
     if ext == ".md":
         with open(file, 'r') as file:
             markdown_text = file.read()
-        html = markdown.markdown(markdown_text)
-        soup = BeautifulSoup(html, 'html.parser')
-        text = soup.get_text().replace("\n", " ")
+        data = frontmatter.loads(markdown_text).to_dict()
+        print(data)
+        data["content"] = data["content"].replace("\n", " ")
+        if "date_created" in data.keys():
+            date = data["date_created"]
+            data["date_created"] = '%s-%s-%s' % (date.year, date.month, date.day)
+        if "date_modified" in data.keys():
+            date = data["date_modified"]
+            data["date_modified"] = '%s-%s-%s' % (date.year, date.month, date.day)
+        data["file_type"] = ext
 
     elif ext == ".pdf":
         with fitz.open(file) as pages:
+            data = pages.metadata
             texts = [page.get_text() for page in pages]
-            text = ' '.join(texts)
-    
-    return text
+            data["content"] = ' '.join(texts).replace("\n", " ")
+            data = organize_pdf_metadata(data, file)
+
+    return data
 
 
 class Item(BaseModel):
@@ -76,16 +103,11 @@ def create():
     new_files = all_files
     body = []
     for file in new_files:
-        file_path = Path(file)
         body.append(
             {"index": {"_index": "documents"}}
         )
         body.append(
-            {
-                "name": file_path.stem,
-                "file_type": file_path.suffix,
-                "body": extract_text(file)
-            }
+            extract_text(file)
         )
 
     resp = client.bulk(
@@ -96,11 +118,17 @@ def create():
 
 @app.get("/query")
 def query():
-    resp = client.search(
-        index="documents",
-        body={"query": {"match": {"name": "YOLOv8"}}},
+    response = client.search(
+        index="documents", query={
+            "multi_match": {
+                "query": "Python",
+                "fields": ["title", "content"]
+            }
+        }
     )
-    return json.dumps(resp.body)
+    pprint(dir(response))
+    pprint(response.body)
+    return json.dumps(response.body)
 
 @app.post("/update")
 def update():
@@ -116,3 +144,30 @@ def delete():
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8200)
+
+
+# create API key
+# POST /_security/api_key
+# {
+#   "name": "my-api-key",
+#   "expiration": "1d",   
+#   "role_descriptors": { 
+#     "role_name": {
+#       "cluster": ["all"],
+#       "indices": [
+#         {
+#           "names": ["*"],
+#           "privileges": ["all"]
+#         }
+#       ]
+#     }
+#   }
+# }
+
+# {
+#   "id": "2DJJ24wBJ6dVx6J_i9b4",
+#   "name": "my-api-key",
+#   "expiration": 1704572479481,
+#   "api_key": "TTLu7w2GTyKF3NwMFIDkXQ",
+#   "encoded": "MkRKSjI0d0JKNmRWeDZKX2k5YjQ6VFRMdTd3MkdUeUtGM053TUZJRGtYUQ=="
+# }
