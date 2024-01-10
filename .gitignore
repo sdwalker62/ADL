@@ -12,3 +12,8 @@ vite.config.ts.timestamp-*
 package-lock.json
 elastic/http_ca.crt
 __pycache__/
+build/
+node_modules/
+.svelte-kit/
+
+AthenaDocs/

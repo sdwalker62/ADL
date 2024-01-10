@@ -1,6 +1,5 @@
 <script lang="ts">
 	export let innerHTMLString = '';
-	console.log(innerHTMLString);
 </script>
 
 <svelte:head>
