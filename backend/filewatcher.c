@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <limits.h>
 #include <ftw.h>
+#include <zmq.h>
+#include <assert.h>
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
@@ -17,6 +19,11 @@ FILE *log_file;
 char *watched_dirs[MAX_DIRS];
 int wd[MAX_DIRS];
 int dir_count = 0;
+
+void clearScreen() {
+  const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
+  write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 11);
+}
 
 int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
     if (typeflag == FTW_D) {
@@ -36,30 +43,68 @@ int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW
     return 0; // Continue traversing directories
 }
 
-int main() {
+int main(void) {
+    printf("Initiating filewatch service\n");
+
     char buffer[BUF_LEN];
 
+    printf("Establishing connection with Python service...");
+    //  Socket to talk to clients
+    void *context = zmq_ctx_new();
+    void *requester = zmq_socket(context, ZMQ_REQ);
+    int connect_status = zmq_connect(requester, "tcp://localhost:13000");
+    assert(connect_status == 0);
+    printf("established!\n");
+
     // File to log changes
+    printf("Creating log file...");
     log_file = fopen("./logfile.txt", "a");
     if (!log_file) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
+    printf("created!\n");
 
-    // Initialize inotify
+    printf("Starting inotify...");
     fd = inotify_init();
     if (fd < 0) {
         perror("inotify_init");
         exit(EXIT_FAILURE);
     }
+    printf("initialized!\n");
 
-    // Start watching directories recursively
+    printf("Begin watch service...");
     if (nftw(".", add_watch, 20, 0) == -1) {
         perror("nftw");
         exit(EXIT_FAILURE);
     }
+    printf("started!\n");
 
-    // Watch for changes and log them
+    clearScreen();
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+       printf("Filewatcher is watching for changes in the following dir: %s\n", cwd);
+    } else {
+        perror("getcwd() error");
+        return 1;
+    }
+
+    // ==================================
+    int request_nbr;
+    for (request_nbr = 0; request_nbr != 10; request_nbr++) {
+        char buffer [10];
+        printf("Sending Hello %d…\n", request_nbr);
+        zmq_send(requester, "Hello", 5, 0);
+        sleep(1);
+        printf("Hey");
+        zmq_recv(requester, buffer, 10, 0);
+        printf ("Received World %d\n", request_nbr);
+    }
+    zmq_close (requester);
+    zmq_ctx_destroy (context);
+    // ==================================
+
+
     while (1) {
         int length = read(fd, buffer, BUF_LEN);
         if (length < 0) {
@@ -74,6 +119,7 @@ int main() {
                 if (event->mask & IN_CREATE || event->mask & IN_MODIFY || event->mask & IN_DELETE) {
                     // Check if the event is not for the log file itself
                     if (strcmp(event->name, "logfile.txt") != 0) {
+                        fprintf(stdout, "File: %s\n", event->name);
                         fprintf(log_file, "Event: %s on file: %s\n", 
                                 (event->mask & IN_CREATE) ? "CREATE" : 
                                 (event->mask & IN_MODIFY) ? "MODIFY" : "DELETE", 

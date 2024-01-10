@@ -1,0 +1,3 @@
+/home/dwalker/ADL/backend/CMakeFiles/filewatcher.dir
+/home/dwalker/ADL/backend/CMakeFiles/edit_cache.dir
+/home/dwalker/ADL/backend/CMakeFiles/rebuild_cache.dir
