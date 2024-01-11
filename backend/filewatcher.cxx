@@ -83,7 +83,7 @@ int main(void) {
     printf("Sentinel is healthy and watching the following directory:\n");
     std::cout << cur_dir << std::endl;
     std::cout << "=========================================================\n" << std::endl;
-    socket.send(zmq::buffer(alive_message), zmq::send_flags::none);
+    socket.send(zmq::buffer("HEALTH_CHECK" + alive_message), zmq::send_flags::none);
 
     while (1) {
         int length = read(fd, buffer, BUF_LEN);
@@ -106,7 +106,7 @@ int main(void) {
                     } else if (event->mask & IN_DELETE) {
                         event_type = "DELETE";
                     }
-                std::string msg = file_name + "," + event_type;
+                std::string msg = cur_dir + "/" + file_name + "," + event_type;
                 socket.send(zmq::buffer(msg), zmq::send_flags::none);
                 std::cout << msg << std::endl;
                 }

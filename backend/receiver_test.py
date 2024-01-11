@@ -17,8 +17,15 @@ print(f"Listening to tcp://{HOST}:{PORT}")
 
 try:
     while True:
-        message = socket.recv()
-        print(f"Received message: {message}")
+        msg = socket.recv()
+        msg = msg.decode("utf-8")
+        if msg[0:12] == "HEALTH_CHECK":
+            print("Sentinel is alive")
+        else:
+            msg_split = msg.split(",")
+            file = msg_split[0]
+            event = msg_split[1]
+            print(f"Received {event} from {file}")
 
 except KeyboardInterrupt:
     print("Interrupted")
