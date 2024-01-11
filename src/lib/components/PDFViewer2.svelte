@@ -26,6 +26,8 @@
 	import { onMount } from 'svelte';
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 	import { rightPanelActive } from '$lib/data/shared';
+	import { page } from '$app/stores';
+	import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
 	// #endregion
 
 	// #region Props
@@ -403,7 +405,12 @@
 	<div id="pdf-top-bar">
 		<!-- Download -->
 		<div id="pdf-download-icon">
-			<DownloadIcon />
+			<a
+				href={`http://localhost:8000/api/doc${$page.params.document}`}
+				download="test.pdf"
+			>
+				<DownloadIcon />
+			</a>
 		</div>
 		<div id="pdf-theme-switcher">
 			<ThemeSwitcherIcon />

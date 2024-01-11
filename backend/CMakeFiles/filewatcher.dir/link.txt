@@ -1,1 +1,1 @@
-/usr/bin/cc CMakeFiles/filewatcher.dir/filewatcher.c.o -o filewatcher  -lzmq 
+/usr/bin/c++ CMakeFiles/filewatcher.dir/filewatcher.cxx.o -o filewatcher  -lzmq 

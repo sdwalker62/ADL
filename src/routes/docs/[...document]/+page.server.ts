@@ -36,7 +36,8 @@ export const load: PageServerLoad = async ({ params }) => {
 	const contents = fs.readFileSync(params.document, 'utf-8');
 
 	if (!contents) {
-		const doc = '<h1> No Document Found! </h1> <p> You can help by writing me!</p>';
+		const doc =
+			'<h1> No Document Found! </h1> <p> You can help by writing me!</p>';
 		const outline: Array<any> = [];
 		return {
 			document: doc,
@@ -85,7 +86,8 @@ export const load: PageServerLoad = async ({ params }) => {
     */
 	const htmlDoc = new JSDOM(docs.toString());
 
-	const isMath = (node: HTMLElement) => node.querySelectorAll('span.katex-mathml').length;
+	const isMath = (node: HTMLElement) =>
+		node.querySelectorAll('span.katex-mathml').length;
 	const isCode = (node: HTMLElement) => node.querySelectorAll('code').length;
 	const isTable = (node: HTMLElement) => node.querySelectorAll('table').length;
 

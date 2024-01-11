@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b64e5a3a-193f-469c-8209-15f493c3e32d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/components/PDFViewer2.svelte" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/YOLOv8.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" beforeDir="false" afterPath="$PROJECT_DIR$/AthenaDocs/machine_learning/pytorch.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +49,7 @@
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "settings.editor.splitter.proportion": "0.24925816",
-    "ts.external.directory.path": "/Users/dalton/Development/ADL/node_modules/typescript/lib",
+    "ts.external.directory.path": "\\\\wsl.localhost\\Ubuntu\\home\\dwalker\\dev\\adl\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -74,6 +75,8 @@
       <workItem from="1703738762041" duration="2309000" />
       <workItem from="1704149531550" duration="485000" />
       <workItem from="1704150034597" duration="415000" />
+      <workItem from="1704587128772" duration="70000" />
+      <workItem from="1704587217661" duration="131000" />
     </task>
     <servers />
   </component>
