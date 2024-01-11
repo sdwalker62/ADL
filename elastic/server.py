@@ -18,8 +18,8 @@ accepted_exts = [".md", ".pdf"]
 
 
 client = Elasticsearch(
-    "https://localhost:9200/",
-    ca_certs=os.getenv("HTTP_CERT_PATH"),
+    os.getenv("ES_URI"),
+    ca_certs=os.getenv("HTTP_CERTIFICATE_PATH"),
     api_key=(
         os.getenv("API_KEY_ID"),
         os.getenv("API_KEY_SECRET")
@@ -50,7 +50,7 @@ def update():
         for name in files:
             if Path(name).suffix in accepted_exts:
                 all_files.append(os.path.join(path, name))
-    
+
     files = prepare_files(client, INDEX, all_files)
 
     if files[0]:
