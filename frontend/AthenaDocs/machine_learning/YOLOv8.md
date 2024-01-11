@@ -1,6 +1,6 @@
 ---
 title: YOLOv8
-author: Russell Land
+author: Russell
 date_created: 2023-12-19
 date_modified: 2024-01-04
 description: How to use YOLOv8, installation, deployment, and training.

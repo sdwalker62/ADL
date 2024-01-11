@@ -1,7 +1,7 @@
 import pprint
 import requests
 
-url = "http://localhost:8200/update"
+url = "http://localhost:8200/create"
 
 response = requests.post(
     url,

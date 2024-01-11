@@ -106,7 +106,7 @@ int main(void) {
                     } else if (event->mask & IN_DELETE) {
                         event_type = "DELETE";
                     }
-                std::string msg = cur_dir + "/" + file_name + "," + event_type;
+                std::string msg = file_name + "," + event_type;
                 socket.send(zmq::buffer(msg), zmq::send_flags::none);
                 std::cout << msg << std::endl;
                 }
@@ -125,4 +125,3 @@ int main(void) {
 
     return 0;
 }
-
