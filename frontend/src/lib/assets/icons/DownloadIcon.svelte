@@ -2,6 +2,7 @@
 	export let active = false;
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <svg
 	class:active
 	version="1.1"
@@ -9,6 +10,7 @@
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	width="24"
 	height="24"
+	on:click
 >
 	<g>
 		<rect height="24.1781" opacity="0" width="24.9252" x="0" y="0" />

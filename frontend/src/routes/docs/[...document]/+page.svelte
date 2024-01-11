@@ -86,7 +86,9 @@
 				};
 			}
 
-			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
+			const sectionIntersectionCallback = (
+				entries: IntersectionObserverEntry[]
+			) => {
 				let outline = document.getElementById('outline-container');
 				if (outline) {
 					if (!outline.hasChildNodes()) return;
@@ -110,7 +112,10 @@
 					});
 				}
 			};
-			let observer = new IntersectionObserver(sectionIntersectionCallback, options);
+			let observer = new IntersectionObserver(
+				sectionIntersectionCallback,
+				options
+			);
 			let sections = document.querySelectorAll('[data-heading-rank="1"]');
 			sections.forEach((section) => {
 				observer.observe(section);
@@ -194,7 +199,8 @@
 
 	:global(.document-code-img) {
 		height: 2rem !important;
-		filter: invert(52%) sepia(6%) saturate(194%) hue-rotate(202deg) brightness(89%) contrast(84%);
+		filter: invert(52%) sepia(6%) saturate(194%) hue-rotate(202deg)
+			brightness(89%) contrast(84%);
 	}
 
 	:global(.document-code-img):hover {
