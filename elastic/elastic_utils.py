@@ -1,9 +1,12 @@
+import os
 import hashlib
 import datetime
 from pathlib import Path
 
 import fitz
 import frontmatter
+
+accepted_exts = [".md", ".pdf"]
 
 
 
@@ -29,36 +32,25 @@ def prepare_files(client, index, all_files):
                 query={
                     "match_all": {}
                 },
-                _source=["file_path", "hash", "_id"],
-                size=len(all_files * 2)
+                _source=["file_path", "_id"],
+                size=len(all_files)*2
             )
 
             existing_files = {
-                i["_source"]["file_path"]: [i["_source"]["hash"], i["_id"]]
+                i["_source"]["file_path"]: i["_id"]
                 for i in response['hits']['hits']
             }
-            file_paths = existing_files.keys()
 
-            files_to_update = []
-            files_to_delete = []
-            for i in file_paths:
-                if i in all_files:
-                    hash = hash_document(i)
-                    if hash != existing_files[i][0]:
-                        files_to_update.append({i: existing_files[i]})
-                else:
-                    files_to_delete.append({i: existing_files[i]})
+            file_paths = existing_files.keys()
+            files_to_delete = [{i: existing_files[i]} for i in file_paths if i not in all_files]
             
             files_to_add = set(all_files).difference(set(file_paths))
-            print(file_paths)
-            print(files_to_add)
 
         else:
-            files_to_update = []
             files_to_delete = []
             files_to_add = all_files
 
-        return files_to_update, files_to_delete, files_to_add
+        return files_to_add, files_to_delete
 
     except Exception as e:
         print(f"Elasticsearch client error: {e}")
@@ -195,3 +187,71 @@ def organize_pdf_metadata(data, doc):
     new_data["file_type"] = Path(doc).suffix
 
     return new_data
+
+
+def get_full_paths(file_name):
+    all_files = []
+    for path, _, files in os.walk(os.getenv("DOCUMENTS_PATH")):
+        for name in files:
+            if Path(name).suffix in accepted_exts:
+                all_files.append(os.path.join(path, name))
+    
+    return [file for file in all_files if file_name in file]
+
+def modify_entry(file, client):
+    INDEX = "documents"
+
+    file_paths = get_full_paths(file)
+    for file_path in file_paths:
+        response = client.search(
+            index="documents",
+            query={
+                "match": {
+                    "file_path": file_path
+                }
+            },
+            _source=["_id"],
+            size=1
+        )
+        print(response)
+        client.update(
+            index=INDEX,
+            id=response['hits']['hits'][0]["_id"],
+            doc=extract_text(file_path)
+        )
+    return
+
+
+def create_entry(file, client):
+    INDEX = "documents"
+
+    file_paths = get_full_paths(file)
+    for file_path in file_paths:
+        client.index(
+            index=INDEX,
+            document=extract_text(file_path)
+        )
+    return
+
+
+def delete_entry(file, client):
+    INDEX = "documents"
+
+    file_paths = get_full_paths(file)
+    for file_path in file_paths:
+        response = client.search(
+            index="documents",
+            query={
+                "match": {
+                    "file_path": file_path
+                }
+            },
+            _source=["_id"],
+            size=1
+        )
+
+        client.delete(
+            index=INDEX,
+            id=response['hits']['hits'][0]["_id"],
+        )
+    return

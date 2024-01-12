@@ -40,9 +40,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-
-@app.post("/update")
-def update():
+@app.post("/create")
+def create():
     INDEX = "documents"
 
     all_files = []
@@ -51,42 +50,22 @@ def update():
             if Path(name).suffix in accepted_exts:
                 all_files.append(os.path.join(path, name))
 
-    files = prepare_files(client, INDEX, all_files)
-
-    if files[0]:
-        for file in files[0]:
-            file_path = list(file.keys())[0]
-            response = client.update(
-                index=INDEX,
-                id=file[file_path][1],
-                doc=extract_text(file_path)
-            )
-            print(response)
+    files_to_add, files_to_delete = prepare_files(client, INDEX, all_files)
     
-    if files[1]:
-        for file in files[1]:
-            file_path = list(file.keys())[0]
-            response = client.delete(
+    if files_to_add:
+        for file in files_to_add:
+            client.index(
                 index=INDEX,
-                id=file[file_path][1]
-            )
-            print(response)
-    
-    if files[2]:
-        body = []
-        for file in all_files:
-            body.append(
-                {"index": {"_index": INDEX}}
-            )
-            body.append(
-                extract_text(file)
+                document=extract_text(file)
             )
 
-        response = client.bulk(
-            index=INDEX,
-            body=body
-        )
-        print(response)
+    if files_to_delete:
+        for file in files_to_delete:
+            file_path = list(file.keys())[0]
+            client.delete(
+                index=INDEX,
+                id=file[file_path]
+            )
 
     return json.dumps({"status": "200"})
 

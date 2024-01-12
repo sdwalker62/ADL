@@ -10,7 +10,7 @@ echo $ES_PASSWORD | xargs -I{} sed -i '/^ES_PASSWORD=/s/=.*/="{}"/' elastic.env
 echo $KB_ENROLLMENT_TOKEN | xargs -I{} sed -i '/^KB_ENROLLMENT_TOKEN=/s/=.*/="{}"/' elastic.env
 
 # get http cert
-docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt ./
+docker cp es01:/usr/share/elasticsearch/config/certs/http_ca.crt .
 
 # create/save API key to JSON
 curl -X POST "https://localhost:9200/_security/api_key" --cacert http_ca.crt -u elastic:$ES_PASSWORD -H 'Content-Type: application/json' -d'
