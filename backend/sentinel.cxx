@@ -105,11 +105,13 @@ main(void)
     std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
     std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
 
-    /* Some systems cannot read integer variables if they are not
+    /* 
+    Some systems cannot read integer variables if they are not
     properly aligned. On other systems, incorrect alignment may
     decrease performance. Hence, the buffer used for reading from
     the inotify file descriptor should have the same alignment as
-    struct inotify_event. */
+    struct inotify_event. 
+    */
     char buf[4096] __attribute__ ((aligned(__alignof__(struct inotify_event))));
     ssize_t length;
 
@@ -155,10 +157,11 @@ main(void)
             exit(EXIT_FAILURE);
         }
 
-        /* If the nonblocking read() found no events to read, then
-            it returns -1 with errno set to EAGAIN. In that case,
-            we exit the loop. */
-
+        /* 
+        If the nonblocking read() found no events to read, then
+        it returns -1 with errno set to EAGAIN. In that case,
+        we wait and then try again.
+        */
         if (length <= 0) {
             if (errno == EAGAIN) {
                 std::this_thread::sleep_for(0.5s);
