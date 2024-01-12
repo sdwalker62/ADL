@@ -15,10 +15,9 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <fmt/format.h>
 
-
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
 #define BUF_LEN     ( 1024 * ( EVENT_SIZE + 16 ) )
-#define MAX_DIRS    8096
+#define MAX_DIRS    2048
 
 int fd;
 char *watched_dirs[MAX_DIRS];
@@ -28,7 +27,9 @@ int dir_count = 0;
 using namespace std::chrono_literals;
 
 
-std::map<std::string, std::string> parse_env(const std::string& env_file_name) {
+std::map<std::string, std::string> 
+parse_env(const std::string& env_file_name) 
+{
     std::map<std::string, std::string> env_map;
     std::ifstream file(env_file_name);
     std::string line;
@@ -46,13 +47,17 @@ std::map<std::string, std::string> parse_env(const std::string& env_file_name) {
 }
 
 
-void clearScreen() {
+void 
+clearScreen() 
+{
   const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
   write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 11);
 }
 
 
-int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
+int 
+add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) 
+{
     if (typeflag == FTW_D) {
         if (dir_count >= MAX_DIRS) {
             fprintf(stderr, "Maximum directory count reached, not watching: %s\n", fpath);
@@ -71,7 +76,22 @@ int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW
 }
 
 
-int main(void) {
+std::string 
+get_watch_dir(const inotify_event *event) 
+{
+    std::string event_dir {""};
+    for (int j = 0; j < dir_count; ++j) {
+        if (event->wd == wd[j]) {
+            event_dir = watched_dirs[j];
+        }
+    }
+    return event_dir;
+}
+
+
+int 
+main(void) 
+{
     clearScreen();
 
     std::cout << std::endl;
@@ -85,10 +105,18 @@ int main(void) {
     std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
     std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
 
-    char buffer[BUF_LEN];
-    fd = inotify_init();
-    if (fd < 0) {
-        perror("inotify_init");
+    /* Some systems cannot read integer variables if they are not
+    properly aligned. On other systems, incorrect alignment may
+    decrease performance. Hence, the buffer used for reading from
+    the inotify file descriptor should have the same alignment as
+    struct inotify_event. */
+    char buf[4096] __attribute__ ((aligned(__alignof__(struct inotify_event))));
+    ssize_t length;
+
+    /* Create the file descriptor for accessing the inotify API. */
+    fd = inotify_init1(IN_NONBLOCK);
+    if (fd == -1) {
+        perror("inotify_init1");
         exit(EXIT_FAILURE);
     }
 
@@ -118,39 +146,48 @@ int main(void) {
     std::cout << "=========================================================\n" << std::endl;
     socket.send(zmq::buffer("HEALTH_CHECK" + alive_message), zmq::send_flags::none);
 
-    while (1) {
-        int length = read(fd, buffer, BUF_LEN);
-        if (length < 0) {
+    /* Loop while events can be read from inotify file descriptor. */
+    const struct inotify_event *event;
+    for (;;) {
+        length = read(fd, buf, sizeof(buf));
+        if (length == -1 && errno != EAGAIN) {
             perror("read");
             exit(EXIT_FAILURE);
         }
 
-        int i = 0;
-        while (i < length) {
-            struct inotify_event *event = (struct inotify_event *)&buffer[i];
-            if (event->len) {
-                std::string event_dir {""};
-                for (int j = 0; j < dir_count; ++j) {
-                    if (event->wd == wd[j]) {
-                        event_dir = watched_dirs[j];
-                    }
-                }
-                auto file_name = std::string(event->name);
-                if (event->mask & IN_CREATE || event->mask & IN_MODIFY || event->mask & IN_DELETE) {
-                    std::string event_type;
-                    if (event->mask & IN_CREATE) {
-                        event_type = "CREATE";
-                    } else if (event->mask & IN_MODIFY) {
-                        event_type = "MODIFY";
-                    } else if (event->mask & IN_DELETE) {
-                        event_type = "DELETE";
-                    }
-                std::string event_msg = fmt::format("{}/{},{}", event_dir, file_name, event_type);
-                socket.send(zmq::buffer(event_msg), zmq::send_flags::none);
-                std::cout << event_msg << std::endl;
-                }
+        /* If the nonblocking read() found no events to read, then
+            it returns -1 with errno set to EAGAIN. In that case,
+            we exit the loop. */
+
+        if (length <= 0) {
+            if (errno == EAGAIN) {
+                std::this_thread::sleep_for(0.5s);
+                continue;
+            } else {
+                perror("read");
+                exit(EXIT_FAILURE);
             }
-            i += EVENT_SIZE + event->len;
+        }
+            
+        /* Loop over all events in the buffer. */
+        auto step_size = sizeof(struct inotify_event) + event->len;
+        for (char *ptr = buf; ptr < buf + length; ptr += step_size) {
+            event = (const struct inotify_event *) ptr;
+            std::string event_dir = get_watch_dir(event);
+            auto file_name = std::string(event->name);
+            if (event->mask & IN_CREATE || event->mask & IN_MODIFY || event->mask & IN_DELETE) {
+                std::string event_type;
+                if (event->mask & IN_CREATE) {
+                    event_type = "CREATE";
+                } else if (event->mask & IN_MODIFY) {
+                    event_type = "MODIFY";
+                } else if (event->mask & IN_DELETE) {
+                    event_type = "DELETE";
+                }
+            std::string event_msg = fmt::format("{}/{},{}", event_dir, file_name, event_type);
+            socket.send(zmq::buffer(event_msg), zmq::send_flags::none);
+            std::cout << event_msg << std::endl;
+            }
         }
     }
 
@@ -161,6 +198,5 @@ int main(void) {
     close(fd);
     socket.close();
     context.close();
-
-    return 0;
+    return EXIT_SUCCESS;
 }
