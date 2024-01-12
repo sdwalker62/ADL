@@ -117,41 +117,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named filewatcher
+# Target rules for targets named sentinel
 
 # Build rule for target.
-filewatcher: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 filewatcher
-.PHONY : filewatcher
+sentinel: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 sentinel
+.PHONY : sentinel
 
 # fast build rule for target.
-filewatcher/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/build
-.PHONY : filewatcher/fast
+sentinel/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/build
+.PHONY : sentinel/fast
 
-filewatcher.o: filewatcher.cxx.o
-.PHONY : filewatcher.o
+sentinel.o: sentinel.cxx.o
+.PHONY : sentinel.o
 
 # target to build an object file
-filewatcher.cxx.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/filewatcher.cxx.o
-.PHONY : filewatcher.cxx.o
+sentinel.cxx.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/sentinel.cxx.o
+.PHONY : sentinel.cxx.o
 
-filewatcher.i: filewatcher.cxx.i
-.PHONY : filewatcher.i
+sentinel.i: sentinel.cxx.i
+.PHONY : sentinel.i
 
 # target to preprocess a source file
-filewatcher.cxx.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/filewatcher.cxx.i
-.PHONY : filewatcher.cxx.i
+sentinel.cxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/sentinel.cxx.i
+.PHONY : sentinel.cxx.i
 
-filewatcher.s: filewatcher.cxx.s
-.PHONY : filewatcher.s
+sentinel.s: sentinel.cxx.s
+.PHONY : sentinel.s
 
 # target to generate assembly for a file
-filewatcher.cxx.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/filewatcher.cxx.s
-.PHONY : filewatcher.cxx.s
+sentinel.cxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/sentinel.cxx.s
+.PHONY : sentinel.cxx.s
 
 # Help Target
 help:
@@ -161,10 +161,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... filewatcher"
-	@echo "... filewatcher.o"
-	@echo "... filewatcher.i"
-	@echo "... filewatcher.s"
+	@echo "... sentinel"
+	@echo "... sentinel.o"
+	@echo "... sentinel.i"
+	@echo "... sentinel.s"
 .PHONY : help
 
 

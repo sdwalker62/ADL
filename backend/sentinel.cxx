@@ -7,7 +7,13 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <map>
+#include <sstream>
+#include <fstream>
 #include <filesystem>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <fmt/format.h>
 
 
 #define EVENT_SIZE  ( sizeof (struct inotify_event) )
@@ -21,10 +27,30 @@ int dir_count = 0;
 
 using namespace std::chrono_literals;
 
+
+std::map<std::string, std::string> parse_env(const std::string& env_file_name) {
+    std::map<std::string, std::string> env_map;
+    std::ifstream file(env_file_name);
+    std::string line;
+
+    while (std::getline(file, line)) {
+        std::istringstream lineStream(line);
+        std::string key, value;
+
+        if (std::getline(lineStream, key, '=') && std::getline(lineStream, value)) {
+            env_map[key] = value;
+        }
+    }
+
+    return env_map;
+}
+
+
 void clearScreen() {
   const char *CLEAR_SCREEN_ANSI = "\e[1;1H\e[2J";
   write(STDOUT_FILENO, CLEAR_SCREEN_ANSI, 11);
 }
+
 
 int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf) {
     if (typeflag == FTW_D) {
@@ -41,8 +67,9 @@ int add_watch(const char *fpath, const struct stat *sb, int typeflag, struct FTW
             dir_count++;
         }
     }
-    return 0; // Continue traversing directories
+    return 0;
 }
+
 
 int main(void) {
     clearScreen();
@@ -54,9 +81,9 @@ int main(void) {
     std::cout << "    `8 8oooo8 8' `8   8   8 8' `8 8oooo8 8" << std::endl; 
     std::cout << "     8 8.     8   8   8   8 8   8 8.     8" << std::endl;  
     std::cout << "`YooP' `Yooo' 8   8   8   8 8   8 `Yooo' 8" << std::endl;  
-    std::cout << ":.....::.....:..::..::..::....::..:.....:.." << std::endl; 
-    std::cout << ":::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
-    std::cout << ":::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
+    std::cout << ":.....::.....:..::..::..::....::..:.....:." << std::endl; 
+    std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
+    std::cout << "::::::::::::::::::::::::::::::::::::::::::" << std::endl; 
 
     char buffer[BUF_LEN];
     fd = inotify_init();
@@ -65,7 +92,14 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    if (nftw(".", add_watch, 20, 0) == -1) {
+    // Get paths from environment variables
+    std::map env_variables = parse_env(".env");
+    auto docs_path = env_variables["DOCS_PATH"];
+    std::string cur_dir = std::filesystem::current_path().string();
+    auto watch_dir = cur_dir + docs_path;
+
+    const char *char_dir = watch_dir.c_str();
+    if (nftw(char_dir, add_watch, 20, 0) == -1) {
         perror("nftw");
         exit(EXIT_FAILURE);
     }
@@ -77,11 +111,10 @@ int main(void) {
     printf("established!\n\n");
 
     std::this_thread::sleep_for(1s);
-    std::string cur_dir = std::filesystem::current_path().string();
     std::cout << "=========================================================" << std::endl;
-    auto alive_message = "Sentinel is healthy and watching the following directory: " + cur_dir;
+    auto alive_message = "Sentinel is healthy and watching the following directory: " + watch_dir;
     printf("Sentinel is healthy and watching the following directory:\n");
-    std::cout << cur_dir << std::endl;
+    std::cout << watch_dir << std::endl;
     std::cout << "=========================================================\n" << std::endl;
     socket.send(zmq::buffer("HEALTH_CHECK" + alive_message), zmq::send_flags::none);
 
@@ -96,6 +129,12 @@ int main(void) {
         while (i < length) {
             struct inotify_event *event = (struct inotify_event *)&buffer[i];
             if (event->len) {
+                std::string event_dir {""};
+                for (int j = 0; j < dir_count; ++j) {
+                    if (event->wd == wd[j]) {
+                        event_dir = watched_dirs[j];
+                    }
+                }
                 auto file_name = std::string(event->name);
                 if (event->mask & IN_CREATE || event->mask & IN_MODIFY || event->mask & IN_DELETE) {
                     std::string event_type;
@@ -106,9 +145,9 @@ int main(void) {
                     } else if (event->mask & IN_DELETE) {
                         event_type = "DELETE";
                     }
-                std::string msg = cur_dir + "/" + file_name + "," + event_type;
-                socket.send(zmq::buffer(msg), zmq::send_flags::none);
-                std::cout << msg << std::endl;
+                std::string event_msg = fmt::format("{}/{},{}", event_dir, file_name, event_type);
+                socket.send(zmq::buffer(event_msg), zmq::send_flags::none);
+                std::cout << event_msg << std::endl;
                 }
             }
             i += EVENT_SIZE + event->len;
@@ -125,4 +164,3 @@ int main(void) {
 
     return 0;
 }
-

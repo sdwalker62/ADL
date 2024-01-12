@@ -63,7 +63,7 @@ CMAKE_BINARY_DIR = /home/dwalker/dev/adl/backend
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/filewatcher.dir/all
+all: CMakeFiles/sentinel.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -71,34 +71,34 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/filewatcher.dir/clean
+clean: CMakeFiles/sentinel.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/filewatcher.dir
+# Target rules for target CMakeFiles/sentinel.dir
 
 # All Build rule for target.
-CMakeFiles/filewatcher.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dwalker/dev/adl/backend/CMakeFiles --progress-num=1,2 "Built target filewatcher"
-.PHONY : CMakeFiles/filewatcher.dir/all
+CMakeFiles/sentinel.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dwalker/dev/adl/backend/CMakeFiles --progress-num=1,2 "Built target sentinel"
+.PHONY : CMakeFiles/sentinel.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/filewatcher.dir/rule: cmake_check_build_system
+CMakeFiles/sentinel.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dwalker/dev/adl/backend/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/filewatcher.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/sentinel.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dwalker/dev/adl/backend/CMakeFiles 0
-.PHONY : CMakeFiles/filewatcher.dir/rule
+.PHONY : CMakeFiles/sentinel.dir/rule
 
 # Convenience name for target.
-filewatcher: CMakeFiles/filewatcher.dir/rule
-.PHONY : filewatcher
+sentinel: CMakeFiles/sentinel.dir/rule
+.PHONY : sentinel
 
 # clean rule for target.
-CMakeFiles/filewatcher.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/filewatcher.dir/build.make CMakeFiles/filewatcher.dir/clean
-.PHONY : CMakeFiles/filewatcher.dir/clean
+CMakeFiles/sentinel.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/sentinel.dir/build.make CMakeFiles/sentinel.dir/clean
+.PHONY : CMakeFiles/sentinel.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.
