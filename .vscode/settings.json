@@ -63,6 +63,7 @@
     "cinttypes": "cpp",
     "typeinfo": "cpp",
     "__nullptr": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "source_location": "cpp"
   }
 }
