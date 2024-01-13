@@ -189,69 +189,54 @@ def organize_pdf_metadata(data, doc):
     return new_data
 
 
-def get_full_paths(file_name):
-    all_files = []
-    for path, _, files in os.walk(os.getenv("DOCUMENTS_PATH")):
-        for name in files:
-            if Path(name).suffix in accepted_exts:
-                all_files.append(os.path.join(path, name))
-    
-    return [file for file in all_files if file_name in file]
-
 def modify_entry(file, client):
     INDEX = "documents"
 
-    file_paths = get_full_paths(file)
-    for file_path in file_paths:
-        response = client.search(
-            index="documents",
-            query={
-                "match": {
-                    "file_path": file_path
-                }
-            },
-            _source=["_id"],
-            size=1
-        )
-        print(response)
-        client.update(
-            index=INDEX,
-            id=response['hits']['hits'][0]["_id"],
-            doc=extract_text(file_path)
-        )
+    response = client.search(
+        index="documents",
+        query={
+            "match": {
+                "file_path": file
+            }
+        },
+        _source=["_id"],
+        size=1
+    )
+
+    client.update(
+        index=INDEX,
+        id=response['hits']['hits'][0]["_id"],
+        doc=extract_text(file)
+    )
     return
 
 
 def create_entry(file, client):
     INDEX = "documents"
 
-    file_paths = get_full_paths(file)
-    for file_path in file_paths:
-        client.index(
-            index=INDEX,
-            document=extract_text(file_path)
-        )
+    client.index(
+        index=INDEX,
+        document=extract_text(file)
+    )
     return
 
 
 def delete_entry(file, client):
     INDEX = "documents"
 
-    file_paths = get_full_paths(file)
-    for file_path in file_paths:
-        response = client.search(
-            index="documents",
-            query={
-                "match": {
-                    "file_path": file_path
-                }
-            },
-            _source=["_id"],
-            size=1
-        )
+    response = client.search(
+        index="documents",
+        query={
+            "match": {
+                "file_path": file
+            }
+        },
+        _source=["_id"],
+        size=1
+    )
 
-        client.delete(
-            index=INDEX,
-            id=response['hits']['hits'][0]["_id"],
-        )
+    client.delete(
+        index=INDEX,
+        id=response['hits']['hits'][0]["_id"],
+    )
     return
