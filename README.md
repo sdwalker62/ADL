@@ -1,3 +1,14 @@
+# Instructions for initial setup!
+
+If it's your first time cloning the project and you're trying to get started with development, then congratulations! There's a few steps that you need to follow to ensure that you won't run into any problems getting the project running:
+
+1. Install nvm and npm
+2. Navigate to the /frontend folder
+3. Run `npm install` to install the project dependencies
+4. Create a .env file in the /frontend folder
+5. Within the .env file, add a line saying `DOCS_PATH=/AthenaDocs/`
+6. To start the project, run `npm run dev`!
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
