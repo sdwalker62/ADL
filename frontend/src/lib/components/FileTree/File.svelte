@@ -1,6 +1,6 @@
 <script lang="ts">
 	import markdownLogo from '$lib/assets/images/markdown.svg';
-	import fileLogo from '$lib/assets/icons/doc.richtext.fill.svg';
+	// import fileLogo from '$lib/assets/icons/doc.richtext.fill.svg';
 	import { page } from '$app/stores';
 
 	// https://codepen.io/sosuke/pen/Pjoqqp

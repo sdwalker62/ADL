@@ -77,14 +77,14 @@
 	}
 
 	label {
-		font-family: 'SF Pro';
+		font-family: 'SF Pro',sans-serif;
 		font-size: 1.4em;
 		font-weight: 500;
 		color: var(--font-1);
 	}
 
 	h1 {
-		font-family: 'EB Garamond';
+		font-family: 'EB Garamond',serif;
 		color: var(--font-2);
 		font-weight: 300;
 	}

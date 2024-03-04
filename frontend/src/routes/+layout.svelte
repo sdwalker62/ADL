@@ -8,7 +8,7 @@
 		showTableOutlineElements,
 		leftPanelActive,
 		rightPanelActive
-	} from '$lib/data/shared';
+	} from '$lib/data/shared.js';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
 	import SiteNavigationLink from '$lib/components/MainModalMenu/SiteNavigationLink.svelte';
 	import ExternalNavigationLink from '$lib/components/MainModalMenu/ExternalNavigationLink.svelte';
@@ -17,25 +17,25 @@
 	import ActionMenuItem from '$lib/components/TopMenuBar/ActionMenuItem.svelte';
 	import Cookies from 'js-cookie';
 	import LeftPanelIcon from '$lib/assets/icons/LeftPanelIcon.svelte';
-	import ServerIcon from '$lib/assets/icons/ServerIcon.svelte';
+	// import ServerIcon from '$lib/assets/icons/ServerIcon.svelte';
 	import DriveIcon from '$lib/assets/icons/DriveIcon.svelte';
 	import CodeIcon from '$lib/assets/icons/CodeIcon.svelte';
 	import MathIcon from '$lib/assets/icons/MathIcon.svelte';
 	import TableIcon from '$lib/assets/icons/TableIcon.svelte';
 	import RightPanelIcon from '$lib/assets/icons/RightPanelIcon.svelte';
 	import MenuIcon from '$lib/assets/icons/MenuIcon.svelte';
-	import DecreaseFontIcon from '$lib/assets/icons/DecreaseFontIcon.svelte';
-	import IncreaseFontIcon from '$lib/assets/icons/IncreaseFontIcon.svelte';
+	// import DecreaseFontIcon from '$lib/assets/icons/DecreaseFontIcon.svelte';
+	// import IncreaseFontIcon from '$lib/assets/icons/IncreaseFontIcon.svelte';
 	import HomeIcon from '$lib/assets/icons/HomeIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
-	import Cookie from 'js-cookie';
-	import type { LayoutData } from './$types';
+	// import Cookie from 'js-cookie';
+	// import type { LayoutData } from './$types';
 	import { page } from '$app/stores';
 
 	console.log($page.url.pathname);
 
-	export let data: LayoutData;
+	export let data;
 
 	$colorTheme = data.colorMode;
 	$showCodeOutlineElements = data.showCodeOutlineElements;
@@ -45,7 +45,7 @@
 	$rightPanelActive = data.rightPanelActive;
 
 	let folderActive = true;
-	let serverActive = false;
+	// let serverActive = false;
 
 	let pageHome = false;
 	let pageDocs = false;

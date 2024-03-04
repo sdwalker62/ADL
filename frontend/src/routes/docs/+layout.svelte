@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { leftPanelActive } from '$lib/data/shared';
+	import { leftPanelActive } from '$lib/data/shared.js';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
-	import type { LayoutData } from './$types';
+	// import type { LayoutData } from './$types';
 
-	export let data: LayoutData;
+	export let data;
 
 	const library = JSON.parse(data.tree);
 	const props = {

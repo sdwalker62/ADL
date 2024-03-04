@@ -11,10 +11,13 @@
 	import { addPrompt } from '$lib/utilities/prompt';
 	import tippy from 'tippy.js';
 	import 'tippy.js/dist/tippy.css';
-	import PdfViewer2 from '$lib/components/PDFViewer.svelte';
-	import type { PageData } from './$types';
+	import PdfViewer from '$lib/components/PDFViewer.svelte';
+	// import type { PageData } from './$types';
 
-	export let data: PageData;
+	export let data;
+	const isPDF: boolean = data.isPDF;
+	const htmlDocument: string = data.document;
+	const htmlOutline = data.outline;
 	const root = data.root!;
 
 	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
@@ -22,6 +25,7 @@
 		let headingElement: HTMLElement | null = target.querySelector('h1');
 		if (headingElement) {
 			const headingID: string | null = headingElement.getAttribute('id');
+			// noinspection LoopStatementThatDoesntLoopJS
 			for (const child of dom.children) {
 				const element = child.querySelector(`[href="#${headingID}"]`);
 				return element ? element : null;
@@ -50,7 +54,7 @@
 	}
 
 	onMount(async () => {
-		if (!data.isPDF) {
+		if (!isPDF) {
 			stickybits('#outline-top-bar-sticky');
 			wrapCode(document);
 			let codeBlocks = document.getElementsByClassName('document-code');
@@ -142,7 +146,7 @@
 	});
 </script>
 
-{#if !data.isPDF}
+{#if !isPDF}
 	<div
 		id="page-canvas"
 		class="no-scroll-bar constrained-height"
@@ -150,19 +154,19 @@
 	>
 		<div id="document" class="no-scroll-bar constrained-height flex-col">
 			<!--eslint-disable-next-line svelte/no-at-html-tags-->
-			{@html data.document}
+			{@html htmlDocument}
 		</div>
 		{#if $rightPanelActive}
 			<div id="outline" class="no-scroll-bar constrained-height flex-col">
 				<div id="outline-container" class="no-scroll-bar">
-					<OutlineElement children={data.outline} />
+					<OutlineElement children={htmlOutline} />
 				</div>
 			</div>
 		{/if}
 	</div>
 {:else}
 	<div id="pdf-canvas">
-		<PdfViewer2 doc={data.document} {root} />
+		<PdfViewer doc={htmlDocument} {root} />
 	</div>
 {/if}
 
@@ -176,7 +180,8 @@
 		overflow: scroll;
 	}
 
-	:global(#document div.document-code-block-container) {
+  /*noinspection ALL*/
+  :global(#document div.document-code-block-container) {
 		display: grid;
 		grid-template-rows: 3rem 1fr;
 		background-color: var(--background-7);
@@ -186,6 +191,7 @@
 		margin-bottom: 20px;
 	}
 
+  /*noinspection ALL*/
 	:global(#document div.document-code-heading-container) {
 		display: flex;
 		flex-direction: row;
@@ -193,16 +199,19 @@
 		margin-left: 6px;
 	}
 
+  /*noinspection ALL*/
 	:global(#document span.document-code-prompt) {
 		color: var(--font-5);
 	}
 
+  /*noinspection ALL*/
 	:global(.document-code-img) {
 		height: 2rem !important;
 		filter: invert(52%) sepia(6%) saturate(194%) hue-rotate(202deg)
 			brightness(89%) contrast(84%);
 	}
 
+  /*noinspection ALL*/
 	:global(.document-code-img):hover {
 		filter: var(--active-filter);
 		/* transition: filter 0.2s ease-in-out; */
@@ -277,6 +286,7 @@
 		opacity: 0.8;
 	}
 
+  /*noinspection ALL*/
 	:global(#document .math) {
 		display: flex;
 		flex-direction: row;
@@ -396,6 +406,7 @@
 		max-width: 320px;
 	}
 
+  /*noinspection ALL*/
 	:global(.table-block) {
 		display: flex;
 		align-content: center;

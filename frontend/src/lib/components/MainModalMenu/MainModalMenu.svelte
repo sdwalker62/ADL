@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { showMainMenu } from '$lib/data/shared';
+	import { showMainMenu } from '$lib/data/shared.js';
 	import ThemeSwitcher from './ThemeSwitcher.svelte';
 	import logo from '$lib/assets/images/AthenaLogo.png';
 

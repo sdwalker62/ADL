@@ -23,18 +23,18 @@
 	}
 
 	h1 {
-		font-family: 'EB Garamond';
+		font-family: 'EB Garamond',serif;
 		font-size: 3em;
 		color: var(--font-2);
 	}
 	p {
-		font-family: 'EB Garamond';
+		font-family: 'EB Garamond',serif;
 		font-size: 2em;
 		color: var(--font-1);
 	}
 
 	li {
-		font-family: 'EB Garamond';
+		font-family: 'EB Garamond',serif;
 		font-size: 1.5em;
 		color: var(--font-1);
 	}

@@ -35,25 +35,25 @@
 </script>
 
 <button
-	on:click={(_) => {
+	on:click={() => {
 		active = !active;
 	}}
-	on:mouseenter={(_) => {
+	on:mouseenter={() => {
 		hovering = true;
 	}}
-	on:mouseleave={(_) => {
+	on:mouseleave={() => {
 		hovering = false;
 	}}
 >
-	<div id="left-cluster">
+	<span id="left-cluster">
 		{#key hovering}
 			<FolderIcon {active} {hovering} />
 		{/key}
 		{formatName(name)}
-	</div>
-	<div id="count-container">
+	</span>
+	<span id="count-container">
 		<span>{files.length}</span>
-	</div>
+	</span>
 </button>
 
 {#if active}
@@ -74,8 +74,7 @@
 	button {
 		display: grid;
 		grid-template-columns: 1fr 3rem;
-		padding: 0;
-		padding-left: 5px;
+		padding: 0 0 0 5px;
 		background-color: transparent;
 		cursor: pointer;
 		border: none;

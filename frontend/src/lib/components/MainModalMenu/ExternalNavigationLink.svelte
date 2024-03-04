@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentPage } from '$lib/data/shared';
+	import { currentPage } from '$lib/data/shared.js';
 	import { afterUpdate } from 'svelte';
 
 	export let link: string;
@@ -20,8 +20,7 @@
 
 <a href={link} bind:this={component}>
 	<div id="link-canvas">
-		<!-- svelte-ignore a11y-missing-attribute -->
-		<img src="http://www.google.com/s2/favicons?domain_url=www.{site}.com" />
+		<img src="http://www.google.com/s2/favicons?domain_url=www.{site}.com"  alt="nav-icon"/>
 		<span>{name}</span>
 	</div>
 </a>

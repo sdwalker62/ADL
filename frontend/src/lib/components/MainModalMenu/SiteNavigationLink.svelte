@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { currentPage } from '$lib/data/shared';
+	import { currentPage } from '$lib/data/shared.js';
 	import { beforeUpdate, onMount } from 'svelte';
 	import { page } from '$app/stores';
 

@@ -45,12 +45,12 @@
 
 	:global(.math-item-canvas span) {
 		color: var(--font-2);
-		font-family: 'KaTeX_Main';
+		font-family: 'KaTeX_Main',serif;
 		font-size: 2rem;
 		line-height: 1.5;
 	}
 	p {
 		width: 100%;
-		font-family: 'KaTeX_Main';
+		font-family: 'KaTeX_Main',serif;
 	}
 </style>

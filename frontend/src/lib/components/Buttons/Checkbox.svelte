@@ -4,7 +4,7 @@
 <label class="container"
 	>One
 	<input type="checkbox" />
-	<img class="checkmark" />
+	<img class="checkmark"  alt="checkmark"/>
 </label>
 
 <style>

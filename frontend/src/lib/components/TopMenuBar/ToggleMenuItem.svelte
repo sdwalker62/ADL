@@ -41,10 +41,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 5px;
-		padding-bottom: 5px;
+		padding: 5px 10px;
 		margin-top: 2px;
 		margin-bottom: 2px;
 		border-radius: 8px;

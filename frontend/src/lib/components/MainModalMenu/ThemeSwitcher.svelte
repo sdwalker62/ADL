@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { beforeUpdate, onMount } from 'svelte';
 	import Modal from '../Modal.svelte';
-	import { colorThemeOptions, colorTheme } from '$lib/data/shared';
+	import { colorThemeOptions, colorTheme } from '$lib/data/shared.js';
 	import Cookies from 'js-cookie';
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 
@@ -13,11 +13,7 @@
 	$: {
 		$colorTheme = themeGroup;
 		Cookies.set('colorMode', themeGroup);
-		if (themeGroup.includes('dark')) {
-			dark = true;
-		} else {
-			dark = false;
-		}
+		dark = themeGroup.includes('dark');
 	}
 
 	beforeUpdate(() => {

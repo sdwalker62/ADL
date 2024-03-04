@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Cookie from 'js-cookie';
 	import updateImg from '$lib/assets/images/code-pull-request-solid.svg';
 	import copyImg from '$lib/assets/images/copy-solid.svg';
 	import downloadImg from '$lib/assets/images/file-code-regular.svg';
@@ -16,6 +15,7 @@
 			<img src={updateImg} alt="update-icon" class="update-version" />
 		</div>
 		<div id="code">
+			<!--eslint-disable-next-line svelte/no-at-html-tags-->
 			{@html innerHTMLString}
 		</div>
 	</div>
