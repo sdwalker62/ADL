@@ -43,6 +43,8 @@
 	}
 
 	:global(a.observed span) {
+		border-radius: 5px;
+		padding: 5px;
 		color: var(--highlight-font);
 		background: var(--gradient-1);
 	}
