@@ -1,20 +1,38 @@
-<h1 style="text-align: center;">ADL</h1>
+# create-svelte
 
-![build-dev-container workflow](https://github.com/sdwalker62/ADL/actions/workflows/build-dev-container.yml/badge.svg)
+Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
----
+## Creating a project
 
-Welcome to the ADL, a project focused on building a modern documentation library that brings together code and mathematics. 
+If you're seeing this, you've probably already done this step. Congrats!
 
+```bash
+# create a new project in the current directory
+npm create svelte@latest
 
-# How To Contribute
+# create a new project in my-app
+npm create svelte@latest my-app
+```
 
-We are open to members of the open source community contributing to the project. The master branch will be protected and we will require approval from a project member to merge pull request. All open issues will be reviewed and solutions incorporated into each release. If you wish to help solve any of the open issues, please create a branch with the issue name and then open a PR when you are ready to merge. We will inspect the code and merge if it passes our unit and integration tests. The corresponding issue will then be closed.
+## Developing
 
-We use development containers to package all dev dependencies. This makes it easy for new members to gather all dependencies at once. We will provide an updated dev container with each release. If your branch requires a new dependency to work, please note that in the pull request and we will update the dev container once the PR is merged. More information on dev containers will be listed below:
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-### PyCharm
-https://www.jetbrains.com/help/pycharm/connect-to-devcontainer.html
+```bash
+npm run dev
 
-### VSCode
-https://code.visualstudio.com/docs/devcontainers/containers
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../WebViewer.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\r\n\r\n  import { onMount, createEventDispatcher } from 'svelte';\r\n  import WebViewer from '@pdftron/pdfjs-express-viewer';\r\n\r\n  let instance = null;\r\n  const dispatch = createEventDispatcher();\r\n\r\n\tonMount(async () => {\r\n\t\tconst ele = document.getElementById('viewer');\r\n\tWebViewer({\r\n      path: '/lib',\r\n\t\t\tinitialDoc: '/files/demo.pdf',\r\n\t\t\tlicenseKey: 'VMeLR5MsW5lX3X9YfqQF',\r\n\t\t}, ele).then(instance => {\r\n\t\t\tdispatch('ready', {\r\n\t\t\t\tinstance\r\n\t\t\t})\r\n\t\t})\r\n\t});\r\n\r\n</script>\r\n\r\n<style>\r\n\t#viewer {\r\n\t\twidth: 100%;\r\n\t\theight: 100%;\r\n\t}\r\n</style>\r\n\r\n\r\n<div id='viewer'>\r\n\r\n</div>\r\n"
+  ],
+  "names": [],
+  "mappings": "AAwBC,OAAO,cAAC,CAAC,AACR,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,AACb,CAAC"
+}

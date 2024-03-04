@@ -1,0 +1,52 @@
+version: "3.8"
+
+
+networks:
+  elastic:
+    driver: bridge
+  backend:
+    driver: bridge
+
+
+services:
+  backend:
+    build:
+      context: ./elastic
+    networks:
+      - backend
+    depends_on:
+      - elastic
+      - kibana
+    volumes:
+      - ./frontend/AthenaDocs:/root/app/AthenaDocs
+      - ./elastic/elastic.env:/root/app/elastic.env
+      - ./elastic/http_ca.crt:/root/app/http_ca.crt
+    ports:
+      - 8200:8200
+
+  elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    container_name: es01
+    networks:
+      - elastic
+      - backend
+    ports:
+      - 9200:9200
+    tty: true
+    stdin_open: true
+    deploy:
+      resources:
+        reservations:
+          memory: 4GB
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.3
+    container_name: kib01
+    networks:
+      - elastic
+    ports:
+      - 5601:5601
+    volumes:
+      - ./elastic/data:/root/elasticKibana/data
+    depends_on:
+      - elastic

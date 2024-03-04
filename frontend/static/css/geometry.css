@@ -1,0 +1,22 @@
+:root {
+	--documentation-height: calc(100vh - 40px);
+}
+
+.constrained-height {
+	height: var(--documentation-height);
+	max-height: var(--documentation-height);
+	min-height: var(--documentation-height);
+}
+
+.flex-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.collapse-folder {
+	grid-template-columns: 0 1fr !important;
+}
+
+.collapse-outline {
+	grid-template-columns: 1fr 0 !important;
+}

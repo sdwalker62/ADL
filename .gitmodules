@@ -1,0 +1,3 @@
+[submodule "AthenaDocs"]
+	path = AthenaDocs
+	url = git@github.com:sigil-ml/AthenaDocs.git

@@ -1,0 +1,6 @@
+elasticsearch
+PyMuPDF
+python-frontmatter
+python-dotenv
+fastapi
+uvicorn

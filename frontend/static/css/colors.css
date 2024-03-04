@@ -1,0 +1,199 @@
+/* Variable naming schemes are always difficult */
+/* Here is a link for some ideas: https://css-tricks.com/what-do-you-name-color-variables/ */
+
+/* I will follow the authors naming schema. */
+/* We will also re-use colors for clarity. */
+
+:root {
+	--black-1: #000000;
+	--black-1-40: #00000040;
+
+	--black-2: #141414;
+	--black-2-50: #14141450;
+
+	--black-3: #0a0a0a;
+	--black-3-70: #0a0a0a70;
+	--black-3-90: #0a0a0a;
+
+	--grey-1: #474747;
+	--grey-2: #79797d;
+	--grey-2-50: #79797d50;
+
+	--grey-3: #878788;
+
+	--white-1: #e0e0e1;
+	--white-1-85: #e0e0e185;
+	--white-1-90: #e0e0e190;
+
+	--white-2: #fafaf9;
+	--white-3: #e7e5e4;
+	--white-4: #a8a29e;
+
+	--purple-1: #efd5ff;
+	--purple-2: #d2a8ff;
+	--purple-3: #515ada;
+	--red-1: #d73a49;
+
+	--purple-purple-1: linear-gradient(90deg, #686fdf 0%, #515ada 100%);
+	--purple-purple-2: linear-gradient(90deg, #515ada 0%, #686fdf 100%);
+	--white-purple-1: linear-gradient(90deg, #d2a8ff 0%, #515ada 100%);
+	--white-purple-2: linear-gradient(90deg, #515ada 0%, #d2a8ff 100%);
+	--white-purple-1-rotated: linear-gradient(0deg, #d2a8ff 0%, #515ada 100%);
+	--white-red-1: linear-gradient(
+		90deg,
+		rgba(254, 202, 202, 1) 0%,
+		#d73a49 100%
+	);
+	--red-red-1: linear-gradient(90deg, rgba(239, 68, 68, 1) 0%, #d73a49 100%);
+}
+
+[data-theme='light'] {
+	/* Backgrounds */
+	--header-background: black;
+	--menu-background: var(--white-3);
+	--background-1: var(--white-2);
+	--background-2: white;
+	--background-3: white;
+	--background-4: var(--white-3);
+	--background-6: var(--black-1-40);
+	--background-7: #f5f5f5;
+	--background-8: var(--black-1-40);
+
+	/* Typography */
+	--font-1: black;
+	--font-1-50: #00000050;
+	--font-2: var(--black-2);
+	--font-3: var(--black-2);
+	--font-4: black;
+	--font-5: var(--grey-3);
+	--highlight-font: var(--black-2);
+
+	/* Gradients */
+	--gradient-1: var(--white-red-1);
+	--gradient-2: var(--white-red-1);
+	--highlight: var(--red-1);
+	--highlight-20: #efd5ff20;
+
+	/* SVG Filters */
+	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+}
+
+[data-theme='cb-light'] {
+	/* Backgrounds */
+	--header-background: black;
+	--menu-background: var(--white-3);
+	--background-1: var(--white-2);
+	--background-2: white;
+	--background-3: white;
+	--background-4: var(--white-3);
+	--background-6: var(--black-1-40);
+	--background-7: #f5f5f5;
+	--background-8: var(--black-1-40);
+
+	/* Typography */
+	--font-1: black;
+	--font-1-50: #00000050;
+	--font-2: var(--black-2);
+	--font-3: var(--black-2);
+	--font-4: black;
+	--font-5: var(--grey-3);
+	--highlight-font: var(--black-2);
+
+	/* Gradients */
+	--gradient-1: var(--white-red-1);
+	--gradient-2: var(--white-red-1);
+	--highlight: var(--red-1);
+	--highlight-20: #efd5ff20;
+
+	/* SVG Filters */
+	--active-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+}
+
+[data-theme='dark'] {
+	/* Backgrounds */
+	--header-background: var(--black-1);
+	--menu-background: var(--grey-3);
+	--background-1: var(--black-1);
+	--background-2: var(--black-2);
+	--background-3: var(--black-3);
+	--background-4: var(--grey-2-50);
+	--background-6: var(--white-1-90);
+	--background-7: var(--black-3);
+	--background-8: var(--white-1-85);
+
+	/* Typography */
+	--font-1: white;
+	--font-1-10: #ffffff10;
+	--font-1-50: #ffffff50;
+	--font-2: var(--white-1);
+	--font-3: var(--grey-2);
+	--font-4: black;
+	--font-5: var(--grey-3);
+	--highlight-font: var(--black-2);
+
+	/* Gradients */
+	--gradient-1: var(--white-purple-1);
+	--gradient-1-reversed: var(--white-purple-2);
+	--gradient-2: var(--purple-purple-1);
+	--gradient-3: var(--white-purple-1-rotated);
+	--highlight: var(--purple-1);
+	--highlight-2: var(--purple-3);
+	--highlight-20: #efd5ff20;
+
+	/* SVG Filters */
+	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg)
+		brightness(112%) contrast(102%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+}
+
+[data-theme='cb-dark'] {
+	/* Backgrounds */
+	--header-background: var(--black-1);
+	--menu-background: var(--grey-3);
+	--background-1: var(--black-1);
+	--background-2: var(--black-2);
+	--background-3: var(--black-3);
+	--background-4: var(--grey-2-50);
+	--background-6: var(--white-1-90);
+	--background-7: var(--black-3-70);
+	--background-8: var(--white-1-85);
+
+	/* Typography */
+	--font-1: white;
+	--font-1-10: #ffffff10;
+	--font-1-50: #ffffff50;
+	--font-2: var(--white-1);
+	--font-3: var(--grey-2);
+	--font-4: black;
+	--font-5: var(--grey-3);
+	--highlight-font: var(--black-2);
+
+	/* Gradients */
+	--gradient-1: var(--white-purple-1);
+	--gradient-1-reversed: var(--white-purple-2);
+	--gradient-2: var(--purple-purple-1);
+	--highlight: var(--purple-1);
+	--highlight-2: var(--purple-3);
+	--highlight-20: #efd5ff20;
+
+	/* SVG Filters */
+	--active-filter: invert(100%) sepia(2%) saturate(7461%) hue-rotate(27deg)
+		brightness(112%) contrast(102%);
+	--inactive-filter: invert(27%) sepia(0%) saturate(16%) hue-rotate(144deg)
+		brightness(88%) contrast(86%);
+	--top-bar-filter: invert(0%) sepia(3%) saturate(3127%) hue-rotate(5deg)
+		brightness(115%) contrast(84%);
+}
