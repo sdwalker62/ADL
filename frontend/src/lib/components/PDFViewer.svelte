@@ -1,6 +1,6 @@
 <script lang="ts">
 	// This component is responsible for loading, viewing, and controlling
-	// pdfs in the browser. It uses Mozilla's pdf.js library for all of the
+	// pdfs in the browser. It uses Mozilla's pdf.js library for the
 	// pdf parsing. More information on pdf.js can be found here:
 	//
 	// https://github.com/mozilla/pdf.js/blob/399475247feeffb3184d1c865530930a8638aa0e/src/display/api.js#L236
@@ -18,16 +18,16 @@
 	import _ from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
-	import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
+	// import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import ZoomMinus from '$lib/assets/icons/ZoomMinus.svelte';
 	import ZoomPlus from '$lib/assets/icons/ZoomPlus.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
-	import { pdfZoom } from '$lib/data/shared';
+	import { pdfZoom } from '$lib/data/shared.js';
 	import { onMount } from 'svelte';
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
-	import { rightPanelActive } from '$lib/data/shared';
+	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
-	import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
+	// import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
 	// #endregion
 
 	// #region Props
@@ -69,19 +69,19 @@
 		private lowQualityScale: number = 0.01;
 		private thumbnailScale: number = 0.2;
 		private pageScale: number = 2;
-		private pixelRatio: number;
+		private readonly pixelRatio: number;
 		private rootElement: HTMLElement;
 		private outlineElement: HTMLElement;
-		private pdfPageRenderWidth: number;
-		private outlineRenderWidth: number;
-		private interceptHeight: number;
+		private readonly pdfPageRenderWidth: number;
+		private readonly outlineRenderWidth: number;
+		private readonly interceptHeight: number;
 		private renderNeighborhoodRadius: number = 2;
 		private isFirstPageLoad = true;
 		private alreadyRenderedIndices: Set<number> = new Set();
 		private outlinePadding: number;
 		private rootPadding: number;
-		private rootPaddingWidth: number;
-		private outlinePaddingWidth: number;
+		private readonly rootPaddingWidth: number;
+		private readonly outlinePaddingWidth: number;
 
 		constructor(
 			pdfDocument: PDFDocumentProxy,
@@ -251,6 +251,7 @@
 		 */
 		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
 			let thumbnails = outline.querySelectorAll('a');
+			// eslint-disable-next-line no-undef
 			let pdfPages: NodeListOf<HTMLDivElement> =
 				mainCanvas.querySelectorAll('.pdf-page');
 			entries.forEach((entry) => {
@@ -262,7 +263,7 @@
 					radius of the currently viewed page. This radius value can be changed
 					at the top of this file (renderNeighborhoodRadius). All pages outside
 					of this neighborhood will be rendered at a reduced scale. Without this
-					optimization large PDFs will crash the browser. The scale at whic the
+					optimization large PDFs will crash the browser. The scale at which the
 					in-focus pages are rendered can also be changed at the top of this file
 					under the variable renderInFocusScale. Similarly, the scale at which
 					out-of-focus pages are rendered can be changed under the variable
@@ -281,11 +282,7 @@
 						pdfPages.forEach(async (page: HTMLDivElement) => {
 							const pageNum = Number(page.id);
 							const checkIfInNeighborhood = (pageNum: number) => {
-								if (pageNum >= neighborHoodLB && pageNum <= neighborHoodUB) {
-									return true;
-								} else {
-									return false;
-								}
+								return pageNum >= neighborHoodLB && pageNum <= neighborHoodUB;
 							};
 							const pdfPage = await this.pdfDocument.getPage(pageNum);
 							if (checkIfInNeighborhood(pageNum)) {
@@ -396,12 +393,12 @@
 		pdfRenderer = new PDFRenderer(pdfDoc, mainCanvas, outline);
 		pdfRenderer.buildHTMLElements();
 		pdfRenderer.renderAllCanvases();
-		pageCount = pdfRenderer.numPages;
+		pageCount = pdfRenderer.numPages - 1;
 	});
 </script>
 
 <div bind:this={pdfContainer} id="pdf-container">
-	<!-- PDF Topbar -->
+	<!-- PDF Top Bar -->
 	<div id="pdf-top-bar">
 		<!-- Download -->
 		<div id="pdf-download-icon">
@@ -472,7 +469,7 @@
 
 		/* Layout */
 		width: 100%;
-		padding: 0px;
+		padding: 0;
 		justify-content: space-between;
 		align-items: center;
 
@@ -513,6 +510,7 @@
 		padding: 10px;
 		border-radius: 5px;
 	}
+
 	:global(.pdf-thumbnail-link:hover),
 	:global(.pdf-thumbnail-link.active) {
 		background: var(--gradient-1);

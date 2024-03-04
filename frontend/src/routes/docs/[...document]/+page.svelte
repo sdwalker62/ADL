@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { rightPanelActive } from '$lib/data/shared';
+	import { rightPanelActive } from '$lib/data/shared.js';
 	import _ from 'lodash';
 	import OutlineElement from '$lib/components/Outline/OutlineElement.svelte';
 	import stickybits from 'stickybits';
@@ -11,8 +11,7 @@
 	import { addPrompt } from '$lib/utilities/prompt';
 	import tippy from 'tippy.js';
 	import 'tippy.js/dist/tippy.css';
-	import 'svelte-pdf-viewer/dist/bundle.css';
-	import PdfViewer2 from '$lib/components/PDFViewer2.svelte';
+	import PdfViewer2 from '$lib/components/PDFViewer.svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -150,6 +149,7 @@
 		class:rightPanelActive={$rightPanelActive}
 	>
 		<div id="document" class="no-scroll-bar constrained-height flex-col">
+			<!--eslint-disable-next-line svelte/no-at-html-tags-->
 			{@html data.document}
 		</div>
 		{#if $rightPanelActive}

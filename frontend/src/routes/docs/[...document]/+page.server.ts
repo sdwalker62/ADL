@@ -25,10 +25,9 @@ export const load: PageServerLoad = async ({ params }) => {
 	// Handle PDF documents
 	if (params.document.endsWith('.pdf')) {
 		const contents = fs.readFileSync(params.document, 'base64');
-		const outline: Array<any> = [];
 		return {
 			document: contents,
-			outline: outline,
+			outline: [],
 			isPDF: true,
 			root: process.env.INIT_CWD
 		};
@@ -39,10 +38,9 @@ export const load: PageServerLoad = async ({ params }) => {
 	if (!contents) {
 		const doc =
 			'<h1> No Document Found! </h1> <p> You can help by writing me!</p>';
-		const outline: Array<any> = [];
 		return {
 			document: doc,
-			outline: outline,
+			outline: [],
 			isPDF: false
 		};
 	}
@@ -67,11 +65,11 @@ export const load: PageServerLoad = async ({ params }) => {
 			selector: 'section',
 			rewrite: (node: Element) => {
 				if (node.children) {
-					for (let child of node.children) {
-						// @ts-ignore
+					for (const child of node.children) {
+						// @ts-expect-error Incorrectly flags missing attribute
 						if (child.tagName && child.tagName[0] === 'h') {
 							const sectionHash = String(Math.floor(Math.random() * 90 + 10));
-							// @ts-ignore
+							// @ts-expect-error Thinks this is a comment
 							child.properties.id = sectionHash + child.properties.id;
 						}
 					}
@@ -81,10 +79,10 @@ export const load: PageServerLoad = async ({ params }) => {
 		.processSync(contents);
 
 	/*
-    We will create a temporary DOM to walk through instead of attempting to extract
-    heading information using regular expressions. Regular expressions are more error
-    prone and require knowing the appropriate match groups. This method is therefore
-    less error prone and more maintainable.
+    We will create a temporary DOM to walk through instead of attempting to
+    extract heading information using regular expressions. Regular expressions
+    are more error-prone and require knowing the appropriate match groups. This
+    method is therefore less error-prone and more maintainable.
     */
 	const htmlDoc = new JSDOM(docs.toString());
 
@@ -102,11 +100,11 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	function buildOutlineObject(node: HTMLElement): Node {
-		let heading = node.querySelector('h1, h2, h3, h4, h5, h6');
+		const heading = node.querySelector('h1, h2, h3, h4, h5, h6');
 		const sectionLevel = node.getAttribute('data-heading-rank')
 			? node.getAttribute('data-heading-rank')
 			: 0;
-		let newNode: Node = {
+		const newNode: Node = {
 			name: heading!.id,
 			tagName: node.tagName.toLowerCase(),
 			sectionLevel: sectionLevel,

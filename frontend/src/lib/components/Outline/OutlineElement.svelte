@@ -8,7 +8,7 @@
 		showCodeOutlineElements,
 		showMathOutlineElements,
 		showTableOutlineElements
-	} from '$lib/data/shared';
+	} from '$lib/data/shared.js';
 
 	interface Node {
 		name: string;
@@ -22,11 +22,11 @@
 	export let name: string = 'root';
 	export let innerHTML = '';
 	export let sectionLevel = 0;
-	let skip = name.includes('root') ? true : false;
+	let skip = name.includes('root');
 </script>
 
 {#if !skip}
-	{#if sectionLevel == 1}
+	{#if sectionLevel === 1}
 		<H1ListItem {name} html={innerHTML} />
 	{:else}
 		<HeadingListItem {name} rank={sectionLevel} html={innerHTML} />
