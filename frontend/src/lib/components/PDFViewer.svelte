@@ -57,7 +57,7 @@
 	let background3Color: string;
 	let font1Color: string;
 	let templateString: string;
-
+	const zoomDelta = 10;
 	// #endregion
 
 	class PDFRenderer {
@@ -110,10 +110,8 @@
 				this.outlineElement.offsetWidth - this.outlinePaddingWidth;
 		}
 
-		/**
-		 * This function is responsible for rendering the main PDF page.
-		 */
 		private pdfPageHTMLFactory(pageNum: number): HTMLDivElement {
+			// Renders the main PDF page
 			let canvas = document.createElement('canvas');
 			let pageDiv = document.createElement('div');
 			pageDiv.append(canvas);
@@ -124,14 +122,11 @@
 			return pageDiv;
 		}
 
-		/**
-		 * This function is responsible for rendering the thumbnail preview of a PDF page.
-		 */
 		private thumbnailHTMLFactory(
+			// Renders the thumbnail preview
 			pageNum: number,
 			pdfPageDiv: HTMLDivElement
 		): HTMLAnchorElement {
-			// const thumbnailCanvas = renderThumbnailCanvas(pdfPage, thumbnailScale);
 			let canvas = document.createElement('canvas');
 
 			// create a div to hold the page number
@@ -154,20 +149,13 @@
 			aRef.addEventListener('click', (e: MouseEvent) => {
 				e.preventDefault();
 				pdfPageDiv.scrollIntoView();
-				// if (pageNum === 1) {
-				// 	mainCanvas.scrollBy({ top: -55 });
-				// } else {
-				// 	mainCanvas.scrollBy({ top: -40 });
-				// }
 			});
 
 			return aRef;
 		}
 
-		/**
-		 * Renders all pages of the PDF document.
-		 */
 		public buildHTMLElements(): void {
+			// Renders all pages of the PDF
 			this.documentPageRange.forEach((pageNum) => {
 				const pageDiv = this.pdfPageHTMLFactory(pageNum);
 				const thumbnailDiv = this.thumbnailHTMLFactory(pageNum, pageDiv);
@@ -176,10 +164,8 @@
 			});
 		}
 
-		/**
-		 * Renders the canvas element for a PDF page.
-		 */
 		private renderCanvas(
+			// Render the canvas element for a PDF page
 			canvas: HTMLCanvasElement,
 			page: PDFPageProxy,
 			scale: number = 1,
@@ -188,7 +174,6 @@
 		): void {
 			const viewport = page.getViewport({ scale: scale });
 			let context = canvas.getContext('2d')!;
-			// context.filter = 'invert(1)';
 			const outputScale = this.pixelRatio * scalingFactor;
 			const renderScaleCoefficient = rootWidth / viewport.width;
 
@@ -217,10 +202,8 @@
 			page.render(renderParams).promise;
 		}
 
-		/**
-		 * Renders all canvases for the PDF document.
-		 */
 		public renderAllCanvases(renderThumbnails = true): void {
+			// Renders the canvases for the PDF
 			this.documentPageRange.forEach(async (pageNum) => {
 				const page = await this.pdfDocument.getPage(pageNum);
 				const pageDiv = document.getElementById(`${pageNum}`)!;
@@ -246,10 +229,8 @@
 			});
 		}
 
-		/**
-		 * Callback that is triggered whenever a new PDF page is scrolled into view.
-		 */
 		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
+			// Callback that gets executed whenever a PDF page scrolls into view
 			let thumbnails = outline.querySelectorAll('a');
 			// eslint-disable-next-line no-undef
 			let pdfPages: NodeListOf<HTMLDivElement> =
@@ -268,7 +249,7 @@
 					under the variable renderInFocusScale. Similarly, the scale at which
 					out-of-focus pages are rendered can be changed under the variable
 					renderOutOfFocusScale.
-				*/
+				  */
 					const neighborHoodLB =
 						Number(pageIndex) - this.renderNeighborhoodRadius;
 					const neighborHoodUB =
@@ -349,21 +330,6 @@
 					pageNumber.toString()
 				) as HTMLDivElement;
 				pdfPage.scrollIntoView();
-				/*
-					I don't like this solution. There are numerous reasons this is a bad solution:
-						1. We cannot always expect this value to be correct as it will change with other 
-						changes to the geometry of the screen.
-						2. The value should be based on the element of the DOM, not arbitrary pixel values
-
-					For now this solution will stay, but we should come back and correct this!
-					TODO: FIX
-					THIS ALSO HAS TO BE DONE TO THE CLICK METHODS =(
-					*/
-				// if (pageNumber === '1') {
-				// 	mainCanvas.scrollBy({ top: -55 });
-				// } else {
-				// 	mainCanvas.scrollBy({ top: -40 });
-				// }
 			}
 		});
 		// #endregion
@@ -417,8 +383,10 @@
 			<ZoomMinus
 				on:click={() => {
 					if ($pdfZoom > 0.2) {
-						zoom -= 10;
-						pdfRenderer.renderAllCanvases(false);
+						if (zoom - zoomDelta >= 0) {
+							zoom -= zoomDelta;
+							pdfRenderer.renderAllCanvases(false);
+						}
 					}
 				}}
 			/>
@@ -433,7 +401,7 @@
 			</div>
 			<ZoomPlus
 				on:click={() => {
-					zoom += 10;
+					zoom += zoomDelta;
 					pdfRenderer.renderAllCanvases(false);
 				}}
 			/>
@@ -572,12 +540,6 @@
 		gap: 10px;
 		justify-content: center;
 	}
-
-	/* .cur-page-num {
-		color: var(--font-2);
-		width: 20px;
-		border: 0;
-	} */
 
 	.slash {
 		color: var(--font-2);

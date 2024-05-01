@@ -67,6 +67,7 @@
 	<TopBar>
 		<svelte:fragment slot="left-cluster">
 			<ToggleMenuItem
+				tip="Toggle Left Panel"
 				active={$leftPanelActive}
 				onClickFunction={() => {
 					$leftPanelActive = !$leftPanelActive;
@@ -75,8 +76,9 @@
 			>
 				<LeftPanelIcon active={$leftPanelActive} />
 			</ToggleMenuItem>
-			<ToggleMenuItem active={folderActive}>
-				<DriveIcon active={folderActive} />
+			<ToggleMenuItem tip="Remote Servers" active={folderActive}>
+
+				<DriveIcon  active={folderActive} />
 			</ToggleMenuItem>
 			<!-- <ToggleMenuItem active={serverActive}>
 				<ServerIcon active={serverActive} />
@@ -85,6 +87,7 @@
 
 		<svelte:fragment slot="left-search">
 			<ActionMenuItem
+				tip="Main Menu"
 				onClickFunction={() => {
 					$showMainMenu = true;
 				}}
@@ -105,6 +108,7 @@
 		<svelte:fragment slot="right-cluster">
 			{#if showOutLineButtons}
 				<ToggleMenuItem
+					tip="Toggle Code Blocks"
 					active={$showCodeOutlineElements}
 					onClickFunction={() => {
 						$showCodeOutlineElements = !$showCodeOutlineElements;
@@ -117,6 +121,7 @@
 					<CodeIcon active={$showCodeOutlineElements} />
 				</ToggleMenuItem>
 				<ToggleMenuItem
+					tip="Toggle Math"
 					active={$showMathOutlineElements}
 					onClickFunction={() => {
 						$showMathOutlineElements = !$showMathOutlineElements;
@@ -129,6 +134,7 @@
 					<MathIcon active={$showMathOutlineElements} />
 				</ToggleMenuItem>
 				<ToggleMenuItem
+					tip="Toggle Table Previews"
 					active={$showTableOutlineElements}
 					onClickFunction={() => {
 						$showTableOutlineElements = !$showTableOutlineElements;
@@ -142,6 +148,7 @@
 				</ToggleMenuItem>
 			{/if}
 			<ToggleMenuItem
+				tip="Toggle Right Panel"
 				active={$rightPanelActive}
 				onClickFunction={() => {
 					$rightPanelActive = !$rightPanelActive;

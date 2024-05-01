@@ -49,6 +49,7 @@
 		font-size: 2rem;
 		line-height: 1.5;
 	}
+
 	p {
 		width: 100%;
 		font-family: 'KaTeX_Main',serif;

@@ -86,7 +86,7 @@
 		text-decoration: none;
 		color: var(--font-2);
 		font-family: var(--f-Regular), sans-serif;
-		font-size: 1.8rem;
+		font-size: 18px;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}

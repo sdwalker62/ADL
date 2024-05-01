@@ -199,19 +199,16 @@
 		margin-left: 6px;
 	}
 
-  /*noinspection ALL*/
 	:global(#document span.document-code-prompt) {
 		color: var(--font-5);
 	}
 
-  /*noinspection ALL*/
 	:global(.document-code-img) {
 		height: 2rem !important;
 		filter: invert(52%) sepia(6%) saturate(194%) hue-rotate(202deg)
 			brightness(89%) contrast(84%);
 	}
 
-  /*noinspection ALL*/
 	:global(.document-code-img):hover {
 		filter: var(--active-filter);
 		/* transition: filter 0.2s ease-in-out; */
@@ -286,14 +283,23 @@
 		opacity: 0.8;
 	}
 
-  /*noinspection ALL*/
 	:global(#document .math) {
 		display: flex;
-		flex-direction: row;
+		align-items: center;
 		justify-content: center;
-		/* font-family: var(--f-Regular), sans-serif; */
-		font-size: 2.5rem;
+		font-family: 'KaTeX_Main',serif!important;
 	}
+
+  :global(#document .math span) {
+      color: var(--font-2);
+      font-size: 2.5rem;
+      line-height: 2;
+  }
+
+  :global(#document .math span p){
+      width: 100%;
+      font-family: 'KaTeX_Main',serif;
+  }
 
 	:global(#document p) {
 		padding-left: 20px;
