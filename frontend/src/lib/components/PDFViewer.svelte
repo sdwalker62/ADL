@@ -81,6 +81,7 @@
 		private alreadyRenderedIndices: Set<number> = new Set();
 		private readonly rootPaddingWidth: number;
 		private readonly outlinePaddingWidth: number;
+		private maxSizeAchieved: boolean = false;
 
 		constructor(
 			pdfDocument: PDFDocumentProxy,
@@ -179,8 +180,11 @@
 			let styleWidth = (zoom * renderScaleCoefficient * viewport.width) / 100;
 			let styleHeight = (zoom * renderScaleCoefficient * viewport.height) / 100;
 			if (styleWidth > this.rootElement.offsetWidth) {
+				this.maxSizeAchieved = true;
 				styleWidth = this.rootElement.offsetWidth - 15;
 				styleHeight = (styleWidth * viewport.height) / viewport.width;
+			} else {
+				this.maxSizeAchieved = false;
 			}
 			canvas.style.width = Math.floor(styleWidth) + 'px';
 			canvas.style.height = Math.floor(styleHeight) + 'px';
@@ -205,7 +209,7 @@
 			this.pageVisibilityCallback(records);
 		}
 
-		public renderAllCanvases(renderThumbnails = true): void {
+		public renderAllCanvases(renderThumbnails = true): boolean {
 			// Renders the canvases for the PDF
 			this.documentPageRange.forEach(async (pageNum) => {
 				const page = await this.pdfDocument.getPage(pageNum);
@@ -218,6 +222,7 @@
 					1,
 					this.pdfPageRenderWidth
 				);
+				
 				if (renderThumbnails) {
 					const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
 					let thumbnailCanvas = thumbnail.querySelector('canvas')!;
@@ -231,6 +236,7 @@
 					);
 				}
 			});
+			return this.maxSizeAchieved;
 		}
 
 
@@ -350,8 +356,13 @@
 				if (!isFinite(zoomInputValue)) {
 					alert('Please enter a valid number');
 				} else {
+					const zoomBackup = zoom;
 					zoom = Number(zoomInput.value);
-					pdfRenderer.renderAllCanvases(false);
+					let oob = pdfRenderer.renderAllCanvases(false);
+					if (oob) {
+						zoom = zoomBackup;
+					}
+					// pdfRenderer.renderAllCanvases(false);
 				}
 			}
 		});
@@ -416,8 +427,12 @@
 			</div>
 			<ZoomPlus
 				on:click={() => {
+					const backupZoom = zoom;
 					zoom += zoomDelta;
-					pdfRenderer.renderAllCanvases(false);
+					let oob = pdfRenderer.renderAllCanvases(false);
+					if (oob) {
+						zoom = backupZoom;
+					}
 				}}
 			/>
 		</div>
