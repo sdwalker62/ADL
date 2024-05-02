@@ -12,7 +12,6 @@
 		<div id="code-heading-container">
 			<img src={copyImg} alt="copy-icon" class="copy-code-button" />
 			<img src={downloadImg} alt="download-icon" class="save-code-as-file" />
-			<img src={updateImg} alt="update-icon" class="update-version" />
 		</div>
 		<div id="code">
 			<!--eslint-disable-next-line svelte/no-at-html-tags-->

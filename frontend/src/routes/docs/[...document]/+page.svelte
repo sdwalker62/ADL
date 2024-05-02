@@ -43,7 +43,6 @@
 				<div class='document-code-heading-container'>
 					<img class='document-code-img copy-code-button' src=${copyImg} alt="copy-icon" />
 					<img class='document-code-img save-code-as-file' src=${downloadImg} alt="download-icon" />
-					<img class='document-code-img update-version' src=${updateImg} alt="update-icon" />
 				</div>
 				<div class="document-code">
 					${codeBlock.outerHTML}
@@ -132,13 +131,7 @@
 			});
 
 			tippy('.save-code-as-file', {
-				content: 'Download Code As File',
-				theme: 'athena',
-				delay: [400, 0]
-			});
-
-			tippy('.update-version', {
-				content: 'Get Latest Version',
+				content: 'Download Code As File (WIP)',
 				theme: 'athena',
 				delay: [400, 0]
 			});
@@ -283,23 +276,35 @@
 		opacity: 0.8;
 	}
 
-	:global(#document .math) {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		font-family: 'KaTeX_Main',serif!important;
+
+  /* :global(#document .math span) {
+      color: var(--font-2);
+      font-size: 1rem;
+      line-height: 1;
+  } */
+  :global(.katex-display span) {
+		color: var(--font-2);
+		font-family: 'KaTeX_Main', serif;
+		font-size: 2.5rem;
+		line-height: 3;
+		text-overflow: ellipsis;
+		text-align: start;
 	}
 
-  :global(#document .math span) {
-      color: var(--font-2);
-      font-size: 2.5rem;
-      line-height: 2;
-  }
+	:global(p:has(.katex)) {
+		text-align: center;
+	
+	}
 
-  :global(#document .math span p){
+	/* :global(.katex-display) {
+		align-content: center;
+	} */
+
+  /* :global(#document .math span p){
       width: 100%;
+	  font-size: 2rem;
       font-family: 'KaTeX_Main',serif;
-  }
+  } */
 
 	:global(#document p) {
 		padding-left: 20px;
