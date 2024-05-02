@@ -53,10 +53,10 @@
 	}
 
 	#folder-canvas {
-		display: grid;
-		grid-template-rows: 4rem 1fr;
+		display: flex;
 		background-color: var(--background-2);
 		width: 100%;
+		height: 100%;
 		max-width: 320px;
 		align-items: start;
 		overflow-y: scroll;
@@ -65,7 +65,6 @@
 
 	.folder-container {
 		background-color: var(--background-2);
-		overflow: scroll;
 		padding: 15px;
 	}
 </style>
