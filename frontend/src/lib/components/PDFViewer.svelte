@@ -27,6 +27,8 @@
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
+	import { getAllCookies, type CookieMap } from '$lib/utils';
+	import Cookies from 'js-cookie';
 	// import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
 	// #endregion
 
@@ -38,8 +40,10 @@
 	// #region Reactive Declarations
 	$: if ($rightPanelActive) {
 		templateString = '1fr 180px';
+		outlinePaddingString = "20px";
 	} else {
 		templateString = '1fr 0';
+		outlinePaddingString = "0px";
 	}
 	// #endregion
 
@@ -57,6 +61,8 @@
 	let background3Color: string;
 	let font1Color: string;
 	let templateString: string;
+	let rightPanelCookie: boolean;
+	let outlinePaddingString: string;
 	const zoomDelta = 10;
 	// #endregion
 
@@ -202,6 +208,12 @@
 			page.render(renderParams).promise;
 		}
 
+		public triggerObservation() {
+			// Trigger the observation manually
+			const records = this.observer.takeRecords();
+			this.pageVisibilityCallback(records);
+		}
+
 		public renderAllCanvases(renderThumbnails = true): void {
 			// Renders the canvases for the PDF
 			this.documentPageRange.forEach(async (pageNum) => {
@@ -217,7 +229,8 @@
 				);
 				if (renderThumbnails) {
 					const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
-					const thumbnailCanvas = thumbnail.querySelector('canvas')!;
+					let thumbnailCanvas = thumbnail.querySelector('canvas')!;
+					thumbnailCanvas.classList.add('thumbnail-canvas');
 					this.renderCanvas(
 						thumbnailCanvas,
 						page,
@@ -229,9 +242,14 @@
 			});
 		}
 
+
+
 		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
 			// Callback that gets executed whenever a PDF page scrolls into view
-			let thumbnails = outline.querySelectorAll('a');
+			let thumbnails: NodeListOf<HTMLAnchorElement>;
+			if (outline) {
+				thumbnails = outline.querySelectorAll('a');
+			}
 			// eslint-disable-next-line no-undef
 			let pdfPages: NodeListOf<HTMLDivElement> =
 				mainCanvas.querySelectorAll('.pdf-page');
@@ -294,13 +312,12 @@
 						});
 					}
 
-					if ($rightPanelActive) {
+					if (rightPanelActive) {
 						thumbnails.forEach((thumbnail: HTMLElement) => {
 							const thumbnailIndex = thumbnail.id.split('-')[1];
 							if (thumbnailIndex === pageIndex) {
 								thumbnail.classList.add('active');
 								thumbnail.scrollIntoView(false);
-								// outline.scrollBy({ top: -55 });
 							} else {
 								thumbnail.classList.remove('active');
 							}
@@ -308,10 +325,20 @@
 					}
 				}
 			});
+
 		};
 	}
 
 	onMount(async () => {
+		// const allCookies: CookieMap = getAllCookies();
+		// console.log(allCookies);
+		rightPanelCookie = Boolean(Cookies.get('rightPanelActive'));
+		// if (!rightPanelCookie) {
+		// 	let outline = document.getElementById('pdf-outline');
+		// 	if (outline) {
+		// 		outline.style.padding = '0px';
+		// 	}
+		// }
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
 		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
@@ -361,6 +388,12 @@
 		pdfRenderer.renderAllCanvases();
 		pageCount = pdfRenderer.numPages - 1;
 	});
+
+	$: $rightPanelActive, (()=>{
+		if (pdfRenderer) {
+			pdfRenderer.triggerObservation();
+		}
+	})();
 </script>
 
 <div bind:this={pdfContainer} id="pdf-container">
@@ -425,7 +458,7 @@
 			style="transform: scale(${pdfZoom});"
 		/>
 		<!-- <Outline  /> -->
-		<div id="pdf-outline" bind:this={outline} />
+		<div id="pdf-outline" bind:this={outline} style:padding={outlinePaddingString}/>
 	</div>
 </div>
 
@@ -477,6 +510,7 @@
 	:global(.pdf-thumbnail-link) {
 		padding: 10px;
 		border-radius: 5px;
+		width: 100%;
 	}
 
 	:global(.pdf-thumbnail-link:hover),
@@ -484,6 +518,11 @@
 		background: var(--gradient-1);
 	}
 
+	:global(.thumbnail-canvas) {
+		width: 100% !important;
+		height: 100% !important;
+	}	
+	
 	:global(.pdf-thumbnail-pageIndex) {
 		display: flex;
 		width: 100%;
@@ -529,7 +568,7 @@
 		overflow-x: hidden;
 		height: 100%;
 		background-color: var(--background-2);
-		padding: 15px;
+		padding: 10px;
 		gap: 10px;
 	}
 

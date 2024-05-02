@@ -33,8 +33,6 @@
 	// import type { LayoutData } from './$types';
 	import { page } from '$app/stores';
 
-	console.log($page.url.pathname);
-
 	export let data;
 
 	$colorTheme = data.colorMode;
