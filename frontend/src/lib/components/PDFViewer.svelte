@@ -18,7 +18,6 @@
 	import _ from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
-	// import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import ZoomMinus from '$lib/assets/icons/ZoomMinus.svelte';
 	import ZoomPlus from '$lib/assets/icons/ZoomPlus.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
@@ -27,9 +26,6 @@
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
-	import { getAllCookies, type CookieMap } from '$lib/utils';
-	import Cookies from 'js-cookie';
-	// import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
 	// #endregion
 
 	// #region Props
@@ -61,7 +57,6 @@
 	let background3Color: string;
 	let font1Color: string;
 	let templateString: string;
-	let rightPanelCookie: boolean;
 	let outlinePaddingString: string;
 	const zoomDelta = 10;
 	// #endregion
@@ -84,8 +79,6 @@
 		private renderNeighborhoodRadius: number = 2;
 		private isFirstPageLoad = true;
 		private alreadyRenderedIndices: Set<number> = new Set();
-		private outlinePadding: number;
-		private rootPadding: number;
 		private readonly rootPaddingWidth: number;
 		private readonly outlinePaddingWidth: number;
 
@@ -106,8 +99,6 @@
 			this.pixelRatio = window.devicePixelRatio || 1;
 			this.rootElement = rootElement;
 			this.outlineElement = outlineElement;
-			this.outlinePadding = Number(outlineElement.style.padding.slice(0, -2));
-			this.rootPadding = Number(rootElement.style.padding.slice(0, -2));
 			this.rootPaddingWidth = 10 * 2;
 			this.outlinePaddingWidth = 10 * 2;
 			this.pdfPageRenderWidth =
@@ -330,15 +321,6 @@
 	}
 
 	onMount(async () => {
-		// const allCookies: CookieMap = getAllCookies();
-		// console.log(allCookies);
-		rightPanelCookie = Boolean(Cookies.get('rightPanelActive'));
-		// if (!rightPanelCookie) {
-		// 	let outline = document.getElementById('pdf-outline');
-		// 	if (outline) {
-		// 		outline.style.padding = '0px';
-		// 	}
-		// }
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
 		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
