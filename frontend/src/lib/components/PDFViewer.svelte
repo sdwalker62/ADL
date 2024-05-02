@@ -314,7 +314,7 @@
 	onMount(async () => {
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
-		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.js';
+		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
 		pdfjsLib.GlobalWorkerOptions.workerSrc = root + pdfWorkerPath;
 		pdfDoc = await pdfjsLib.getDocument({
 			data: pdfData
