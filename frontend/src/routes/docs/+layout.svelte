@@ -3,6 +3,7 @@
 	import { leftPanelActive, serverVisible, libraryVisible } from '$lib/data/shared.js';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
+	import Modal from '$lib/components/modals/Modal.svelte';
 	// import type { LayoutData } from './$types';
 
 	export let data;
@@ -13,6 +14,16 @@
 		files: library.children,
 		active: true
 	};
+
+	let showURLModal = false;
+
+	function openURLModal() {
+		showURLModal = true;
+	}
+
+	function closeURLModal() {
+		showURLModal = false;
+	}
 
 	onMount(() => {
 		stickybits('#folder-top-bar-sticky');
@@ -26,13 +37,27 @@
 				<div class="folder-container no-scroll-bar constrained-height">
 					<Folder {...props} />
 				</div>
+			{:else}
+				<div id="server-panel"> 
+					<button on:click={openURLModal}>Open Modal</button>
+				</div>
 			{/if}
-		</div>
+		</div>		
 	{/if}
 	<slot />
 </div>
 
+<Modal bind:renderModal={showURLModal}/>
+
 <style>
+	#server-panel {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--background-2);
+		padding: 15px;
+	}
+
 	#page-container {
 		display: grid;
 		overflow: hidden;
