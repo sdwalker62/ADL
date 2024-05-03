@@ -7,7 +7,9 @@
 		showMathOutlineElements,
 		showTableOutlineElements,
 		leftPanelActive,
-		rightPanelActive
+		rightPanelActive,
+		libraryVisible,
+		serverVisible
 	} from '$lib/data/shared.js';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
 	import SiteNavigationLink from '$lib/components/MainModalMenu/SiteNavigationLink.svelte';
@@ -74,9 +76,25 @@
 			>
 				<LeftPanelIcon active={$leftPanelActive} />
 			</ToggleMenuItem>
-			<ToggleMenuItem tip="Remote Servers" active={folderActive}>
-
-				<DriveIcon  active={folderActive} />
+			<ToggleMenuItem 
+				tip="Library" 
+				active={$libraryVisible}
+				onClickFunction={() => {
+					$libraryVisible = !$libraryVisible;
+					$serverVisible = !$serverVisible;
+				}}
+			>
+				<LibraryIcon active={$libraryVisible} />
+			</ToggleMenuItem>
+			<ToggleMenuItem 
+				tip="Remote Servers" 
+				active={$serverVisible}
+				onClickFunction={() => {
+					$libraryVisible = !$libraryVisible;
+					$serverVisible = !$serverVisible;
+				}}
+			>
+				<DriveIcon  active={$serverVisible} />
 			</ToggleMenuItem>
 			<!-- <ToggleMenuItem active={serverActive}>
 				<ServerIcon active={serverActive} />

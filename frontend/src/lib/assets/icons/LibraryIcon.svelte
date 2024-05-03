@@ -1,14 +1,26 @@
 <script>
+	import { onMount } from 'svelte';
+	import tippy from 'tippy.js';
 	export let active = false;
+
+	onMount(() => {
+		tippy('#library', {
+			content: 'Documents Library',
+			placement: 'bottom',
+			theme: 'athena',
+			delay: [400, 0]
+		});
+	})
 </script>
 
 <svg
+	id="library"
 	class:active
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
-	width="4rem"
-	height="4rem"
+	width="20.5658"
+	height="22.0785"
 >
 	<g>
 		<rect height="4rem" opacity="0" width="4rem" x="0" y="0" />
@@ -21,18 +33,18 @@
 </svg>
 
 <style>
-	path {
-		scale: 1.6;
+	svg {
+		scale: 1;
 	}
 
 	svg path {
-		fill: var(--font-1);
-		opacity: 1;
+		fill: var(--background-1);
+		opacity: 0.5;
 	}
 
 	svg:hover path,
 	svg.active path {
-		fill: var(--highlight);
+		fill: var(--background-1);
 		opacity: 1;
 	}
 </style>
