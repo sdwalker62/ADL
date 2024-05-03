@@ -26,6 +26,7 @@
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
+	import { Maximize } from 'lucide-svelte';
 	// #endregion
 
 	// #region Props
@@ -168,7 +169,8 @@
 			page: PDFPageProxy,
 			scale: number = 1,
 			scalingFactor: number = 0.1,
-			rootWidth: number
+			rootWidth: number,
+			maxZoom: boolean = false
 		): void {
 			const viewport = page.getViewport({ scale: scale });
 			let context = canvas.getContext('2d')!;
@@ -179,7 +181,7 @@
 			canvas.height = Math.floor(viewport.height * outputScale);
 			let styleWidth = (zoom * renderScaleCoefficient * viewport.width) / 100;
 			let styleHeight = (zoom * renderScaleCoefficient * viewport.height) / 100;
-			if (styleWidth > this.rootElement.offsetWidth) {
+			if (styleWidth > this.rootElement.offsetWidth || maxZoom) {
 				this.maxSizeAchieved = true;
 				styleWidth = this.rootElement.offsetWidth - 15;
 				styleHeight = (styleWidth * viewport.height) / viewport.width;
@@ -209,7 +211,7 @@
 			this.pageVisibilityCallback(records);
 		}
 
-		public renderAllCanvases(renderThumbnails = true): boolean {
+		public renderAllCanvases(renderThumbnails = true, maxZoom: boolean = false): boolean {
 			// Renders the canvases for the PDF
 			this.documentPageRange.forEach(async (pageNum) => {
 				const page = await this.pdfDocument.getPage(pageNum);
@@ -220,7 +222,8 @@
 					page,
 					this.pageScale,
 					1,
-					this.pdfPageRenderWidth
+					this.pdfPageRenderWidth,
+					maxZoom
 				);
 				
 				if (renderThumbnails) {
@@ -358,7 +361,7 @@
 				} else {
 					const zoomBackup = zoom;
 					zoom = Number(zoomInput.value);
-					let oob = pdfRenderer.renderAllCanvases(false);
+					let oob = pdfRenderer.renderAllCanvases(false, false);
 					if (oob) {
 						zoom = zoomBackup;
 					}
@@ -406,6 +409,12 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
+			<button class="transparent-button" on:click={()=>{
+				pdfRenderer.renderAllCanvases(false, true);
+				zoom = 100;
+			}}>
+				<Maximize size={20} class="maximize"/>
+			</button>
 			<ZoomMinus
 				on:click={() => {
 					if ($pdfZoom > 0.2) {
@@ -528,6 +537,23 @@
 		color: white;
 		font-family: var(--f-Medium);
 		font-size: 1.1rem;
+	}
+
+	.transparent-button {
+		background: transparent;
+		border: none;
+	}
+
+	:global(.transparent-button:hover .lucide) {
+		color: white;
+		opacity: 1;
+		cursor: pointer;
+	}
+
+	:global(.transparent-button .lucide) {
+		color: var(--font-1);
+		opacity: 0.5;
+		cursor: pointer;
 	}
 
 	#pdf-container {
