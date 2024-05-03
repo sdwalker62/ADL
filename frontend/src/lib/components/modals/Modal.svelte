@@ -45,6 +45,7 @@
         background-color: var(--background-2);
 		height: 75px;
         width: 60%;
+        padding: 1px;
 	}
 
 	dialog[open] {

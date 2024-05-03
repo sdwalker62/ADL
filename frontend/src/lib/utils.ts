@@ -20,3 +20,8 @@ export function getAllCookies() {
 
 	return cookies;
 }
+
+export function retrieveDocuments(url: string, password: string) {
+	console.log(url);
+	console.log(password);
+}

@@ -4,6 +4,7 @@
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
 	import Modal from '$lib/components/modals/Modal.svelte';
+	import { retrieveDocuments } from '$lib/utils.js';
 	// import type { LayoutData } from './$types';
 
 	export let data;
@@ -16,14 +17,18 @@
 	};
 
 	let showURLModal = false;
+	let showPasswordModal = false;
 
 	function openURLModal() {
 		showURLModal = true;
 	}
 
-	function closeURLModal() {
-		showURLModal = false;
+	function openPasswordModal() {
+		showPasswordModal = true;
 	}
+
+	let urlValue = '';
+	let passwordValue = '';
 
 	onMount(() => {
 		stickybits('#folder-top-bar-sticky');
@@ -38,8 +43,12 @@
 					<Folder {...props} />
 				</div>
 			{:else}
-				<div id="server-panel"> 
-					<button on:click={openURLModal}>Open Modal</button>
+				<div id="button-panel">
+					<span id="url-label">URL:</span>
+					<span id="url-text">{urlValue}</span>
+					<button on:click={openURLModal}>Enter URL</button>
+					<button on:click={openPasswordModal}>Enter Password</button>
+					<button id="submit-button" on:click={()=>retrieveDocuments(urlValue, passwordValue)}>Retrieve Documents</button>
 				</div>
 			{/if}
 		</div>		
@@ -47,9 +56,79 @@
 	<slot />
 </div>
 
-<Modal bind:renderModal={showURLModal}/>
+<!-- URL Entry Modal -->
+<Modal bind:renderModal={showURLModal}>
+	<input slot="contents" id="urlInputBox" type="text" bind:value={urlValue}/>
+</Modal>
+
+<!-- Password Modal -->
+<Modal bind:renderModal={showPasswordModal}>
+	<input slot="contents" id="urlInputBox" type="text" bind:value={passwordValue}/>
+</Modal>
 
 <style>
+	#url-text {
+		color: var(--font-1);
+		font-family: var(--f-Mono), sans-serif;
+		font-size: 18px;
+	}
+
+	#url-label {
+		color: var(--font-1);
+		font-family: var(--f-Medium), sans-serif;
+		font-size: 18px;
+	
+	}
+
+	button {
+		height: 40px;
+		border: none;
+		border-radius: 8px;
+		color: var(--font-3);
+		font-family: var(--f-Regular), sans-serif;
+		font-size: 18px;
+		background-color: var(--background-4);
+	}
+
+	button:hover {
+		background-color: var(--background-6);
+		cursor: pointer;
+		color: var(--font-1);
+	}
+
+	#submit-button {
+		font-family: var(--f-SemiBold), sans-serif;
+		color: var(--background-1);
+		background: var(--white-purple-1);
+	}
+
+	#button-panel {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		background-color: var(--background-2);
+		padding: 15px;
+		width: 100%;
+		gap: 5px;
+	}
+
+	#urlInputBox {
+		width: 100%;
+		height: 100%;
+		background: transparent;
+		border: none;
+		color: var(--font-1);
+		font-family: var(--f-Mono), sans-serif;
+		font-size: 48px;
+		padding-left: 20px;
+	}
+
+	#urlInputBox:focus {
+		border-radius: 10px;
+		outline: none;
+		border: none;
+	}
+
 	#server-panel {
 		display: flex;
 		justify-content: center;
