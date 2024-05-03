@@ -197,14 +197,84 @@
 	</svelte:fragment>
 	<svelte:fragment slot="links">
 		<ExternalNavigationLink
-			link={'https://github.com/sigil-ml'}
-			site={'github'}
-			name={'GitHub'}
+			link={'https://huggingface.co/'}
+			site={'huggingface.co'}
+			name={'HuggingFace'}
 		/>
 		<ExternalNavigationLink
 			link={'https://hub.docker.com/'}
-			site={'docker'}
+			site={'docker.com'}
 			name={'Docker Hub'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pytorch.org/'}
+			site={'pytorch.org'}
+			name={'PyTorch'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.tensorflow.org/'}
+			site={'tensorflow.org'}
+			name={'TensorFlow'}
+		/>
+		<ExternalNavigationLink
+			link={'https://jax.readthedocs.io/en/latest/'}
+			site={'jax.readthedocs.io'}
+			name={'JAX'}
+		/>
+		<ExternalNavigationLink
+			link={'https://numpy.org/'}
+			site={'numpy.org'}
+			name={'NumPy'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pandas.pydata.org/docs/index.html'}
+			site={'pandas.pydata.org'}
+			name={'Pandas'}
+		/>
+		<ExternalNavigationLink
+			link={'https://unify.ai/'}
+			site={'unify.ai'}
+			name={'Unify'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.ray.io/'}
+			site={'ray.io'}
+			name={'Ray'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.ultralytics.com/'}
+			site={'ultralytics.com'}
+			name={'Ultralytics'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pola.rs/'}
+			site={'pola.rs'}
+			name={'Polars'}
+		/>
+		<ExternalNavigationLink
+			link={'https://jupyter.org/'}
+			site={'jupyter.org'}
+			name={'Jupyter'}
+		/>
+		<ExternalNavigationLink
+			link={'https://colab.research.google.com/'}
+			site={'colab.research.google.com'}
+			name={'Google Colab'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.paperspace.com/'}
+			site={'paperspace.com'}
+			name={'Paperspace'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.langchain.com/'}
+			site={'langchain.com'}
+			name={'LangChain'}
+		/>
+		<ExternalNavigationLink
+			link={'https://milvus.io/'}
+			site={'milvus.io'}
+			name={'Milvus'}
 		/>
 	</svelte:fragment>
 </MainModalMenu>

@@ -20,7 +20,7 @@
 
 <a href={link} bind:this={component}>
 	<div id="link-canvas">
-		<img src="http://www.google.com/s2/favicons?domain_url=www.{site}.com"  alt="nav-icon"/>
+		<img src="http://www.google.com/s2/favicons?domain_url={site}"  alt="nav-icon"/>
 		<span>{name}</span>
 	</div>
 </a>
