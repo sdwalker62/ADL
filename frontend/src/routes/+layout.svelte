@@ -30,6 +30,7 @@
 	// import IncreaseFontIcon from '$lib/assets/icons/IncreaseFontIcon.svelte';
 	import HomeIcon from '$lib/assets/icons/HomeIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
+	import LibraryIcon2 from '$lib/assets/icons/LibraryIcon2.svelte';
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
 	// import Cookie from 'js-cookie';
 	// import type { LayoutData } from './$types';
@@ -184,7 +185,7 @@
 			<HomeIcon active={pageHome} />
 		</SiteNavigationLink>
 		<SiteNavigationLink bind:active={pageDocs} link={'/docs'} name={'Docs'}>
-			<LibraryIcon active={pageDocs} />
+			<LibraryIcon2 active={pageDocs} />
 		</SiteNavigationLink>
 		<SiteNavigationLink
 			bind:active={pageBoard}
