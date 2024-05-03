@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { leftPanelActive } from '$lib/data/shared.js';
+	import { leftPanelActive, serverVisible, libraryVisible } from '$lib/data/shared.js';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
 	// import type { LayoutData } from './$types';
@@ -22,9 +22,11 @@
 <div id="page-container" class="constrained-height" class:active={$leftPanelActive}>
 	{#if $leftPanelActive}
 		<div id="folder-canvas" class="no-scroll-bar">
-			<div class="folder-container no-scroll-bar constrained-height">
-				<Folder {...props} />
-			</div>
+			{#if $libraryVisible}
+				<div class="folder-container no-scroll-bar constrained-height">
+					<Folder {...props} />
+				</div>
+			{/if}
 		</div>
 	{/if}
 	<slot />
