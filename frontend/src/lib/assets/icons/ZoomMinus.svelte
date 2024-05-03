@@ -1,9 +1,21 @@
 <script>
+	import { onMount } from 'svelte';
+	import tippy from 'tippy.js';
 	export let active = false;
+
+	onMount(() => {
+		tippy('#zoom-minus', {
+			content: 'Decrease Zoom',
+			placement: 'bottom',
+			theme: 'athena',
+			delay: [400, 0]
+		});
+	})
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <svg
+	id="zoom-minus"
 	class:active
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg"

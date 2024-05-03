@@ -27,6 +27,7 @@
 	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
 	import { Maximize } from 'lucide-svelte';
+	import tippy from 'tippy.js';
 	// #endregion
 
 	// #region Props
@@ -60,6 +61,7 @@
 	let templateString: string;
 	let outlinePaddingString: string;
 	const zoomDelta = 10;
+	let pageUrl = $page.url.pathname;
 	// #endregion
 
 	class PDFRenderer {
@@ -330,6 +332,7 @@
 	}
 
 	onMount(async () => {
+		pageUrl = window.location.hostname + pageUrl;
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
 		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
@@ -383,6 +386,23 @@
 		pdfRenderer.buildHTMLElements();
 		pdfRenderer.renderAllCanvases();
 		pageCount = pdfRenderer.numPages - 1;
+
+		tippy('#pdf-download-icon', {
+				content: 'Download PDF',
+				theme: 'athena',
+				delay: [400, 0]
+		});
+		tippy('#pdf-theme-switcher', {
+			content: 'Toggle Light/Dark Mode',
+			theme: 'athena',
+			delay: [400, 0]
+		});
+		tippy('#maximize-pdf', {
+			content: 'Fit PDF To Screen',
+			placement: 'bottom',
+			theme: 'athena',
+			delay: [400, 0]
+		});
 	});
 
 	$: $rightPanelActive, (()=>{
@@ -398,7 +418,7 @@
 		<!-- Download -->
 		<div id="pdf-download-icon">
 			<a
-				href={`http://localhost:8000/api/doc${$page.params.document}`}
+				href={pageUrl}
 				download="test.pdf"
 			>
 				<DownloadIcon />
@@ -409,7 +429,7 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
-			<button class="transparent-button" on:click={()=>{
+			<button id="maximize-pdf" class="transparent-button" on:click={()=>{
 				pdfRenderer.renderAllCanvases(false, true);
 				zoom = 100;
 			}}>
