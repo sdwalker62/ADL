@@ -62,7 +62,6 @@ export const actions: Actions = {
 				}
 			}
 		}
-		// Display a success status message
 		return message(form, 'Form posted successfully!');
 	}
 };

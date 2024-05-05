@@ -90,12 +90,12 @@
 	}
 
 	button {
-		height: 40px;
+		height: 30px;
 		border: none;
-		border-radius: 8px;
+		border-radius: 5px;
 		color: var(--font-3);
 		font-family: var(--f-Regular), sans-serif;
-		font-size: 18px;
+		font-size: 16px;
 		background-color: var(--background-4);
 	}
 
