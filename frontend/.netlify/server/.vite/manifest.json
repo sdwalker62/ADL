@@ -44,6 +44,10 @@
       "_ssr.js"
     ]
   },
+  "_private.js": {
+    "file": "chunks/private.js",
+    "name": "private"
+  },
   "_shared.js": {
     "file": "chunks/shared.js",
     "name": "shared",
@@ -157,7 +161,10 @@
     "file": "entries/pages/docs/_layout.server.ts.js",
     "name": "entries/pages/docs/_layout.server.ts",
     "src": "src/routes/docs/+layout.server.ts",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_private.js"
+    ]
   },
   "src/routes/docs/+layout.svelte": {
     "file": "entries/pages/docs/_layout.svelte.js",
@@ -180,7 +187,8 @@
     "isEntry": true,
     "imports": [
       "_client.js",
-      "_index.js"
+      "_index.js",
+      "_private.js"
     ],
     "css": [
       "_app/immutable/assets/_page.server.Crp_yK76.css"

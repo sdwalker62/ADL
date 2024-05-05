@@ -1,16 +1,14 @@
 import dirTree from "directory-tree";
-import dotenv from "dotenv";
+import { D as DOCS_PATH } from "../../../chunks/private.js";
+import path from "path";
 const load = async () => {
-  dotenv.config();
-  if (process.env.DOCS_PATH) {
-    console.log(process.env.DOCS_PATH);
-    const docsPath = process.env.DOCS_PATH;
-    const fileNames = dirTree(docsPath, { exclude: /.git/ });
+  {
+    const repo_path = path.resolve("..");
+    console.log(repo_path);
+    const fileNames = dirTree(repo_path + DOCS_PATH, { exclude: /.git/ });
     return {
       tree: JSON.stringify(fileNames, null, 2)
     };
-  } else {
-    throw new Error("No docs path found!");
   }
 };
 export {

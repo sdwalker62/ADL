@@ -7,6 +7,7 @@ import baseMemoize from "memoize-weak";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import "@exodus/schemasafe";
 import { z } from "zod";
+import { B as BUCKET_ID, a as BUCKET_ACCESS_KEY, P as PASSWORD, D as DOCS_PATH } from "../../../chunks/private.js";
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
 function setPath(parent, key, value) {
@@ -952,10 +953,6 @@ function _zod(schema2, options) {
   });
 }
 const zod = /* @__PURE__ */ memoize(_zod);
-const DOCS_PATH = "/home/dwalker/dev/adl/AthenaDocs/";
-const BUCKET_ID = "DO008KYLKCGGX3HYQLWY";
-const BUCKET_ACCESS_KEY = "TUyqGaFsDTejHkBDrXtrRIJOQ50duNkOHAv7KkGqdOQ";
-const PASSWORD = "Auks878_rill";
 const schema = z.object({
   bucket: z.string().trim().default("adl"),
   endpoint: z.string().trim().url().default("https://nyc3.digitaloceanspaces.com"),
