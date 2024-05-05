@@ -6,7 +6,7 @@
 	import Modal from '$lib/components/modals/Modal.svelte';
 
 	export let data;
-
+	console.log(data);
 	const library = JSON.parse(data.tree);
 	const props = {
 		name: 'root',
