@@ -13,6 +13,7 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest",
+		"deploy:setup": "env $(cat .env.production | grep -v \"#\" | xargs) pm2 deploy production setup",
 		"deploy:production": "env $(cat .env.production | grep -v \"#\" | xargs) pm2 deploy production"
 	},
 	"devDependencies": {

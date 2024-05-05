@@ -13,10 +13,10 @@ module.exports = {
 
 	deploy: {
 		production: {
-			user: 'root',
-			host: '143.244.223.112',
+			user: process.env.USER,
+			host: process.env.HOST,
 			ssh_options: 'StrictHostKeyChecking=no',
-			ref: 'origin/master',
+			ref: process.env.GIT_BRANCH,
 			repo: process.env.GIT_REPOSITORY,
 			path: process.env.DEPLOY_PATH,
 			'pre-deploy-local': '',
