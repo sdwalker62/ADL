@@ -62,21 +62,23 @@ export const actions: Actions = {
 				Bucket: bucket
 			});
 			const bucketObjects = await s3Client.send(retrievalCommand);
-
 			// TODO: Add Check to make sure list command passed
 			for (const object of bucketObjects.Contents!) {
-				const getCommand = new GetObjectCommand({
-					Bucket: bucket,
-					Key: object.Key
-				});
-				const file = await s3Client.send(getCommand);
 				const writePath = outputDirectory + object.Key;
-				const writeStream = fs.createWriteStream(writePath);
-				file.Body!.pipe(writeStream);
-				console.log(`Downloaded: ${object.Key}`);
+				fs.access(writePath!, fs.constants.F_OK, async (err) => {
+					if (err) {
+						const getCommand = new GetObjectCommand({
+							Bucket: bucket,
+							Key: object.Key
+						});
+						const file = await s3Client.send(getCommand);
+						const writeStream = fs.createWriteStream(writePath);
+						file.Body!.pipe(writeStream);
+						console.log(`Downloaded: ${object.Key}`);
+					}
+				});
 			}
 		}
-
 		// Display a success status message
 		return message(form, 'Form posted successfully!');
 	}
