@@ -1,16 +1,5 @@
-import { k as getContext } from "./ssr.js";
-import "./exports.js";
-import "devalue";
-function get(key, parse = JSON.parse) {
-  try {
-    return parse(sessionStorage[key]);
-  } catch {
-  }
-}
-const SNAPSHOT_KEY = "sveltekit:snapshot";
-const SCROLL_KEY = "sveltekit:scroll";
-get(SCROLL_KEY) ?? {};
-get(SNAPSHOT_KEY) ?? {};
+import { r as getContext } from "./ssr.js";
+import "./client.js";
 const getStores = () => {
   const stores = getContext("__svelte__");
   return {

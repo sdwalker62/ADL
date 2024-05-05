@@ -1,4 +1,4 @@
-import { r as readable, w as writable } from "./index.js";
+import { r as readable, w as writable } from "./index2.js";
 let currentPage = writable("Home");
 let showMainMenu = writable(false);
 let colorTheme = writable("");
@@ -9,6 +9,8 @@ let colorThemeOptions = readable([
   { value: "cb-light", displayName: "Light (Colorblind)" }
 ]);
 let leftPanelActive = writable(true);
+let libraryVisible = writable(true);
+let serverVisible = writable(false);
 let rightPanelActive = writable(true);
 let showCodeOutlineElements = writable(true);
 let showMathOutlineElements = writable(true);
@@ -21,6 +23,8 @@ export {
   showCodeOutlineElements as d,
   showMathOutlineElements as e,
   showTableOutlineElements as f,
+  libraryVisible as g,
+  serverVisible as h,
   leftPanelActive as l,
   pdfZoom as p,
   rightPanelActive as r,

@@ -1,0 +1,28 @@
+{
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"moduleResolution": "bundler"
+//		"strict": true,
+//		"allowUnreachableCode": false,
+//		"exactOptionalPropertyTypes": true,
+//		"noImplicitAny": true,
+//		"noImplicitOverride": true,
+//		"noImplicitReturns": true,
+//		"noImplicitThis": true,
+//		"noFallthroughCasesInSwitch": true,
+//		"noUncheckedIndexedAccess": true,
+//		"forceConsistentCasingInFileNames": true,
+//		"allowSyntheticDefaultImports": true,
+//		"moduleResolution": "bundler"
+	},
+	"include": ["src/**/*", "src/node_modules", "index.d.ts"],
+	"exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+}
