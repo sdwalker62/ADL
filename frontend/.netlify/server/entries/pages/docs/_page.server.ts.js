@@ -7,9 +7,12 @@ import baseMemoize from "memoize-weak";
 import { zodToJsonSchema } from "zod-to-json-schema";
 import "@exodus/schemasafe";
 import { z } from "zod";
-import { B as BUCKET_ID, a as BUCKET_ACCESS_KEY, P as PASSWORD, D as DOCS_PATH } from "../../../chunks/private.js";
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from "@aws-sdk/client-s3";
 import fs from "fs";
+const DOCS_PATH = "/frontend/data/";
+const BUCKET_ID = "DO008KYLKCGGX3HYQLWY";
+const BUCKET_ACCESS_KEY = "TUyqGaFsDTejHkBDrXtrRIJOQ50duNkOHAv7KkGqdOQ";
+const PASSWORD = "Auks878_rill";
 function setPath(parent, key, value) {
   parent[key] = value;
   return "skip";

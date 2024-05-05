@@ -6,19 +6,18 @@
 	import Modal from '$lib/components/modals/Modal.svelte';
 
 	export let data;
-	console.log(data);
-	const library = JSON.parse(data.tree);
-	const props = {
-		name: 'root',
-		files: library.children,
-		active: true
-	};
+	// const library = JSON.parse(data.tree);
+	// const props = {
+	// 	name: 'root',
+	// 	files: library.children,
+	// 	active: true
+	// };
 
 	let showDigitalOceanSpaceModal = false;
 
-	function DigitalOceanSpaceModal() {
-		showDigitalOceanSpaceModal = true;
-	}
+	// function DigitalOceanSpaceModal() {
+	// 	showDigitalOceanSpaceModal = true;
+	// }
 
 	let tmp = '';
 
@@ -27,26 +26,30 @@
 	});
 </script>
 
-<div id="page-container" class="constrained-height" class:active={$leftPanelActive}>
-	{#if $leftPanelActive}
-		<div id="folder-canvas" class="no-scroll-bar">
-			{#if $libraryVisible}
-				<div class="folder-container no-scroll-bar constrained-height">
-					<Folder {...props} />
-				</div>
-			{:else}
-				<div id="button-panel">
-					<!--					<span id="url-label">URL:</span>-->
-					<!--					<span id="url-text">{urlValue}</span>-->
-					<button on:click={DigitalOceanSpaceModal}>Pull From Digital Oceans Space</button>
-					<!--					<button on:click={openPasswordModal}>Enter Password</button>-->
-					<!--					<button id="submit-button" on:click={()=>retrieveDocuments(urlValue, passwordValue)}>Retrieve Documents</button>-->
-				</div>
-			{/if}
-		</div>
-	{/if}
-	<slot />
+<div>
+	<h1 style:color="white">{data.path}</h1>
 </div>
+
+<!--<div id="page-container" class="constrained-height" class:active={$leftPanelActive}>-->
+<!--	{#if $leftPanelActive}-->
+<!--		<div id="folder-canvas" class="no-scroll-bar">-->
+<!--			{#if $libraryVisible}-->
+<!--				<div class="folder-container no-scroll-bar constrained-height">-->
+<!--					<Folder {...props} />-->
+<!--				</div>-->
+<!--			{:else}-->
+<!--				<div id="button-panel">-->
+<!--					&lt;!&ndash;					<span id="url-label">URL:</span>&ndash;&gt;-->
+<!--					&lt;!&ndash;					<span id="url-text">{urlValue}</span>&ndash;&gt;-->
+<!--					<button on:click={DigitalOceanSpaceModal}>Pull From Digital Oceans Space</button>-->
+<!--					&lt;!&ndash;					<button on:click={openPasswordModal}>Enter Password</button>&ndash;&gt;-->
+<!--					&lt;!&ndash;					<button id="submit-button" on:click={()=>retrieveDocuments(urlValue, passwordValue)}>Retrieve Documents</button>&ndash;&gt;-->
+<!--				</div>-->
+<!--			{/if}-->
+<!--		</div>-->
+<!--	{/if}-->
+<!--	<slot />-->
+<!--</div>-->
 
 <!-- URL Entry Modal -->
 <Modal bind:renderModal={showDigitalOceanSpaceModal}>

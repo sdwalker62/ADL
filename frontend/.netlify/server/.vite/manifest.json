@@ -44,10 +44,6 @@
       "_ssr.js"
     ]
   },
-  "_private.js": {
-    "file": "chunks/private.js",
-    "name": "private"
-  },
   "_shared.js": {
     "file": "chunks/shared.js",
     "name": "shared",
@@ -161,10 +157,7 @@
     "file": "entries/pages/docs/_layout.server.ts.js",
     "name": "entries/pages/docs/_layout.server.ts",
     "src": "src/routes/docs/+layout.server.ts",
-    "isEntry": true,
-    "imports": [
-      "_private.js"
-    ]
+    "isEntry": true
   },
   "src/routes/docs/+layout.svelte": {
     "file": "entries/pages/docs/_layout.svelte.js",
@@ -174,10 +167,10 @@
     "imports": [
       "_ssr.js",
       "_shared.js",
-      "_stores.js"
+      "_client.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.OWFJ74xr.css"
+      "_app/immutable/assets/_layout.D68_OC4G.css"
     ]
   },
   "src/routes/docs/+page.server.ts": {
@@ -187,8 +180,7 @@
     "isEntry": true,
     "imports": [
       "_client.js",
-      "_index.js",
-      "_private.js"
+      "_index.js"
     ],
     "css": [
       "_app/immutable/assets/_page.server.Crp_yK76.css"
