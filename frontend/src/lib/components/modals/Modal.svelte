@@ -18,34 +18,34 @@
 >
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div id="modal-canvas" on:click|stopPropagation>
-        <slot name="contents"></slot>
+		<slot name="contents"></slot>
 	</div>
 </dialog>
 
 <style>
 	dialog {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		width: 100vw;
 		border: none;
 		padding: 0;
-        background-color: transparent;
+		background-color: transparent;
 	}
 
 	dialog::backdrop {
-        background: #0a0a0a80;
+		background: #0a0a0a80;
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
 	}
 
 	#modal-canvas {
-        border-radius: 10px;
-        border: solid 1px var(--font-3);
-        background-color: var(--background-2);
-		height: 75px;
-        width: 60%;
-        padding: 1px;
+		border-radius: 10px;
+		border: solid 1px var(--font-3);
+		background-color: var(--background-2);
+		height: fit-content;
+		width: 60%;
+		padding: 1px;
 	}
 
 	dialog[open] {

@@ -4,8 +4,6 @@
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
 	import Modal from '$lib/components/modals/Modal.svelte';
-	import { retrieveDocuments } from '$lib/utils.js';
-	// import type { LayoutData } from './$types';
 
 	export let data;
 
@@ -16,19 +14,13 @@
 		active: true
 	};
 
-	let showURLModal = false;
-	let showPasswordModal = false;
+	let showDigitalOceanSpaceModal = false;
 
-	function openURLModal() {
-		showURLModal = true;
+	function DigitalOceanSpaceModal() {
+		showDigitalOceanSpaceModal = true;
 	}
 
-	function openPasswordModal() {
-		showPasswordModal = true;
-	}
-
-	let urlValue = '';
-	let passwordValue = '';
+	let tmp = '';
 
 	onMount(() => {
 		stickybits('#folder-top-bar-sticky');
@@ -44,26 +36,44 @@
 				</div>
 			{:else}
 				<div id="button-panel">
-					<span id="url-label">URL:</span>
-					<span id="url-text">{urlValue}</span>
-					<button on:click={openURLModal}>Enter URL</button>
-					<button on:click={openPasswordModal}>Enter Password</button>
-					<button id="submit-button" on:click={()=>retrieveDocuments(urlValue, passwordValue)}>Retrieve Documents</button>
+					<!--					<span id="url-label">URL:</span>-->
+					<!--					<span id="url-text">{urlValue}</span>-->
+					<button on:click={DigitalOceanSpaceModal}>Pull From Digital Oceans Space</button>
+					<!--					<button on:click={openPasswordModal}>Enter Password</button>-->
+					<!--					<button id="submit-button" on:click={()=>retrieveDocuments(urlValue, passwordValue)}>Retrieve Documents</button>-->
 				</div>
 			{/if}
-		</div>		
+		</div>
 	{/if}
 	<slot />
 </div>
 
 <!-- URL Entry Modal -->
-<Modal bind:renderModal={showURLModal}>
-	<input slot="contents" id="urlInputBox" type="text" bind:value={urlValue}/>
-</Modal>
-
-<!-- Password Modal -->
-<Modal bind:renderModal={showPasswordModal}>
-	<input slot="contents" id="urlInputBox" type="text" bind:value={passwordValue}/>
+<Modal bind:renderModal={showDigitalOceanSpaceModal}>
+	<form slot="contents" method="POST">
+		<label>
+			Endpoint
+			<input name="endpoint" type="url" />
+		</label>
+		<label>
+			Region
+			<input name="region" />
+		</label>
+		<label>
+			Access Key Id
+			<input name="accessKeyId" />
+		</label>
+		<label>
+			Secret Access Key
+			<input name="secretAccessKey" />
+		</label>
+		<label>
+			Password
+			<input name="password" />
+		</label>
+		<button>Pull Documents</button>
+	</form>
+	<!--	<input slot="contents" id="urlInputBox" type="text" bind:value={tmp} />-->
 </Modal>
 
 <style>
@@ -77,7 +87,6 @@
 		color: var(--font-1);
 		font-family: var(--f-Medium), sans-serif;
 		font-size: 18px;
-	
 	}
 
 	button {
