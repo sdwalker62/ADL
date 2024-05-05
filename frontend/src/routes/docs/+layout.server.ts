@@ -4,6 +4,7 @@ import type { LayoutServerLoad } from './$types.js';
 
 export const load: LayoutServerLoad = async () => {
 	if (DOCS_PATH) {
+		console.log(__dirname);
 		const fileNames = dirTree(DOCS_PATH, { exclude: /.git/ });
 
 		return {
