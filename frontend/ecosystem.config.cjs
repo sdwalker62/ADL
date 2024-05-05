@@ -20,7 +20,8 @@ module.exports = {
 			repo: process.env.GIT_REPOSITORY,
 			path: process.env.DEPLOY_PATH,
 			'pre-deploy-local': '',
-			'post-deploy': 'npm install && npm run build && pm2 reload ecosystem.config.cjs',
+			'post-deploy':
+				'cd frontend && npm install && npm run build && pm2 reload ecosystem.config.cjs',
 			'pre-setup': ''
 		}
 	}
