@@ -12,19 +12,14 @@ const schema = z.object({
 	bucket: z.string().trim().default('adl'),
 	endpoint: z.string().trim().url().default('https://nyc3.digitaloceanspaces.com'),
 	region: z.string().trim().default('nyc3'),
-	accessKeyId: z.string().trim(),
-	secretAccessKey: z.string().trim(),
+	accessKeyId: z.string().trim().default(BUCKET_ID),
+	secretAccessKey: z.string().trim().default(BUCKET_ACCESS_KEY),
 	password: z.string().trim()
 });
 
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const form = await superValidate(request, zod(schema));
-		let bucket: string;
-		let endpoint: string;
-		let region: string;
-		let accessKeyId: string = '';
-		let secretAccessKey: string = '';
 
 		if (!form.valid) {
 			// Again, return { form } and things will just work.
@@ -32,51 +27,39 @@ export const actions: Actions = {
 		}
 
 		if (form.data['password'] === PASSWORD) {
-			const outputDirectory = DOCS_PATH;
-			endpoint = form.data['endpoint'];
-			region = form.data['region'];
-			bucket = form.data['bucket'];
-
-			if (form.data['accessKeyId'] === '') {
-				accessKeyId = BUCKET_ID;
-			} else {
-				accessKeyId = form.data['accessKeyId'];
-			}
-			if (form.data['secretAccessKey'] === '') {
-				secretAccessKey = BUCKET_ACCESS_KEY;
-			} else {
-				secretAccessKey = form.data['secretAccessKey'];
-			}
-
 			const s3Client: S3Client = new S3Client({
-				endpoint: endpoint,
+				endpoint: form.data.endpoint,
 				forcePathStyle: false,
-				region: region,
+				region: form.data.region,
 				credentials: {
-					accessKeyId: accessKeyId,
-					secretAccessKey: secretAccessKey
+					accessKeyId: form.data.accessKeyId,
+					secretAccessKey: form.data.secretAccessKey
 				}
 			});
 
 			const retrievalCommand = new ListObjectsV2Command({
-				Bucket: bucket
+				Bucket: form.data.bucket
 			});
 			const bucketObjects = await s3Client.send(retrievalCommand);
-			// TODO: Add Check to make sure list command passed
 			for (const object of bucketObjects.Contents!) {
-				const writePath = outputDirectory + object.Key;
-				fs.access(writePath!, fs.constants.F_OK, async (err) => {
-					if (err) {
-						const getCommand = new GetObjectCommand({
-							Bucket: bucket,
-							Key: object.Key
-						});
-						const file = await s3Client.send(getCommand);
-						const writeStream = fs.createWriteStream(writePath);
-						file.Body!.pipe(writeStream);
-						console.log(`Downloaded: ${object.Key}`);
-					}
-				});
+				if (object.Key) {
+					const writePath = DOCS_PATH + object.Key;
+					fs.access(writePath, fs.constants.F_OK, async (err) => {
+						if (err) {
+							const getCommand = new GetObjectCommand({
+								Bucket: form.data.bucket,
+								Key: object.Key
+							});
+							const file = await s3Client.send(getCommand);
+							const writeStream = fs.createWriteStream(writePath);
+							if (file.Body) {
+								// @ts-expect-error pipe exists, this is a problem with S3
+								file.Body.pipe(writeStream);
+								console.log(`Downloaded: ${object.Key}`);
+							}
+						}
+					});
+				}
 			}
 		}
 		// Display a success status message
