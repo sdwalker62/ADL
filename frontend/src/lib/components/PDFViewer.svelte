@@ -18,7 +18,6 @@
 	import _ from 'lodash';
 	import * as pdfjsLib from 'pdfjs-dist';
 	import DownloadIcon from '$lib/assets/icons/DownloadIcon.svelte';
-	// import ZoomIcon from '$lib/assets/icons/ZoomIcon.svelte';
 	import ZoomMinus from '$lib/assets/icons/ZoomMinus.svelte';
 	import ZoomPlus from '$lib/assets/icons/ZoomPlus.svelte';
 	import type { PDFPageProxy, PDFDocumentProxy } from 'pdfjs-dist';
@@ -27,7 +26,8 @@
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 	import { rightPanelActive } from '$lib/data/shared.js';
 	import { page } from '$app/stores';
-	// import ActionMenuItem from './TopMenuBar/ActionMenuItem.svelte';
+	import { Maximize } from 'lucide-svelte';
+	import tippy from 'tippy.js';
 	// #endregion
 
 	// #region Props
@@ -38,8 +38,10 @@
 	// #region Reactive Declarations
 	$: if ($rightPanelActive) {
 		templateString = '1fr 180px';
+		outlinePaddingString = "20px";
 	} else {
 		templateString = '1fr 0';
+		outlinePaddingString = "0px";
 	}
 	// #endregion
 
@@ -57,7 +59,9 @@
 	let background3Color: string;
 	let font1Color: string;
 	let templateString: string;
+	let outlinePaddingString: string;
 	const zoomDelta = 10;
+	let pageUrl = $page.url.pathname;
 	// #endregion
 
 	class PDFRenderer {
@@ -78,10 +82,9 @@
 		private renderNeighborhoodRadius: number = 2;
 		private isFirstPageLoad = true;
 		private alreadyRenderedIndices: Set<number> = new Set();
-		private outlinePadding: number;
-		private rootPadding: number;
 		private readonly rootPaddingWidth: number;
 		private readonly outlinePaddingWidth: number;
+		private maxSizeAchieved: boolean = false;
 
 		constructor(
 			pdfDocument: PDFDocumentProxy,
@@ -100,8 +103,6 @@
 			this.pixelRatio = window.devicePixelRatio || 1;
 			this.rootElement = rootElement;
 			this.outlineElement = outlineElement;
-			this.outlinePadding = Number(outlineElement.style.padding.slice(0, -2));
-			this.rootPadding = Number(rootElement.style.padding.slice(0, -2));
 			this.rootPaddingWidth = 10 * 2;
 			this.outlinePaddingWidth = 10 * 2;
 			this.pdfPageRenderWidth =
@@ -170,7 +171,8 @@
 			page: PDFPageProxy,
 			scale: number = 1,
 			scalingFactor: number = 0.1,
-			rootWidth: number
+			rootWidth: number,
+			maxZoom: boolean = false
 		): void {
 			const viewport = page.getViewport({ scale: scale });
 			let context = canvas.getContext('2d')!;
@@ -181,9 +183,12 @@
 			canvas.height = Math.floor(viewport.height * outputScale);
 			let styleWidth = (zoom * renderScaleCoefficient * viewport.width) / 100;
 			let styleHeight = (zoom * renderScaleCoefficient * viewport.height) / 100;
-			if (styleWidth > this.rootElement.offsetWidth) {
+			if (styleWidth > this.rootElement.offsetWidth || maxZoom) {
+				this.maxSizeAchieved = true;
 				styleWidth = this.rootElement.offsetWidth - 15;
 				styleHeight = (styleWidth * viewport.height) / viewport.width;
+			} else {
+				this.maxSizeAchieved = false;
 			}
 			canvas.style.width = Math.floor(styleWidth) + 'px';
 			canvas.style.height = Math.floor(styleHeight) + 'px';
@@ -202,7 +207,13 @@
 			page.render(renderParams).promise;
 		}
 
-		public renderAllCanvases(renderThumbnails = true): void {
+		public triggerObservation() {
+			// Trigger the observation manually
+			const records = this.observer.takeRecords();
+			this.pageVisibilityCallback(records);
+		}
+
+		public renderAllCanvases(renderThumbnails = true, maxZoom: boolean = false): boolean {
 			// Renders the canvases for the PDF
 			this.documentPageRange.forEach(async (pageNum) => {
 				const page = await this.pdfDocument.getPage(pageNum);
@@ -213,11 +224,14 @@
 					page,
 					this.pageScale,
 					1,
-					this.pdfPageRenderWidth
+					this.pdfPageRenderWidth,
+					maxZoom
 				);
+				
 				if (renderThumbnails) {
 					const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
-					const thumbnailCanvas = thumbnail.querySelector('canvas')!;
+					let thumbnailCanvas = thumbnail.querySelector('canvas')!;
+					thumbnailCanvas.classList.add('thumbnail-canvas');
 					this.renderCanvas(
 						thumbnailCanvas,
 						page,
@@ -227,11 +241,17 @@
 					);
 				}
 			});
+			return this.maxSizeAchieved;
 		}
+
+
 
 		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
 			// Callback that gets executed whenever a PDF page scrolls into view
-			let thumbnails = outline.querySelectorAll('a');
+			let thumbnails: NodeListOf<HTMLAnchorElement>;
+			if (outline) {
+				thumbnails = outline.querySelectorAll('a');
+			}
 			// eslint-disable-next-line no-undef
 			let pdfPages: NodeListOf<HTMLDivElement> =
 				mainCanvas.querySelectorAll('.pdf-page');
@@ -294,13 +314,12 @@
 						});
 					}
 
-					if ($rightPanelActive) {
+					if (rightPanelActive) {
 						thumbnails.forEach((thumbnail: HTMLElement) => {
 							const thumbnailIndex = thumbnail.id.split('-')[1];
 							if (thumbnailIndex === pageIndex) {
 								thumbnail.classList.add('active');
 								thumbnail.scrollIntoView(false);
-								// outline.scrollBy({ top: -55 });
 							} else {
 								thumbnail.classList.remove('active');
 							}
@@ -308,13 +327,15 @@
 					}
 				}
 			});
+
 		};
 	}
 
 	onMount(async () => {
+		pageUrl = window.location.hostname + pageUrl;
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
-		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.js';
+		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
 		pdfjsLib.GlobalWorkerOptions.workerSrc = root + pdfWorkerPath;
 		pdfDoc = await pdfjsLib.getDocument({
 			data: pdfData
@@ -341,8 +362,13 @@
 				if (!isFinite(zoomInputValue)) {
 					alert('Please enter a valid number');
 				} else {
+					const zoomBackup = zoom;
 					zoom = Number(zoomInput.value);
-					pdfRenderer.renderAllCanvases(false);
+					let oob = pdfRenderer.renderAllCanvases(false, false);
+					if (oob) {
+						zoom = zoomBackup;
+					}
+					// pdfRenderer.renderAllCanvases(false);
 				}
 			}
 		});
@@ -360,7 +386,30 @@
 		pdfRenderer.buildHTMLElements();
 		pdfRenderer.renderAllCanvases();
 		pageCount = pdfRenderer.numPages - 1;
+
+		tippy('#pdf-download-icon', {
+				content: 'Download PDF',
+				theme: 'athena',
+				delay: [400, 0]
+		});
+		tippy('#pdf-theme-switcher', {
+			content: 'Toggle Light/Dark Mode',
+			theme: 'athena',
+			delay: [400, 0]
+		});
+		tippy('#maximize-pdf', {
+			content: 'Fit PDF To Screen',
+			placement: 'bottom',
+			theme: 'athena',
+			delay: [400, 0]
+		});
 	});
+
+	$: $rightPanelActive, (()=>{
+		if (pdfRenderer) {
+			pdfRenderer.triggerObservation();
+		}
+	})();
 </script>
 
 <div bind:this={pdfContainer} id="pdf-container">
@@ -369,7 +418,7 @@
 		<!-- Download -->
 		<div id="pdf-download-icon">
 			<a
-				href={`http://localhost:8000/api/doc${$page.params.document}`}
+				href={pageUrl}
 				download="test.pdf"
 			>
 				<DownloadIcon />
@@ -380,6 +429,12 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
+			<button id="maximize-pdf" class="transparent-button" on:click={()=>{
+				pdfRenderer.renderAllCanvases(false, true);
+				zoom = 100;
+			}}>
+				<Maximize size={20} class="maximize"/>
+			</button>
 			<ZoomMinus
 				on:click={() => {
 					if ($pdfZoom > 0.2) {
@@ -401,8 +456,12 @@
 			</div>
 			<ZoomPlus
 				on:click={() => {
+					const backupZoom = zoom;
 					zoom += zoomDelta;
-					pdfRenderer.renderAllCanvases(false);
+					let oob = pdfRenderer.renderAllCanvases(false);
+					if (oob) {
+						zoom = backupZoom;
+					}
 				}}
 			/>
 		</div>
@@ -425,7 +484,7 @@
 			style="transform: scale(${pdfZoom});"
 		/>
 		<!-- <Outline  /> -->
-		<div id="pdf-outline" bind:this={outline} />
+		<div id="pdf-outline" bind:this={outline} style:padding={outlinePaddingString}/>
 	</div>
 </div>
 
@@ -477,6 +536,7 @@
 	:global(.pdf-thumbnail-link) {
 		padding: 10px;
 		border-radius: 5px;
+		width: 100%;
 	}
 
 	:global(.pdf-thumbnail-link:hover),
@@ -484,6 +544,11 @@
 		background: var(--gradient-1);
 	}
 
+	:global(.thumbnail-canvas) {
+		width: 100% !important;
+		height: 100% !important;
+	}	
+	
 	:global(.pdf-thumbnail-pageIndex) {
 		display: flex;
 		width: 100%;
@@ -492,6 +557,23 @@
 		color: white;
 		font-family: var(--f-Medium);
 		font-size: 1.1rem;
+	}
+
+	.transparent-button {
+		background: transparent;
+		border: none;
+	}
+
+	:global(.transparent-button:hover .lucide) {
+		color: white;
+		opacity: 1;
+		cursor: pointer;
+	}
+
+	:global(.transparent-button .lucide) {
+		color: var(--font-1);
+		opacity: 0.5;
+		cursor: pointer;
 	}
 
 	#pdf-container {
@@ -529,7 +611,7 @@
 		overflow-x: hidden;
 		height: 100%;
 		background-color: var(--background-2);
-		padding: 15px;
+		padding: 10px;
 		gap: 10px;
 	}
 

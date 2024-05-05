@@ -1,13 +1,21 @@
 <script lang="ts">
 	import SearchIcon from '$lib/assets/icons/SearchIcon.svelte';
+	import toast, { Toaster } from 'svelte-french-toast';
 </script>
 
-<div id="search-canvas">
-	<div class="icon">
-		<SearchIcon />
+<button id="tmp-search-btn" on:click={()=>toast.error("Search will be implemented in a future update.", 	{
+	duration: 2000,
+	style: 'border-radius: 10px; background: #333; color: #fff; font-size: 1.7em; font-family: var(--f-Medium)'
+})}>
+	<div id="search-canvas">
+		<div class="icon">
+			<SearchIcon />
+		</div>
+		<input name="search" placeholder="Search documentation..." />
 	</div>
-	<input name="search" placeholder="Search documentation..." />
-</div>
+</button>
+
+<Toaster />
 
 <style>
 	#search-canvas {
@@ -22,6 +30,11 @@
 		-webkit-backdrop-filter: blur(5px);
 		justify-content: center;
 		align-items: center;
+	}
+
+	#tmp-search-btn {
+		background-color: transparent;
+		border: none;
 	}
 
 	input {

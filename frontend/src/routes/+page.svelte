@@ -1,9 +1,9 @@
 <script lang="ts">
-	import athenaLogo from '$lib/assets/images/AthenaLogo.png';
+	import VMAN from '$lib/assets/images/VMAN.svg';
 </script>
 
 <div id="home-canvas">
-	<img src={athenaLogo} alt="Athena Logo" />
+	<img src={VMAN} alt="Athena Logo" />
 	<h1>Welcome to the Athena Library!</h1>
 	<p>
 		This library contains information on numerous subjects within Mathematics and Computer Science.
@@ -22,8 +22,8 @@
 	}
 
 	img {
-		height: 25rem;
-		width: 25rem;
+		height: 100rem;
+		width: 100rem;
 	}
 
 	h1 {

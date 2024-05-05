@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { showMainMenu } from '$lib/data/shared.js';
 	import ThemeSwitcher from './ThemeSwitcher.svelte';
-	import logo from '$lib/assets/images/AthenaLogo.png';
+	import logo from '$lib/assets/images/VMAN.svg';
 
 	export let renderMenu: boolean;
 
@@ -106,14 +106,14 @@
 	}
 
 	#logo {
-		height: 12rem;
+		height: 20rem;
 		display: flex;
 		justify-content: center;
 		margin-bottom: 30px;
 	}
 
 	#logo img {
-		height: 10rem;
+		height: 20rem;
 		margin: 10px;
 	}
 

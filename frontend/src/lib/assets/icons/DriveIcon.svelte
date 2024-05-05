@@ -1,8 +1,20 @@
 <script>
+	import { onMount } from 'svelte';
+	import tippy from 'tippy.js';
 	export let active = false;
+
+	onMount(() => {
+		tippy('#server', {
+			content: 'Remote Server',
+			placement: 'bottom',
+			theme: 'athena',
+			delay: [400, 0]
+		});
+	})
 </script>
 
 <svg
+	id="server"
 	class:active
 	version="1.1"
 	xmlns="http://www.w3.org/2000/svg"

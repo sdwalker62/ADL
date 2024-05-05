@@ -17,6 +17,8 @@ export let documentationPath = writable('../AthenaDocs');
 
 // Toggles
 export let leftPanelActive = writable(true);
+export let libraryVisible = writable(true);
+export let serverVisible = writable(false);
 export let rightPanelActive = writable(true);
 export let showCodeOutlineElements = writable(true);
 export let showMathOutlineElements = writable(true);

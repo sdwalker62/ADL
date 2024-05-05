@@ -5,7 +5,7 @@ import type { LayoutServerLoad } from './$types.js';
 export const load: LayoutServerLoad = async () => {
 	dotenv.config();
 	if (process.env.DOCS_PATH) {
-		console.log(process.env.DOCS_PATH)
+		console.log(process.env.DOCS_PATH);
 		const docsPath = process.env.DOCS_PATH;
 		const fileNames = dirTree(docsPath, { exclude: /.git/ });
 

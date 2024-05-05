@@ -32,6 +32,7 @@
 <style>
 	:global(.katex span) {
 		overflow: visible!important;
+		
 	}
 
 	.math-item-canvas {
@@ -41,6 +42,7 @@
 		background-color: var(--background-7);
 		border-radius: 7px;
 		padding: 10px;
+		width: 1000px;
 	}
 
 	:global(.math-item-canvas span) {
@@ -48,10 +50,14 @@
 		font-family: 'KaTeX_Main',serif;
 		font-size: 2rem;
 		line-height: 1.5;
+		text-overflow: ellipsis;
+		
 	}
 
 	p {
 		width: 100%;
 		font-family: 'KaTeX_Main',serif;
+		
 	}
+
 </style>

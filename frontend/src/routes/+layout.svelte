@@ -7,7 +7,9 @@
 		showMathOutlineElements,
 		showTableOutlineElements,
 		leftPanelActive,
-		rightPanelActive
+		rightPanelActive,
+		libraryVisible,
+		serverVisible
 	} from '$lib/data/shared.js';
 	import MainModalMenu from '$lib/components/MainModalMenu/MainModalMenu.svelte';
 	import SiteNavigationLink from '$lib/components/MainModalMenu/SiteNavigationLink.svelte';
@@ -28,12 +30,11 @@
 	// import IncreaseFontIcon from '$lib/assets/icons/IncreaseFontIcon.svelte';
 	import HomeIcon from '$lib/assets/icons/HomeIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
+	import LibraryIcon2 from '$lib/assets/icons/LibraryIcon2.svelte';
 	import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
 	// import Cookie from 'js-cookie';
 	// import type { LayoutData } from './$types';
 	import { page } from '$app/stores';
-
-	console.log($page.url.pathname);
 
 	export let data;
 
@@ -76,9 +77,25 @@
 			>
 				<LeftPanelIcon active={$leftPanelActive} />
 			</ToggleMenuItem>
-			<ToggleMenuItem tip="Remote Servers" active={folderActive}>
-
-				<DriveIcon  active={folderActive} />
+			<ToggleMenuItem 
+				tip="Library" 
+				active={$libraryVisible}
+				onClickFunction={() => {
+					$libraryVisible = !$libraryVisible;
+					$serverVisible = !$serverVisible;
+				}}
+			>
+				<LibraryIcon active={$libraryVisible} />
+			</ToggleMenuItem>
+			<ToggleMenuItem 
+				tip="Remote Servers" 
+				active={$serverVisible}
+				onClickFunction={() => {
+					$libraryVisible = !$libraryVisible;
+					$serverVisible = !$serverVisible;
+				}}
+			>
+				<DriveIcon  active={$serverVisible} />
 			</ToggleMenuItem>
 			<!-- <ToggleMenuItem active={serverActive}>
 				<ServerIcon active={serverActive} />
@@ -168,7 +185,7 @@
 			<HomeIcon active={pageHome} />
 		</SiteNavigationLink>
 		<SiteNavigationLink bind:active={pageDocs} link={'/docs'} name={'Docs'}>
-			<LibraryIcon active={pageDocs} />
+			<LibraryIcon2 active={pageDocs} />
 		</SiteNavigationLink>
 		<SiteNavigationLink
 			bind:active={pageBoard}
@@ -180,14 +197,84 @@
 	</svelte:fragment>
 	<svelte:fragment slot="links">
 		<ExternalNavigationLink
-			link={'https://github.com/sigil-ml'}
-			site={'github'}
-			name={'GitHub'}
+			link={'https://huggingface.co/'}
+			site={'huggingface.co'}
+			name={'HuggingFace'}
 		/>
 		<ExternalNavigationLink
 			link={'https://hub.docker.com/'}
-			site={'docker'}
+			site={'docker.com'}
 			name={'Docker Hub'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pytorch.org/'}
+			site={'pytorch.org'}
+			name={'PyTorch'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.tensorflow.org/'}
+			site={'tensorflow.org'}
+			name={'TensorFlow'}
+		/>
+		<ExternalNavigationLink
+			link={'https://jax.readthedocs.io/en/latest/'}
+			site={'jax.readthedocs.io'}
+			name={'JAX'}
+		/>
+		<ExternalNavigationLink
+			link={'https://numpy.org/'}
+			site={'numpy.org'}
+			name={'NumPy'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pandas.pydata.org/docs/index.html'}
+			site={'pandas.pydata.org'}
+			name={'Pandas'}
+		/>
+		<ExternalNavigationLink
+			link={'https://unify.ai/'}
+			site={'unify.ai'}
+			name={'Unify'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.ray.io/'}
+			site={'ray.io'}
+			name={'Ray'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.ultralytics.com/'}
+			site={'ultralytics.com'}
+			name={'Ultralytics'}
+		/>
+		<ExternalNavigationLink
+			link={'https://pola.rs/'}
+			site={'pola.rs'}
+			name={'Polars'}
+		/>
+		<ExternalNavigationLink
+			link={'https://jupyter.org/'}
+			site={'jupyter.org'}
+			name={'Jupyter'}
+		/>
+		<ExternalNavigationLink
+			link={'https://colab.research.google.com/'}
+			site={'colab.research.google.com'}
+			name={'Google Colab'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.paperspace.com/'}
+			site={'paperspace.com'}
+			name={'Paperspace'}
+		/>
+		<ExternalNavigationLink
+			link={'https://www.langchain.com/'}
+			site={'langchain.com'}
+			name={'LangChain'}
+		/>
+		<ExternalNavigationLink
+			link={'https://milvus.io/'}
+			site={'milvus.io'}
+			name={'Milvus'}
 		/>
 	</svelte:fragment>
 </MainModalMenu>
