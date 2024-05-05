@@ -5,7 +5,7 @@ import path from 'path';
 
 export const load: LayoutServerLoad = async () => {
 	if (DOCS_PATH) {
-		const repo_path = path.resolve('.');
+		const repo_path = path.resolve('/');
 		// return {
 		// 	path: repo_path
 		// };
