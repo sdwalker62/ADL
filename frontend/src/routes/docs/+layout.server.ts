@@ -1,13 +1,10 @@
 import dirTree from 'directory-tree';
-import dotenv from 'dotenv';
+import { DOCS_PATH } from '$env/static/private';
 import type { LayoutServerLoad } from './$types.js';
 
 export const load: LayoutServerLoad = async () => {
-	dotenv.config();
-	if (process.env.DOCS_PATH) {
-		console.log(process.env.DOCS_PATH);
-		const docsPath = process.env.DOCS_PATH;
-		const fileNames = dirTree(docsPath, { exclude: /.git/ });
+	if (DOCS_PATH) {
+		const fileNames = dirTree(DOCS_PATH, { exclude: /.git/ });
 
 		return {
 			tree: JSON.stringify(fileNames, null, 2)
