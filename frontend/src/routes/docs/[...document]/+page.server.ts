@@ -45,6 +45,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	const docs = unified()
+		// @ts-expect-error fragment exists
 		.data('settings', { fragment: true })
 		.use(remarkParse)
 		.use(remarkMath)

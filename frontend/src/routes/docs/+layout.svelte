@@ -26,11 +26,7 @@
 	});
 </script>
 
-<!-- <div>
-	<h1 style:color="white">{data.path}</h1>
-</div> -->
-
-<div id="page-container" class="constrained-height" class:active={$leftPanelActive}>-->
+<div id="page-container" class="constrained-height" class:active={$leftPanelActive}>
 	{#if $leftPanelActive}
 		<div id="folder-canvas" class="no-scroll-bar">
 			{#if $libraryVisible}
@@ -72,7 +68,6 @@
 		</label>
 		<button>Pull Documents</button>
 	</form>
-	<!--	<input slot="contents" id="urlInputBox" type="text" bind:value={tmp} />-->
 </Modal>
 
 <style>
