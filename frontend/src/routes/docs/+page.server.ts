@@ -48,6 +48,14 @@ export const actions: Actions = {
 					const writePath = repo_path + DOCS_PATH + object.Key;
 					fs.access(writePath, fs.constants.F_OK, async (err) => {
 						if (err) {
+							// An error occurs if the fs.access fails to find the file at the supplied path
+							// If the file does not exist, we need to determine if the directories upstream exists
+							// If they do not, we should create them, or else we will get an 'ENOENT' error code from node
+							const directoryPath = getDirectoryPath(writePath);
+							// Make the directory if it does not exist
+							if (!fs.existsSync(directoryPath)) {
+								fs.mkdirSync(directoryPath);
+							}
 							const getCommand = new GetObjectCommand({
 								Bucket: form.data.bucket,
 								Key: object.Key
@@ -67,3 +75,13 @@ export const actions: Actions = {
 		return message(form, 'Form posted successfully!');
 	}
 };
+
+function getDirectoryPath(path: string): string {
+	const pathSplit = path.split('/');
+	if (pathSplit.length > 1) {
+		const pathArray = pathSplit.slice(0, pathSplit.length - 1);
+		return pathArray.join('/');
+	} else {
+		return path;
+	}
+}
