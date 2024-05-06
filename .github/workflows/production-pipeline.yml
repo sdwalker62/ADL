@@ -34,6 +34,7 @@ jobs:
           echo HOST=${{ secrets.HOST }} >> .env.production
           echo PASSWORD=${{ secrets.PASSWORD }} >> .env.production
           echo USER=${{ secrets.USER }} >> .env.production
+          mv .env.production frontend/
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
