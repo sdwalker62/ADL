@@ -1,6 +1,5 @@
 import type { Actions } from '@sveltejs/kit';
 import { message } from 'sveltekit-superforms';
-import { fail } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { z } from 'zod';
@@ -21,13 +20,15 @@ const schema = z.object({
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const form = await superValidate(request, zod(schema));
-
 		if (!form.valid) {
-			// Again, return { form } and things will just work.
-			return fail(400, { form });
+			return message(form, { status: 'failure', text: 'The form contains validation errors' });
 		}
 
-		if (form.data['password'] === PASSWORD) {
+		let filesRetrieved: string[] = [];
+
+		if (form.data['password'] !== PASSWORD) {
+			return message(form, { status: 'failure', text: 'Password is incorrect' });
+		} else {
 			const repo_path = path.resolve('..');
 			const s3Client: S3Client = new S3Client({
 				endpoint: form.data.endpoint,
@@ -65,14 +66,14 @@ export const actions: Actions = {
 							if (file.Body) {
 								// @ts-expect-error pipe exists, this is a problem with S3
 								file.Body.pipe(writeStream);
-								console.log(`Downloaded: ${object.Key}`);
+								filesRetrieved.push(object.Key!);
 							}
 						}
 					});
 				}
 			}
 		}
-		return message(form, 'Form posted successfully!');
+		return message(form, { status: 'success', files: filesRetrieved.join('\n') });
 	}
 };
 

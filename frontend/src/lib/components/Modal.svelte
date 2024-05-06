@@ -27,10 +27,10 @@
 <style>
 	dialog {
 		max-width: 50%;
-		border-radius: 10px;
+		/*border-radius: 10px;*/
 		border: none;
 		padding: 0;
-		background-color: var(--background-2);
+		/*background-color: var(--menu-background);*/
 	}
 	dialog::backdrop {
 		background: #0a0a0a80;

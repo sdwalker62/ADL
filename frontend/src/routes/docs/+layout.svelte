@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { leftPanelActive, serverVisible, libraryVisible } from '$lib/data/shared.js';
+	import { leftPanelActive, libraryVisible, showDigitalOceanSpaceModal } from '$lib/data/shared.js';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
 	import Modal from '$lib/components/modals/Modal.svelte';
 
 	export let data;
+
 	const library = JSON.parse(data.tree);
 	const props = {
 		name: 'root',
@@ -13,13 +14,11 @@
 		active: true
 	};
 
-	let showDigitalOceanSpaceModal = false;
-
-	function DigitalOceanSpaceModal() {
-		showDigitalOceanSpaceModal = true;
-	}
-
-	let tmp = '';
+	// export let showDigitalOceanSpaceModal = false;
+	//
+	// function DigitalOceanSpaceModal() {
+	// 	showDigitalOceanSpaceModal = true;
+	// }
 
 	onMount(() => {
 		stickybits('#folder-top-bar-sticky');
@@ -35,40 +34,17 @@
 				</div>
 			{:else}
 				<div id="button-panel">
-					<button on:click={DigitalOceanSpaceModal}>Pull From Digital Oceans Space</button>
+					<button
+						on:click={() => {
+							$showDigitalOceanSpaceModal = !$showDigitalOceanSpaceModal;
+						}}>Pull From Digital Oceans Space</button
+					>
 				</div>
 			{/if}
 		</div>
 	{/if}
 	<slot />
 </div>
-
-<!-- URL Entry Modal -->
-<Modal bind:renderModal={showDigitalOceanSpaceModal}>
-	<form slot="contents" method="POST">
-		<label>
-			Endpoint
-			<input name="endpoint" type="url" />
-		</label>
-		<label>
-			Region
-			<input name="region" />
-		</label>
-		<label>
-			Access Key Id
-			<input name="accessKeyId" />
-		</label>
-		<label>
-			Secret Access Key
-			<input name="secretAccessKey" />
-		</label>
-		<label>
-			Password
-			<input name="password" />
-		</label>
-		<button>Pull Documents</button>
-	</form>
-</Modal>
 
 <style>
 	#url-text {

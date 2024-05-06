@@ -23,5 +23,6 @@ export let rightPanelActive = writable(true);
 export let showCodeOutlineElements = writable(true);
 export let showMathOutlineElements = writable(true);
 export let showTableOutlineElements = writable(true);
+export let showDigitalOceanSpaceModal = writable(false);
 
 export let pdfZoom = writable(100);
