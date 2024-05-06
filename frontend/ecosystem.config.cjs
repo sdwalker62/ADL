@@ -2,7 +2,7 @@ module.exports = {
 	apps: [
 		{
 			name: 'athenalib',
-			script: 'build/server/index.js',
+			script: 'build/index.js',
 			env_production: {
 				NODE_ENV: 'production',
 				PORT: 5173 // port the app will be launched on
