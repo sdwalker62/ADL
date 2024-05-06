@@ -6,10 +6,7 @@ import path from 'path';
 export const load: LayoutServerLoad = async () => {
 	if (DOCS_PATH) {
 		const repo_path = path.resolve('.');
-		// return {
-		// 	path: repo_path
-		// };
-		const fileNames = dirTree(repo_path, { exclude: /.git/ });
+		const fileNames = dirTree(repo_path + DOCS_PATH, { exclude: /.git/ });
 		return {
 			tree: JSON.stringify(fileNames, null, 2)
 		};

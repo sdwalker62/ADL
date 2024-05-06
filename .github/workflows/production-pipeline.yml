@@ -1,0 +1,46 @@
+name: Dev Container Construction
+
+on:
+  # schedule:
+  #   - cron: '23 12 * * *'
+  push:
+    branches: ["master"]
+    # Publish semver tags as releases.
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: dev-container
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Create production environment file
+        run: |
+          touch .env.production
+
+          echo DOCS_PATH=${{ vars.DOCS_PATH }} >> .env.production
+          echo DEPLOY_PATH=${{ vars.DEPLOY_PATH }} >> .env.production
+          echo GIT_BRANCH=${{ vars.GIT_BRANCH }} >> .env.production
+          echo GIT_REPOSITORY=${{ vars.GIT_REPOSITORY }} >> .env.production
+
+          echo BUCKET_ACCESS_KEY=${{ secrets.BUCKET_ACCESS_KEY }} >> .env.production
+          echo BUCKET_ID=${{ secrets.BUCKET_ID }} >> .env.production
+          echo HOST=${{ secrets.HOST }} >> .env.production
+          echo PASSWORD=${{ secrets.PASSWORD }} >> .env.production
+          echo USER=${{ secrets.USER }} >> .env.production
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+      - name: Install PM2
+        run: |
+          npm install pm2 -g
+      - name: Deploy
+        run: |
+          env $(cat .env.production | grep -v \"#\" | xargs) pm2 deploy production
