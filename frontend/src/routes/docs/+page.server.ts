@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { PASSWORD, BUCKET_ID, BUCKET_ACCESS_KEY, DOCS_PATH } from '$env/static/private';
 import { ListObjectsV2Command, GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import fs from 'fs';
+import path from 'path';
 
 const schema = z.object({
 	bucket: z.string().trim().default('adl'),
@@ -27,6 +28,7 @@ export const actions: Actions = {
 		}
 
 		if (form.data['password'] === PASSWORD) {
+			const repo_path = path.resolve('..');
 			const s3Client: S3Client = new S3Client({
 				endpoint: form.data.endpoint,
 				forcePathStyle: false,
@@ -43,7 +45,7 @@ export const actions: Actions = {
 			const bucketObjects = await s3Client.send(retrievalCommand);
 			for (const object of bucketObjects.Contents!) {
 				if (object.Key) {
-					const writePath = DOCS_PATH + object.Key;
+					const writePath = repo_path + DOCS_PATH + object.Key;
 					fs.access(writePath, fs.constants.F_OK, async (err) => {
 						if (err) {
 							const getCommand = new GetObjectCommand({
