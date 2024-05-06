@@ -3,7 +3,7 @@ module.exports = {
 		{
 			name: 'athenalib',
 			script: 'build/index.js',
-			env_production: {
+			env: {
 				PORT: 4173
 			},
 			watch: '.'
