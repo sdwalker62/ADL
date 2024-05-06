@@ -43,4 +43,4 @@ jobs:
           npm install pm2 -g
       - name: Deploy
         run: |
-          cd frontend && env $(cat .env.production | grep -v \"#\" | xargs) pm2 deploy production
+          cd frontend && ls -la && env $(cat .env.production | grep -v \"#\" | xargs) pm2 deploy production
