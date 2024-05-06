@@ -23,7 +23,7 @@ module.exports = {
 			repo: process.env.GIT_REPOSITORY,
 			path: process.env.DEPLOY_PATH,
 			'pre-deploy-local': '',
-			'post-deploy': 'sh scripts/startup.sh',
+			'post-deploy': 'sh frontend/scripts/startup.sh',
 			'pre-setup': ''
 		}
 	}
