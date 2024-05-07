@@ -10,7 +10,7 @@
 	</p>
 </div>
 
-<style>
+<style lang="scss">
 	#home-canvas {
 		display: flex;
 		flex-direction: column;
