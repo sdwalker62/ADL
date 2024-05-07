@@ -44,7 +44,7 @@
 		border: solid 1px var(--font-3);
 		background-color: var(--background-2);
 		height: fit-content;
-		width: 60%;
+		width: fit-content;
 		padding: 1px;
 	}
 

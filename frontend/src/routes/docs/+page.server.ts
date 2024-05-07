@@ -62,11 +62,13 @@ export const actions: Actions = {
 								Key: object.Key
 							});
 							const file = await s3Client.send(getCommand);
-							const writeStream = fs.createWriteStream(writePath);
-							if (file.Body) {
-								// @ts-expect-error pipe exists, this is a problem with S3
-								file.Body.pipe(writeStream);
-								filesRetrieved.push(object.Key!);
+							if (!object.Key.endsWith('/')) {
+								const writeStream = fs.createWriteStream(writePath);
+								if (file.Body) {
+									// @ts-expect-error pipe exists, this is a problem with S3
+									file.Body.pipe(writeStream);
+									filesRetrieved.push(object.Key!);
+								}
 							}
 						}
 					});

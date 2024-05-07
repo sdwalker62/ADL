@@ -3,7 +3,6 @@
 	import { leftPanelActive, libraryVisible, showDigitalOceanSpaceModal } from '$lib/data/shared.js';
 	import Folder from '$lib/components/FileTree/Folder.svelte';
 	import stickybits from 'stickybits';
-	import Modal from '$lib/components/modals/Modal.svelte';
 
 	export let data;
 

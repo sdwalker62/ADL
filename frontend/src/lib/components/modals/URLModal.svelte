@@ -1,14 +1,14 @@
 <script>
 </script>
-  
-  
+
+
 <div class="modal">
     <div class="modal-content">
     <h2>Modal Title</h2>
     <p>Modal content goes here.</p>
     </div>
 </div>
-  
+
   <style>
     .modal {
       position: fixed;
@@ -21,7 +21,7 @@
       justify-content: center;
       align-items: center;
     }
-  
+
     .modal-content {
       background-color: white;
       padding: 20px;

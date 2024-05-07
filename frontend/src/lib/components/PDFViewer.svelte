@@ -28,6 +28,7 @@
 	import { page } from '$app/stores';
 	import { Maximize } from 'lucide-svelte';
 	import tippy from 'tippy.js';
+	// import 'pdfjs-dist/build/pdf.worker.mjs';
 	// #endregion
 
 	// #region Props
@@ -38,10 +39,10 @@
 	// #region Reactive Declarations
 	$: if ($rightPanelActive) {
 		templateString = '1fr 180px';
-		outlinePaddingString = "20px";
+		outlinePaddingString = '20px';
 	} else {
 		templateString = '1fr 0';
-		outlinePaddingString = "0px";
+		outlinePaddingString = '0px';
 	}
 	// #endregion
 
@@ -105,10 +106,8 @@
 			this.outlineElement = outlineElement;
 			this.rootPaddingWidth = 10 * 2;
 			this.outlinePaddingWidth = 10 * 2;
-			this.pdfPageRenderWidth =
-				this.rootElement.offsetWidth - this.rootPaddingWidth;
-			this.outlineRenderWidth =
-				this.outlineElement.offsetWidth - this.outlinePaddingWidth;
+			this.pdfPageRenderWidth = this.rootElement.offsetWidth - this.rootPaddingWidth;
+			this.outlineRenderWidth = this.outlineElement.offsetWidth - this.outlinePaddingWidth;
 		}
 
 		private pdfPageHTMLFactory(pageNum: number): HTMLDivElement {
@@ -193,8 +192,7 @@
 			canvas.style.width = Math.floor(styleWidth) + 'px';
 			canvas.style.height = Math.floor(styleHeight) + 'px';
 
-			let transform =
-				outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+			let transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
 			const renderParams = {
 				canvasContext: context!,
 				viewport: viewport,
@@ -219,32 +217,17 @@
 				const page = await this.pdfDocument.getPage(pageNum);
 				const pageDiv = document.getElementById(`${pageNum}`)!;
 				const canvas = pageDiv.querySelector('canvas')!;
-				this.renderCanvas(
-					canvas,
-					page,
-					this.pageScale,
-					1,
-					this.pdfPageRenderWidth,
-					maxZoom
-				);
-				
+				this.renderCanvas(canvas, page, this.pageScale, 1, this.pdfPageRenderWidth, maxZoom);
+
 				if (renderThumbnails) {
 					const thumbnail = document.getElementById(`thumbnail-${pageNum}`)!;
 					let thumbnailCanvas = thumbnail.querySelector('canvas')!;
 					thumbnailCanvas.classList.add('thumbnail-canvas');
-					this.renderCanvas(
-						thumbnailCanvas,
-						page,
-						this.thumbnailScale,
-						1,
-						this.outlineRenderWidth
-					);
+					this.renderCanvas(thumbnailCanvas, page, this.thumbnailScale, 1, this.outlineRenderWidth);
 				}
 			});
 			return this.maxSizeAchieved;
 		}
-
-
 
 		private pageVisibilityCallback = (entries: IntersectionObserverEntry[]) => {
 			// Callback that gets executed whenever a PDF page scrolls into view
@@ -253,8 +236,7 @@
 				thumbnails = outline.querySelectorAll('a');
 			}
 			// eslint-disable-next-line no-undef
-			let pdfPages: NodeListOf<HTMLDivElement> =
-				mainCanvas.querySelectorAll('.pdf-page');
+			let pdfPages: NodeListOf<HTMLDivElement> = mainCanvas.querySelectorAll('.pdf-page');
 			entries.forEach((entry) => {
 				if (entry.isIntersecting) {
 					const pageIndex = entry.target.id;
@@ -270,10 +252,8 @@
 					out-of-focus pages are rendered can be changed under the variable
 					renderOutOfFocusScale.
 				  */
-					const neighborHoodLB =
-						Number(pageIndex) - this.renderNeighborhoodRadius;
-					const neighborHoodUB =
-						Number(pageIndex) + this.renderNeighborhoodRadius;
+					const neighborHoodLB = Number(pageIndex) - this.renderNeighborhoodRadius;
+					const neighborHoodUB = Number(pageIndex) + this.renderNeighborhoodRadius;
 					if (this.isFirstPageLoad) {
 						for (let i = 1; i <= neighborHoodUB; i++) {
 							this.alreadyRenderedIndices.add(i);
@@ -327,7 +307,6 @@
 					}
 				}
 			});
-
 		};
 	}
 
@@ -335,8 +314,11 @@
 		pageUrl = window.location.hostname + pageUrl;
 		// #region PDF Load and Render Logic
 		const pdfData = window.atob(doc); // Load PDF from base64 encoding
-		const pdfWorkerPath = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
-		pdfjsLib.GlobalWorkerOptions.workerSrc = root + pdfWorkerPath;
+		// const pdfWorkerPath = '/src/pdf.worker.mjs';
+		pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+			'pdfjs-dist/build/pdf.worker.min.mjs',
+			import.meta.url
+		).toString();
 		pdfDoc = await pdfjsLib.getDocument({
 			data: pdfData
 		}).promise;
@@ -347,9 +329,7 @@
 			if (event.key === 'Enter') {
 				event.preventDefault();
 				const pageNumber = pdfCurPageInput.value;
-				const pdfPage = document.getElementById(
-					pageNumber.toString()
-				) as HTMLDivElement;
+				const pdfPage = document.getElementById(pageNumber.toString()) as HTMLDivElement;
 				pdfPage.scrollIntoView();
 			}
 		});
@@ -374,13 +354,11 @@
 		});
 		// #endregion
 
-		font1Color = getComputedStyle(document.documentElement).getPropertyValue(
-			'--font-2'
-		);
+		font1Color = getComputedStyle(document.documentElement).getPropertyValue('--font-2');
 
-		background3Color = getComputedStyle(
-			document.documentElement
-		).getPropertyValue('--background-3');
+		background3Color = getComputedStyle(document.documentElement).getPropertyValue(
+			'--background-3'
+		);
 
 		pdfRenderer = new PDFRenderer(pdfDoc, mainCanvas, outline);
 		pdfRenderer.buildHTMLElements();
@@ -388,9 +366,9 @@
 		pageCount = pdfRenderer.numPages - 1;
 
 		tippy('#pdf-download-icon', {
-				content: 'Download PDF',
-				theme: 'athena',
-				delay: [400, 0]
+			content: 'Download PDF',
+			theme: 'athena',
+			delay: [400, 0]
 		});
 		tippy('#pdf-theme-switcher', {
 			content: 'Toggle Light/Dark Mode',
@@ -405,11 +383,12 @@
 		});
 	});
 
-	$: $rightPanelActive, (()=>{
-		if (pdfRenderer) {
-			pdfRenderer.triggerObservation();
-		}
-	})();
+	$: $rightPanelActive,
+		(() => {
+			if (pdfRenderer) {
+				pdfRenderer.triggerObservation();
+			}
+		})();
 </script>
 
 <div bind:this={pdfContainer} id="pdf-container">
@@ -417,10 +396,7 @@
 	<div id="pdf-top-bar">
 		<!-- Download -->
 		<div id="pdf-download-icon">
-			<a
-				href={pageUrl}
-				download="test.pdf"
-			>
+			<a href={pageUrl} download="test.pdf">
 				<DownloadIcon />
 			</a>
 		</div>
@@ -429,11 +405,15 @@
 		</div>
 		<!-- Page Zoom -->
 		<div class="zoom-row">
-			<button id="maximize-pdf" class="transparent-button" on:click={()=>{
-				pdfRenderer.renderAllCanvases(false, true);
-				zoom = 100;
-			}}>
-				<Maximize size={20} class="maximize"/>
+			<button
+				id="maximize-pdf"
+				class="transparent-button"
+				on:click={() => {
+					pdfRenderer.renderAllCanvases(false, true);
+					zoom = 100;
+				}}
+			>
+				<Maximize size={20} class="maximize" />
 			</button>
 			<ZoomMinus
 				on:click={() => {
@@ -446,12 +426,7 @@
 				}}
 			/>
 			<div class="zoom-level-row">
-				<input
-					bind:this={zoomInput}
-					type="text"
-					class="curZoomInput"
-					value={zoom}
-				/>
+				<input bind:this={zoomInput} type="text" class="curZoomInput" value={zoom} />
 				<span class="cur-zoom">%</span>
 			</div>
 			<ZoomPlus
@@ -466,25 +441,16 @@
 			/>
 		</div>
 		<div id="pdf-page-num-row">
-			<input
-				bind:this={pdfCurPageInput}
-				type="text"
-				id="pdfCurPageInput"
-				value={curPage}
-			/>
+			<input bind:this={pdfCurPageInput} type="text" id="pdfCurPageInput" value={curPage} />
 			<span class="slash">/</span>
 			<span class="total-page-num">{pageCount}</span>
 		</div>
 	</div>
 
 	<div id="pdf-render-container" style:grid-template-columns={templateString}>
-		<div
-			id="pdf-render"
-			bind:this={mainCanvas}
-			style="transform: scale(${pdfZoom});"
-		/>
+		<div id="pdf-render" bind:this={mainCanvas} style="transform: scale(${pdfZoom});" />
 		<!-- <Outline  /> -->
-		<div id="pdf-outline" bind:this={outline} style:padding={outlinePaddingString}/>
+		<div id="pdf-outline" bind:this={outline} style:padding={outlinePaddingString} />
 	</div>
 </div>
 
@@ -547,8 +513,8 @@
 	:global(.thumbnail-canvas) {
 		width: 100% !important;
 		height: 100% !important;
-	}	
-	
+	}
+
 	:global(.pdf-thumbnail-pageIndex) {
 		display: flex;
 		width: 100%;

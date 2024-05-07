@@ -135,12 +135,14 @@
 		background-color: var(--menu-background);
 		border-radius: 10px;
 		gap: 20px;
+		width: fit-content;
 	}
 
 	#form-container {
 		display: flex;
 		flex-direction: column;
 		gap: 20px;
+		width: 100%;
 	}
 
 	.form-option {
@@ -148,11 +150,12 @@
 		gap: 7px;
 		align-items: center;
 		height: 30px;
+		width: fit-content;
 	}
 
 	.form-label {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr 6fr;
 		align-items: center;
 		gap: 8px;
 		font-family: var(--f-Medium), sans-serif;
@@ -168,7 +171,7 @@
 		color: var(--font-1);
 		outline: none;
 		border: 1px solid var(--font-3);
-		width: 530px;
+		width: 40vw;
 		height: 32px;
 		padding: 5px;
 	}
