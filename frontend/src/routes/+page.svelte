@@ -11,19 +11,21 @@
 </div>
 
 <style lang="scss">
+
+
 	#home-canvas {
 		display: flex;
 		flex-direction: column;
-		background-color: var(--background-1);
-		padding: 40px;
-		gap: 40px;
-		height: 100vh;
+		background-color: var(--background-2);
+		// padding: 40px;
+		// gap: 40px;
+		height: 100%;
 		align-items: center;
 	}
 
 	img {
-		height: 100rem;
-		width: 100rem;
+		height: 50rem;
+		width: 50rem;
 	}
 
 	h1 {

@@ -8,19 +8,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
 	</head>
-	<script>
-		document.cookie.split(';').forEach((cookie) => {
-			cookie = cookie.trim();
-			const cookieMap = cookie.split('=');
-			const cookieKey = cookieMap[0];
-			const cookieValue = cookieMap[1];
-			if (cookieKey === 'colorMode') {
-				document.documentElement.setAttribute('data-theme', cookieValue);
-			}
-		});
-	</script>
 
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
+	<body
+		style="margin: 0; padding: 0; width: 100vw; height: 100vh; position: absolute; top: 0; left: 0"
+		data-sveltekit-preload-data="hover"
+	>
+		<div
+			style="margin: 0; padding: 0; width: 100%; height: 100%; position: absolute; top: 0; left: 0"
+		>
+			%sveltekit.body%
+		</div>
 	</body>
 </html>

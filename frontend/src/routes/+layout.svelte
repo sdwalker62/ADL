@@ -1,45 +1,77 @@
 <script lang="ts">
-	import { beforeUpdate } from 'svelte';
-	import {
-		colorTheme
-	} from '$lib/data/shared.js';
+	import { ModeWatcher } from 'mode-watcher';
+	import { Menu } from 'lucide-svelte';
 	import { page } from '$app/stores';
-
-	export let data;
-
-	let showOutLineButtons = true;
-
-	if ($page.url.pathname.endsWith('.pdf')) {
-		showOutLineButtons = false;
-	}
-
-	beforeUpdate(() => {
-		document.documentElement.setAttribute('data-theme', $colorTheme);
-	});
-
-	
 </script>
 
 <main>
 	<nav>
+		<button id="main__menu"><Menu size={36}/></button>
 		<menu>
-			<menuitem>Home</menuitem>
-			<menuitem>Docs</menuitem>
-			<menuitem>Board</menuitem>
+			<menuitem><a href="/" class:active="{$page.url.pathname.endsWith("/")}">Home</a></menuitem>
+			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
 		</menu>
 	</nav>
-	
 	<slot />
 </main>
+<ModeWatcher />
 
+<style lang="scss"> 
 
-
-<style lang="scss">
-	main {
-		background-color: var(--background-2);
-		overflow: hidden;
-		width: 100%;
-		height: 100%;
-		min-height: 100vh;
+	a {
+		text-decoration: none;
+		color: var(--font-3);
+		font: 1.2em var(--f-Regular);
+		padding: 0.1rem 0.7rem;
+		border-radius: 4px;
 	}
+
+	.active {
+		color: var(--font-1);
+		background: var(--background-4);
+	}
+
+	main {
+		// position: absolute;
+		// top: 0;
+		// left: 0;
+		background-color: var(--background-1);
+		// width: 100vw;
+		// height: 100vh;
+	}
+
+	nav {
+		@media (min-width: 640px) {
+			display: flex;
+			align-items: center;
+			height: 2.5rem;
+		}
+	}
+
+	menu {
+		display: none;
+		@media (min-width: 640px) {
+			padding-left: 1.2rem;
+			display: flex;
+			flex-direction: row;
+			gap: 1.2rem;
+		}
+	}
+
+	#main__menu {
+		margin: 2rem;
+		background: none;
+		border: none;
+
+		&:hover {
+			border-radius: 7px;
+			background: var(--background-4);
+			cursor: pointer;
+		}
+
+		@media (min-width: 640px) {
+			display: none;
+		}
+	}
+
 </style>

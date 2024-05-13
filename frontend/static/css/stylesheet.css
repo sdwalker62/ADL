@@ -2,6 +2,7 @@
 @import url('geometry.css');
 @import url('fonts.css');
 @import url('code.css');
+@import url('reset.css');
 
 :root {
 	/* The default font size is 16px */
@@ -9,6 +10,7 @@
 	/* This makes sizing with rem units easier */
 	font-size: 62.5%;
 	background-color: var(--background);
+
 	--transition: all 0s;
 	--slider-ball: linear-gradient(145deg, #f0f0f0, #cacaca);
 	--button-background: #02006c;
