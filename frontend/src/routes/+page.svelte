@@ -2,30 +2,31 @@
 	import VMAN from '$lib/assets/images/VMAN.svg';
 </script>
 
-<div id="home-canvas">
-	<img src={VMAN} alt="Athena Logo" />
+<div id="content-main__container">
 	<h1>Welcome to the Athena Library!</h1>
+	<img src={VMAN} alt="Athena Logo" />
 	<p>
 		This library contains information on numerous subjects within Mathematics and Computer Science.
 	</p>
 </div>
 
 <style lang="scss">
-
-
-	#home-canvas {
+	#content-main__container {
 		display: flex;
 		flex-direction: column;
 		background-color: var(--background-2);
-		// padding: 40px;
-		// gap: 40px;
 		height: 100%;
 		align-items: center;
+		padding: 4rem;
 	}
 
 	img {
 		height: 50rem;
-		width: 50rem;
+		width: 80%;
+		@media (min-width: 640px) {
+			height: 50rem;
+			width: 50rem;
+		}
 	}
 
 	h1 {
