@@ -26,6 +26,7 @@
 			background: var(--background-2);
 			justify-content: start;
 			align-items: center;
+			padding-left: 0.5rem;
 		}
 	}
 

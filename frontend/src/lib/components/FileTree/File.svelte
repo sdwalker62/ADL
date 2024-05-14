@@ -47,6 +47,7 @@
 		border-radius: 5px;
 		width: 100%;
 		gap: 0.5rem;
+		padding-left: 0.5rem;
 	}
 
 	:global(.highlight) {

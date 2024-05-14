@@ -174,7 +174,7 @@
 			background: var(--background-2);
 			padding: 15px;
 			padding-top: calc(15px - 1.2rem);
-			padding-left: calc(15px - 1.2rem);
+			padding-left: calc(15px - 1.7rem);
 			width: 100%;
 			height: 100%;
 			max-height: calc(100vh - 2.5rem - 4rem);

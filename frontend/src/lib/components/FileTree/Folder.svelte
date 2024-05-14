@@ -33,11 +33,6 @@
 	}}
 >
 	<div id="button-left__cluster">
-		<!-- {#if active}
-			<FolderOpen class="lucide-icon"/>
-		{:else}
-			<FolderClosed class="lucide-icon"/>
-		{/if} -->
 		<FolderIcon active={active} />
 		<span id="button-folder__name">
 			{formatName(name)}
@@ -77,6 +72,7 @@
 		padding: 0;
 		margin: 0;
 		gap: 0.5rem;
+		padding-left: 0.5rem;
 
 		&:hover {
 			color: var(--font-1);
