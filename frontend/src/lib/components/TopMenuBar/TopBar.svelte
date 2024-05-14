@@ -35,11 +35,11 @@
 	});
 </script>
 
-<div id="top-bar">
-	<div id="left-cluster">
+<div id="bar__container">
+	<div id="bar-left__cluster">
 		<slot name="left-cluster" />
 	</div>
-	<div id="center-cluster">
+	<div id="bar-center__cluster">
 		<div id="left-search">
 			<slot name="left-search" />
 		</div>
@@ -48,41 +48,34 @@
 			<slot name="right-search" />
 		</div>
 	</div>
-	<div id="right-cluster">
+	<div id="bar-right__cluster">
 		<slot name="right-cluster" />
 	</div>
 </div>
 
-<style>
-	#top-bar {
-		display: flex;
-		flex-direction: row;
-
-		/* grid-template-columns: 1fr 1fr auto 1fr 1fr; */
+<style lang="scss">
+	#bar__container {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
 		justify-content: space-between;
 		align-items: center;
 		background: var(--background-6);
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
-		margin: 0;
-		z-index: 1000;
-		min-height: 4rem;
-		max-height: 4rem;
+		height: 4rem;
 	}
 
-	#center-cluster {
+	#bar-center__cluster {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 	}
 
-	#left-cluster,
+	#bar-left__cluster,
 	#left-search,
-	#right-cluster,
+	#bar-right__cluster,
 	#right-search {
 		display: flex;
 		flex-direction: row;
-		gap: 2px;
+		gap: 0.2rem;
 	}
 
 	#left-search,
@@ -90,23 +83,23 @@
 		gap: 0;
 	}
 
-	#left-cluster,
+	#bar-left__cluster,
 	#right-search {
 		justify-content: start;
 	}
 
-	#right-cluster,
+	#bar-right__cluster,
 	#left-search {
 		justify-content: end;
 	}
 
-	#left-cluster,
+	#bar-left__cluster,
 	#right-search {
-		margin-left: 10px;
+		margin-left: 1rem;
 	}
 
-	#right-cluster,
+	#bar-right__cluster,
 	#left-search {
-		margin-right: 10px;
+		margin-right: 1rem;
 	}
 </style>

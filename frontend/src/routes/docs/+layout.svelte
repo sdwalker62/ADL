@@ -173,6 +173,7 @@
 			display: flex;
 			background: var(--background-2);
 			padding: 15px;
+			padding-top: calc(15px - 1.2rem);
 			padding-left: calc(15px - 1.2rem);
 			width: 100%;
 			height: 100%;
