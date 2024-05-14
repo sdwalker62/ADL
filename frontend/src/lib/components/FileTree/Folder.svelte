@@ -28,6 +28,7 @@
 </script>
 
 <button
+	class:root={name==='root'}
 	on:click={() => {
 		active = !active;
 	}}
@@ -122,12 +123,16 @@
 	ul {
 		list-style: none;
 		width: 100%;
-		padding-left: 1.2rem;
+		padding-left: 1.5rem;
 		padding-top: 0.5rem;
 	}
 
 	li {
 		width: 100%;
 		padding: 0.2rem 0;
+	}
+
+	.root {
+		display: none;
 	}
 </style>

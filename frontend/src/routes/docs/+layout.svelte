@@ -148,11 +148,11 @@
 			{#if $libraryVisible}
 				<Folder {...props} />
 			{:else}
-				<button
-					on:click={() => {
+				<button on:click={() => {
 						$showDigitalOceanSpaceModal = !$showDigitalOceanSpaceModal;
-					}}>Pull From Digital Oceans Space</button
-				>
+					}}>
+					Pull From Digital Oceans Space
+				</button>
 			{/if}
 		</div>
 	{/if}
@@ -172,9 +172,9 @@
 		@media (min-width: 640px) {
 			display: flex;
 			background: var(--background-2);
-			padding: 15px;
-			padding-top: calc(15px - 1.2rem);
-			padding-left: calc(15px - 1.7rem);
+			padding: 1.5rem;
+			padding-top: calc(15px - 0.5rem);
+			padding-left: 0;
 			width: 100%;
 			height: 100%;
 			max-height: calc(100vh - 2.5rem - 4rem);

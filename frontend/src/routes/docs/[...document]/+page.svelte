@@ -150,11 +150,11 @@
 			{@html htmlDocument}
 		</div>
 		{#if $rightPanelActive}
-			<div id="outline" class="no-scroll-bar constrained-height flex-col">
-				<div id="outline-container" class="no-scroll-bar">
-					<OutlineElement children={htmlOutline} />
-				</div>
+			<!-- <div id="outline" class="no-scroll-bar constrained-height flex-col"> -->
+			<div id="outline-container" class="no-scroll-bar">
+				<OutlineElement children={htmlOutline} />
 			</div>
+			<!-- </div> -->
 		{/if}
 	</div>
 {:else}
@@ -163,12 +163,13 @@
 	</div>
 {/if}
 
-<style>
+<style lang="scss">
 	.rightPanelActive {
 		grid-template-columns: 1fr 320px;
 	}
 
 	#pdf-canvas {
+		height: 100%;
 		width: 100%;
 		overflow: scroll;
 	}
@@ -210,6 +211,7 @@
 
 	#page-canvas {
 		display: grid;
+		grid-template-rows: 1fr 320px;
 		align-items: start;
 		justify-content: center;
 		background-color: var(--background-1);
@@ -276,12 +278,6 @@
 		opacity: 0.8;
 	}
 
-
-  /* :global(#document .math span) {
-      color: var(--font-2);
-      font-size: 1rem;
-      line-height: 1;
-  } */
   :global(.katex-display span) {
 		color: var(--font-2);
 		font-family: 'KaTeX_Main', serif;
@@ -295,16 +291,6 @@
 		text-align: center;
 	
 	}
-
-	/* :global(.katex-display) {
-		align-content: center;
-	} */
-
-  /* :global(#document .math span p){
-      width: 100%;
-	  font-size: 2rem;
-      font-family: 'KaTeX_Main',serif;
-  } */
 
 	:global(#document p) {
 		padding-left: 20px;
@@ -334,9 +320,8 @@
 		font-size: 2rem;
 	}
 
-	/* :global(#document section) {
-		color: var(--font-2);
-	} */
+
+// ====================== TABLE ======================
 
 	:global(thead) {
 		background-color: var(--background-2);
@@ -391,24 +376,14 @@
 	}
 
 	/* ====================== OUTLINE ====================== */
-	#outline {
-		display: grid;
-		grid-template-rows: 4rem 1fr;
-		background-color: var(--background-2);
-		width: 100%;
-		max-width: 320px;
-		align-items: start;
-		overflow-y: scroll;
-		overflow-x: hidden;
-	}
-
 	#outline-container {
+		background: var(--background-2);
 		overflow-y: scroll;
 		overflow-x: hidden;
 		text-overflow: ellipsis;
-		width: calc(320px - 4rem);
-		max-width: calc(320px - 4rem);
-		padding: 15px;
+		width: 320px;
+		max-height: calc(100vh - 2.5rem - 4rem);
+		padding: 1.5rem;
 	}
 
 	:global(#outline-container *) {

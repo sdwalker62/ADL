@@ -57,15 +57,16 @@
 	#bar__container {			
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		grid-template: "left-cluster right-cluster";
+		width: 100%;
 		max-width: 100%;
 		align-items: center;
 		background: var(--background-6);
 		height: 6rem;
 		@media (min-width: 640px) {
 			height: 4rem;
-			grid-template-columns: 1fr 1fr 1fr;
-			grid-template: "left-cluster center-cluster right-cluster";
+			width: 100%;
+			min-width: 100%;
+			grid-template-columns: 320px 1fr 320px;
 		}
 	}
 
@@ -76,6 +77,8 @@
 		justify-content: start;
 		margin-left: 1rem;
 		grid-area: "left-cluster";
+		width: 100%;
+		max-width: 320px;
 		@media (min-width: 640px) {
 			grid-area: "left-cluster";
 		}
@@ -83,9 +86,12 @@
 
 	#bar-center__cluster {
 		display: none;
+		width: 100%;
+		padding: 0 1.5rem;
 		@media (min-width: 640px) {
 			display: flex;
 			flex-direction: row;
+			justify-content: center;
 			align-items: center;
 			grid-area: "center-cluster";
 		}
@@ -97,13 +103,15 @@
 		gap: 0.2rem;
 		justify-content: end;
 		margin-right: 1rem;
+		width: 100%;
+		max-width: 320px;
 		@media (min-width: 640px) {
 			grid-area: "right-cluster";
 		}
 	}
 
 	#bar-center__cluster--left {
-		display: flex;
+		display: none;
 		flex-direction: row;
 		gap: 0;
 		justify-content: end;
@@ -111,7 +119,7 @@
 	}
 
 	#bar-center__cluster--right {
-		display: flex;
+		display: none;
 		flex-direction: row;
 		gap: 0;
 		justify-content: start;
