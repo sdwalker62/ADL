@@ -1,12 +1,25 @@
 <script lang="ts">
+	    import {
+		colorTheme,
+		showMainMenu,
+		showCodeOutlineElements,
+		showMathOutlineElements,
+		showTableOutlineElements,
+		rightPanelActive,
+		serverVisible
+	} from '$lib/data/shared.js';
 	import { ModeWatcher } from 'mode-watcher';
 	import { Menu } from 'lucide-svelte';
 	import { page } from '$app/stores';
+	import MobileMainMenu from './MobileMainMenu.svelte';
+
+	$: renderMenu = $showMainMenu;
+
 </script>
 
 <main>
 	<nav>
-		<button id="main-menu__button"><Menu size={36}/></button>
+		<button id="main-menu__button" on:click={()=>{renderMenu = !renderMenu;}} ><Menu size={36}/></button>
 		<menu>
 			<menuitem><a href="/" class:active="{$page.url.pathname.endsWith("/")}">Home</a></menuitem>
 			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
@@ -15,6 +28,7 @@
 	<slot />
 </main>
 <ModeWatcher />
+<MobileMainMenu bind:renderMenu/>
 
 <style lang="scss"> 
 	main {

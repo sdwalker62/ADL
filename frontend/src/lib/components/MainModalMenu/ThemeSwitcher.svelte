@@ -58,7 +58,7 @@
 
 <style>
 	#theme-canvas {
-		height: 4rem;
+		height: 100%;
 		width: 4rem;
 		display: flex;
 		justify-content: center;

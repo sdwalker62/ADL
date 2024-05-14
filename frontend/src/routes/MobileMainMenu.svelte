@@ -31,7 +31,7 @@
     import LibraryIcon2 from '$lib/assets/icons/LibraryIcon2.svelte';
     import WhiteboardIcon from '$lib/assets/icons/WhiteboardIcon.svelte';
 
-    $: renderMenu = $showMainMenu;
+	export let renderMenu: boolean;
 
     let pageHome = false;
 	let pageDocs = false;

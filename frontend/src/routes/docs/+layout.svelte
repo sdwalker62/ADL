@@ -21,7 +21,7 @@
 	import TableIcon from '$lib/assets/icons/TableIcon.svelte';
 	import RightPanelIcon from '$lib/assets/icons/RightPanelIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
-	import MainMenu from './MainMenu.svelte';
+	// import MainMenu from './MainMenu.svelte';
 
 	export let data;
 	import { page } from '$app/stores';
@@ -140,7 +140,7 @@
 	</svelte:fragment>
 </TopBar>
 
-<MainMenu />
+<!-- <MainMenu /> -->
 
 <main class:active={$leftPanelActive}>
 	{#if $leftPanelActive}
