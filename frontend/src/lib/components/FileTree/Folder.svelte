@@ -2,6 +2,7 @@
 	import File from './File.svelte';
 	import FolderIcon from '$lib/assets/icons/FolderIcon.svelte';
 
+
 	interface File {
 		name: string;
 		path: string;
@@ -11,25 +12,17 @@
 	export let active = true;
 	export let name: string;
 	export let files: Array<File>;
-	let hovering = false;
-
-	function capitalizeFirstLetter(word: string) {
-		const firstLetter = word.charAt(0);
-		const firstLetterCap = firstLetter.toUpperCase();
-		const restOfWord = word.slice(1);
-		return firstLetterCap + restOfWord;
-	}
 
 	function formatName(inStr: string) {
 		inStr = inStr.replace('_', ' ');
 		const inStrSplit = inStr.split(' ');
 		if (inStrSplit.length > 1) {
 			return inStrSplit.reduce((acc, curWord) => {
-				acc += capitalizeFirstLetter(curWord) + ' ';
+				acc += curWord + ' ';
 				return acc;
 			}, ' ');
 		} else {
-			return capitalizeFirstLetter(inStr);
+			return inStr;
 		}
 	}
 </script>
@@ -38,20 +31,19 @@
 	on:click={() => {
 		active = !active;
 	}}
-	on:mouseenter={() => {
-		hovering = true;
-	}}
-	on:mouseleave={() => {
-		hovering = false;
-	}}
 >
-	<span id="left-cluster">
-		{#key hovering}
-			<FolderIcon {active} {hovering} />
-		{/key}
-		{formatName(name)}
-	</span>
-	<span id="count-container">
+	<div id="button-left__cluster">
+		<!-- {#if active}
+			<FolderOpen class="lucide-icon"/>
+		{:else}
+			<FolderClosed class="lucide-icon"/>
+		{/if} -->
+		<FolderIcon active={active} />
+		<span id="button-folder__name">
+			{formatName(name)}
+		</span>
+	</div>
+	<span id="button-folder__count">
 		<span>{files.length}</span>
 	</span>
 </button>
@@ -70,79 +62,76 @@
 	</ul>
 {/if}
 
-<style>
+<style lang="scss">
 	button {
-		display: grid;
-		grid-template-columns: 1fr 3rem;
-		padding: 0 0 0 5px;
-		background-color: transparent;
+		display: flex;
+		justify-content: space-between;
+		background: transparent;
 		cursor: pointer;
 		border: none;
-		margin: 0;
-		max-width: 100%;
 		color: var(--font-1);
 		align-items: center;
-		text-align: start;
 		width: 100%;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		padding: 0;
+		margin: 0;
+		gap: 0.5rem;
+
+		&:hover {
+			color: var(--font-1);
+			background: var(--gradient-2);
+			border-radius: 5px;
+		}
+
+		&:hover #button-folder__count {
+			background-color: transparent;
+			transition: background-color 0s;
+			color: white;
+		}
 	}
 
-	#left-cluster {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		padding: 0;
-		background-color: transparent;
-		cursor: pointer;
-		border: none;
-		margin: 0;
-		max-width: 100%;
+	#button-left__cluster {
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		gap: 0.5rem;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	#button-folder__name {
+		text-align: start;
 		color: var(--font-1);
 		font-family: var(--f-SemiBold), sans-serif;
 		font-size: 2rem;
-		align-items: center;
-		text-align: start;
-		width: 100%;
 		text-overflow: ellipsis;
+		text-transform: capitalize;
 		overflow: hidden;
 	}
 
-	#count-container {
+	#button-folder__count {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: 8px;
+		border-radius: 7px;
 		background-color: var(--background-4);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 1.3rem;
 		color: var(--font-2);
-	}
-
-	button:hover {
-		color: var(--font-1);
-		background: var(--gradient-2);
-		border-radius: 5px;
-	}
-
-	button:hover #count-container {
-		background-color: transparent;
-		transition: background-color 0s;
-		color: white;
-	}
-
-	@media (max-width: 1300px) {
-		button {
-			font-size: 1.6em;
-		}
+		width: 3rem;
+		min-width: 3rem;
 	}
 
 	ul {
-		padding: 5px 0 0 3rem;
-		margin: 0 0 0 0.5rem;
 		list-style: none;
+		width: 100%;
+		padding-left: 1.2rem;
+		padding-top: 0.5rem;
 	}
 
 	li {
-		padding: 2px 0;
+		width: 100%;
+		padding: 0.2rem 0;
 	}
 </style>

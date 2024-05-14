@@ -5,7 +5,6 @@
 	import stickybits from 'stickybits';
 	import {
 		colorTheme,
-		showMainMenu,
 		showCodeOutlineElements,
 		showMathOutlineElements,
 		showTableOutlineElements,
@@ -14,7 +13,6 @@
 	} from '$lib/data/shared.js';
 	import TopBar from '$lib/components/TopMenuBar/TopBar.svelte';
 	import ToggleMenuItem from '$lib/components/TopMenuBar/ToggleMenuItem.svelte';
-	import ActionMenuItem from '$lib/components/TopMenuBar/ActionMenuItem.svelte';
 	import Cookies from 'js-cookie';
 	import LeftPanelIcon from '$lib/assets/icons/LeftPanelIcon.svelte';
 	import DriveIcon from '$lib/assets/icons/DriveIcon.svelte';
@@ -22,7 +20,6 @@
 	import MathIcon from '$lib/assets/icons/MathIcon.svelte';
 	import TableIcon from '$lib/assets/icons/TableIcon.svelte';
 	import RightPanelIcon from '$lib/assets/icons/RightPanelIcon.svelte';
-	import MenuIcon from '$lib/assets/icons/MenuIcon.svelte';
 	import LibraryIcon from '$lib/assets/icons/LibraryIcon.svelte';
 	import MainMenu from './MainMenu.svelte';
 
@@ -149,9 +146,7 @@
 	{#if $leftPanelActive}
 		<div id="docs-folder__canvas">
 			{#if $libraryVisible}
-				<div>
-					<Folder {...props} />
-				</div>
+				<Folder {...props} />
 			{:else}
 				<button
 					on:click={() => {
@@ -168,7 +163,6 @@
 	main {
 		@media (min-width: 640px) {
 			display: grid;
-			// grid-template-rows: 100%;
 			height: 100%;
 			width: 100%;
 		}
@@ -177,10 +171,12 @@
 	#docs-folder__canvas {
 		@media (min-width: 640px) {
 			display: flex;
-			background-color: var(--background-2);
+			background: var(--background-2);
 			padding: 15px;
+			padding-left: calc(15px - 1.2rem);
 			width: 100%;
 			height: 100%;
+			max-height: calc(100vh - 2.5rem - 4rem);
 			align-items: start;
 			overflow-y: scroll;
 			overflow-x: hidden;
@@ -198,10 +194,10 @@
 		color: var(--font-3);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 16px;
-		background-color: var(--background-4);
+		background: var(--background-4);
 
 		&:hover {
-			background-color: var(--background-6);
+			background: var(--background-6);
 			cursor: pointer;
 			color: var(--font-1);
 		}

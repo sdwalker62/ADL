@@ -44,6 +44,8 @@
 <style>
 	svg {
 		scale: 1;
+		width: 2.5rem;
+		min-width: 2.5rem;
 	}
 
 	svg path {

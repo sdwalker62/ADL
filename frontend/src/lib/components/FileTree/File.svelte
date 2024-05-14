@@ -40,16 +40,13 @@
 	>
 </div>
 
-<style>
+<style lang="scss">
 	#file-selector-canvas {
-		display: grid;
-		grid-template-columns: 2rem 1fr;
+		display: flex;
 		align-items: center;
-		gap: 10px;
 		border-radius: 5px;
-		width: 95%;
-		padding-left: 5px;
-		padding-right: 5px;
+		width: 100%;
+		gap: 0.5rem;
 	}
 
 	:global(.highlight) {
@@ -75,32 +72,22 @@
 	}
 
 	img {
+		width: 2.5rem;
 		filter: invert(52%) sepia(6%) saturate(194%) hue-rotate(202deg) brightness(89%) contrast(84%);
-	}
-
-	a:hover {
-		color: var(--font-1);
 	}
 
 	a {
 		text-decoration: none;
 		color: var(--font-2);
 		font-family: var(--f-Regular), sans-serif;
-		font-size: 18px;
+		font-size: 1.8rem;
 		text-overflow: ellipsis;
 		overflow: hidden;
-	}
+		text-wrap: nowrap;
 
-	@media (max-width: 1300px) {
-		a {
-			font-size: 1.5em;
-		}
-
-		#file-selector-canvas {
-			border-radius: 5px;
-			width: 95%;
-			padding-left: 5px;
-			height: 35px;
+		&:hover {
+			color: var(--font-1);
 		}
 	}
+
 </style>
