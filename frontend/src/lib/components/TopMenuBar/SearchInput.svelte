@@ -17,15 +17,16 @@
 
 <style lang="scss">
 	#search-canvas {
-		display: flex;
-		border-radius: 7px;
-		width: 60rem;
-		height: 3rem;
-		gap: 5px;
-		background: var(--background-2);
-		justify-content: start;
-		align-items: center;
-		padding-left: 1rem;
+		@media (min-width: 640px) {
+			display: flex;
+			border-radius: 7px;
+			width: 100%;
+			height: 3rem;
+			gap: 5px;
+			background: var(--background-2);
+			justify-content: start;
+			align-items: center;
+		}
 	}
 
 	#tmp-search-btn {
@@ -33,6 +34,7 @@
 		border: none;
 		padding: 0;
 		margin: 0;
+		width: 100%;
 	}
 
 	input {
