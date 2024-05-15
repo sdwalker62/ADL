@@ -422,6 +422,7 @@
 		text-overflow: ellipsis;
 		width: 320px;
 		max-height: calc(100vh - 2.5rem - 4rem);
+		min-height: calc(100vh - 2.5rem - 4rem);
 		padding: 1.5rem;
 	}
 

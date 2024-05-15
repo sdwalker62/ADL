@@ -178,6 +178,7 @@
 			width: 100%;
 			height: 100%;
 			max-height: calc(100vh - 2.5rem - 4rem);
+			min-height: calc(100vh - 2.5rem - 4rem);
 			align-items: start;
 			overflow-y: scroll;
 			overflow-x: hidden;

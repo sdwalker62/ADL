@@ -58,7 +58,7 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		width: 100%;
-		max-width: 100%;
+		max-width: calc(100% - 40rem);
 		align-items: center;
 		background: var(--background-6);
 		height: 6rem;
@@ -93,7 +93,6 @@
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
-			grid-area: "center-cluster";
 		}
 	}
 
@@ -106,6 +105,7 @@
 		width: 100%;
 		max-width: 320px;
 		@media (min-width: 640px) {
+			padding-right: 1rem;
 			grid-area: "right-cluster";
 		}
 	}

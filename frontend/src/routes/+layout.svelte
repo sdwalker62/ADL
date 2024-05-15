@@ -23,6 +23,7 @@
 		<menu>
 			<menuitem><a href="/" class:active="{$page.url.pathname.endsWith("/")}">Home</a></menuitem>
 			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
+			<menuitem><a href="/courses" class:active="{$page.url.pathname.includes("/courses")}">Courses</a></menuitem>
 		</menu>
 	</nav>
 	<slot />

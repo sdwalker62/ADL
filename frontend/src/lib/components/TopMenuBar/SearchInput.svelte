@@ -20,7 +20,7 @@
 		@media (min-width: 640px) {
 			display: flex;
 			border-radius: 7px;
-			width: 100%;
+			width: 70%;
 			height: 3rem;
 			gap: 5px;
 			background: var(--background-2);
@@ -31,11 +31,15 @@
 	}
 
 	#tmp-search-btn {
+		display: flex;
+		flex-direction: row;
 		background-color: transparent;
 		border: none;
 		padding: 0;
 		margin: 0;
 		width: 100%;
+		align-items: center;
+		justify-content: center;
 	}
 
 	input {
