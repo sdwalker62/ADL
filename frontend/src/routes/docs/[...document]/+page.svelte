@@ -174,15 +174,39 @@
 		overflow: scroll;
 	}
 
+	:global(#document section) {
+		width: 100%;
+		max-width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
   /*noinspection ALL*/
   :global(#document div.document-code-block-container) {
 		display: grid;
 		grid-template-rows: 3rem 1fr;
-		background-color: var(--background-7);
+		background: var(--background-9);
 		border-radius: 7px;
 		padding: 10px;
 		margin-top: 20px;
 		margin-bottom: 20px;
+		width: 100%;
+	}
+
+	:global(#document div.document-code) {
+		max-width: calc(100vw - 640px);
+		word-wrap: pre-wrap;
+		overflow: hidden;
+	}
+
+	:global(#document .language-shell) {
+		background: var(--background-2);
+	}
+
+	:global(#document code) {
+		word-wrap: break-word;
+		max-width: calc(100vw - 640px);
 	}
 
   /*noinspection ALL*/
@@ -223,24 +247,26 @@
 	#document {
 		display: flex;
 		flex-direction: column;
-		position: sticky;
-		overflow: scroll;
-		padding-left: 20px;
-		padding-right: 20px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		padding: 1.5rem;
+		width: 100%;
 	}
 
 	:global(#document a) {
 		color: var(--highlight);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 1.8rem;
+		align-self: start;
 	}
 
 	:global(#document h1) {
 		color: var(--font-2);
 		font-family: var(--f-ExtraBold), sans-serif;
 		font-size: 4rem;
-		opacity: 1;
 		font-weight: 100;
+		padding: 3rem 0;
+		align-self: start;
 	}
 
 	:global(#document h2) {
@@ -248,6 +274,8 @@
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 3rem;
 		opacity: 0.8;
+		padding: 2rem 0;
+		align-self: start;
 	}
 
 	:global(#document h3) {
@@ -255,27 +283,35 @@
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 2.3rem;
 		opacity: 0.8;
+		padding: 1.3rem 0;
+		align-self: start;
 	}
 
 	:global(#document h4) {
 		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
-		font-size: 3rem;
+		font-size: 2rem;
 		opacity: 0.8;
+		padding: 1rem 0;
+		align-self: start;
 	}
 
 	:global(#document h5) {
 		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
-		font-size: 3rem;
+		font-size: 1.5rem;
 		opacity: 0.8;
+		padding: 1rem 0;
+		align-self: start;
 	}
 
 	:global(#document h6) {
 		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
-		font-size: 3rem;
+		font-size: 1.3rem;
 		opacity: 0.8;
+		padding: 1rem 0;
+		align-self: start;
 	}
 
   :global(.katex-display span) {
@@ -293,12 +329,16 @@
 	}
 
 	:global(#document p) {
-		padding-left: 20px;
-		padding-right: 20px;
+		padding: 1rem 2rem;
 		color: var(--font-2);
 		line-height: 1.5;
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 2rem;
+		align-self: start;
+	}
+
+	:global(#document p:has( > span.katex)) {
+		align-self: center;
 	}
 
 	:global(#document :is(th tr)) {
@@ -306,8 +346,7 @@
 	}
 
 	:global(#document li) {
-		padding-left: 20px;
-		padding-right: 20px;
+		padding: 0 2rem;
 		font-size: 2rem;
 		color: var(--font-2);
 	}
@@ -397,5 +436,6 @@
 		display: flex;
 		align-content: center;
 		justify-content: center;
+		padding: 2rem 2rem;
 	}
 </style>
