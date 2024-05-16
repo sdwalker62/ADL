@@ -20,7 +20,9 @@
 		@media (min-width: 640px) {
 			display: flex;
 			border-radius: 7px;
-			width: 70%;
+			width: 80%;
+			max-width: 100%;
+			text-overflow: ellipsis;
 			height: 3rem;
 			gap: 5px;
 			background: var(--background-2);
@@ -47,10 +49,12 @@
 		border: none;
 		font-family: var(--f-Medium), sans-serif;
 		align-self: center;
+		width: 100%;
 
 		&::placeholder {
 			color: var(--font-5);
 			font-size: 1.5rem;
+			
 		}
 	}
 </style>

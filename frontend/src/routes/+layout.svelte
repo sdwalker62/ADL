@@ -1,17 +1,13 @@
 <script lang="ts">
 	    import {
-		colorTheme,
-		showMainMenu,
-		showCodeOutlineElements,
-		showMathOutlineElements,
-		showTableOutlineElements,
-		rightPanelActive,
-		serverVisible
+		showMainMenu
 	} from '$lib/data/shared.js';
-	import { ModeWatcher } from 'mode-watcher';
+	import { toggleMode } from "mode-watcher";
+	import { ModeWatcher, mode } from 'mode-watcher';
 	import { Menu } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import MobileMainMenu from './MobileMainMenu.svelte';
+	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
 
 	$: renderMenu = $showMainMenu;
 
@@ -25,6 +21,9 @@
 			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
 			<menuitem><a href="/courses" class:active="{$page.url.pathname.includes("/courses")}">Courses</a></menuitem>
 		</menu>
+		<button id="main-menu__theme-btn" on:click={toggleMode}>
+			<ThemeSwitcherIcon dark={$mode === 'dark'}/>
+		</button>
 	</nav>
 	<slot />
 </main>
@@ -49,6 +48,7 @@
 		@media (min-width: 640px) {
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 		}
 	}
 
@@ -89,6 +89,15 @@
 	.active {
 		color: var(--font-1);
 		background: var(--background-4);
+	}
+
+	#main-menu__theme-btn {
+		background: none;
+		border: none;
+
+		&:hover {
+			cursor: pointer;
+		}
 	}
 
 </style>
