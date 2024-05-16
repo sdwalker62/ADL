@@ -3,14 +3,14 @@
 	import tippy from 'tippy.js';
 	export let active = false;
 
-	onMount(() => {
-		tippy('#library', {
-			content: 'Documents Library',
-			placement: 'bottom',
-			theme: 'athena',
-			delay: [400, 0]
-		});
-	})
+	// onMount(() => {
+	// 	tippy('#library', {
+	// 		content: 'Documents Library',
+	// 		placement: 'bottom',
+	// 		theme: 'athena',
+	// 		delay: [400, 0]
+	// 	});
+	// })
 </script>
 
 <svg

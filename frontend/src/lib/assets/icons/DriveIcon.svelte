@@ -3,14 +3,14 @@
 	import tippy from 'tippy.js';
 	export let active = false;
 
-	onMount(() => {
-		tippy('#server', {
-			content: 'Remote Server',
-			placement: 'bottom',
-			theme: 'athena',
-			delay: [400, 0]
-		});
-	})
+	// onMount(() => {
+	// 	tippy('#server', {
+	// 		content: 'Remote Server',
+	// 		placement: 'bottom',
+	// 		theme: 'athena',
+	// 		delay: [400, 0]
+	// 	});
+	// })
 </script>
 
 <svg
