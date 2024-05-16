@@ -1,5 +1,6 @@
 <script lang="ts">
     import backgroundVideo from '$lib/assets/videos/rubiks_robot_color.webm';
+    import DeepLearning from '$lib/assets/icons/deep_learning.svelte';
 	import { onMount } from 'svelte';
 
     onMount(() => {
@@ -22,7 +23,17 @@
             as well as delve into some advanced topics that we hope will spark your interest and keep
             you engaged. 
         </p>
-        <a href="/courses/deep_learning"> Deep Learning </a>
+        <div id="course-container__deep-learning">
+            <DeepLearning />
+            <div id="course-description__container">
+                <p class="course-description">
+                    This will introduce you to the fundamentals of Deep Learning. It covers 
+                    loss functions, activation functions, network optimization, and more.
+                </p>
+            </div>
+            <a href="/courses/deep_learning"> Start </a>
+        </div>
+        
     </div>
 </main>
 
@@ -49,6 +60,24 @@
         z-index: 1;
     }
 
+    #course-container__deep-learning {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        background: var(--background-4);
+        padding: 1rem 1rem;
+        border-radius: 7px;
+        margin-top: 2rem;
+        max-width: 90%;
+    }
+
+    #course-description__container {
+        background: var(--background-2);
+        border-radius: 7px;
+    }
+
     #main-course__canvas {
         display: flex;
         flex-direction: column;
@@ -60,6 +89,10 @@
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
 		border-radius: 1rem;
+    }
+
+    .course-description {
+        font-size: 1.7rem;
     }
 
     h1 {
@@ -82,13 +115,12 @@
     a {
         font-size: 2rem;
         font-family: var(--f-Medium), sans-serif;
-        padding: 2rem 1.5rem;
+        padding: 1.5rem 1.5rem;
         border: none;
         border-radius: 7px;
         color: white;
         background: var(--gradient-2);
         text-decoration: none;
-        margin: 3rem;
 
         &:hover {
             background: var(--gradient-1);
