@@ -546,15 +546,17 @@
 		display: grid;
 		grid-template-rows: 35px 1fr;
 		height: 100%;
+		width: 100%;
 		overflow: hidden;
 	}
 
 	#pdf-render-container {
 		display: grid;
-		/* grid-template-columns: 1fr 180px; */
+		grid-template-columns: 1fr 180px;
 		justify-content: space-between;
 		align-items: start;
 		height: 100%;
+		max-height: calc(100vh - 2.5rem - 4rem);
 		overflow: scroll;
 	}
 
@@ -563,10 +565,9 @@
 		flex-direction: column;
 		overflow: scroll;
 		height: 100%;
-		width: calc(100% - 30px);
 		align-items: center;
 		background-color: var(--background-1);
-		padding: 15px;
+		padding: 1.5rem;
 	}
 
 	#pdf-outline {
@@ -587,6 +588,7 @@
 		flex-direction: row;
 		gap: 10px;
 		justify-content: center;
+		align-items: center;
 	}
 
 	.slash {
@@ -605,29 +607,35 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: center;
-		gap: 15px;
-		margin-left: -60px;
+		gap: 1rem;
+		margin-left: -120px;
+		/* width: fit-content; */
 	}
 
 	.zoom-level-row {
 		display: grid;
-		grid-template-columns: 25px 25px;
+		grid-template-columns: 1fr 1fr;
 		align-items: center;
-		gap: 5px;
-		/* margin-left: -5px; */
+		justify-content: center;
+		/* gap: 5px; */
+		width: 5rem;
+		/* margin-left: -px; */
 	}
 
 	.cur-zoom {
 		color: var(--font-2);
+		width: 1.5rem;
+		margin-right: 1.2rem;
 	}
 
 	.curZoomInput {
-		width: 25px;
+		width: 4rem;
 		background: transparent;
 		color: var(--font-2);
 		font-size: 1.5rem;
 		border: none;
 		text-align: end;
+		justify-self: end;
 	}
 
 	#pdf-theme-switcher {

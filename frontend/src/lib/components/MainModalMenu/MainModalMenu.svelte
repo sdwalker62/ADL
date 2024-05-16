@@ -2,6 +2,7 @@
 	import { showMainMenu } from '$lib/data/shared.js';
 	import ThemeSwitcher from './ThemeSwitcher.svelte';
 	import logo from '$lib/assets/images/VMAN.svg';
+	import { X } from 'lucide-svelte';
 
 	export let renderMenu: boolean;
 
@@ -24,6 +25,9 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<div id="main-menu-canvas" on:click|stopPropagation>
 		<div id="main-menu-top">
+			<button id="menu-top__close-button" on:click={()=>(dialog.close())}>
+				<X size={42} />
+			</button>
 			<ThemeSwitcher />
 		</div>
 		<div id="logo">
@@ -58,7 +62,7 @@
 		left: 0;
 		top: 0;
 		height: calc(100% - 5rem);
-		width: 300px;
+		width: 100%;
 		padding: 20px;
 		margin: 5px;
 		background: #0a0a0a80;
@@ -78,6 +82,7 @@
 	}
 
 	#main-menu-canvas {
+		width: 100%;
 		height: 100%;
 		display: grid;
 		grid-template-rows: 6rem 12rem 1fr;
@@ -102,7 +107,15 @@
 
 	#main-menu-top {
 		display: flex;
-		justify-content: end;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	#menu-top__close-button {
+		background: none;
+		border: none;
+		color: var(--font-1);
+		font-size: 3rem;
 	}
 
 	#logo {

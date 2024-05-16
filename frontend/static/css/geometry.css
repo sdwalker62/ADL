@@ -1,3 +1,7 @@
+* {
+	box-sizing: border-box;
+}
+
 :root {
 	--documentation-height: calc(100vh - 40px);
 }

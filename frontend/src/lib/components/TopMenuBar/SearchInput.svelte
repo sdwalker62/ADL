@@ -8,33 +8,38 @@
 	style: 'border-radius: 10px; background: #333; color: #fff; font-size: 1.7em; font-family: var(--f-Medium)'
 })}>
 	<div id="search-canvas">
-		<div class="icon">
-			<SearchIcon />
-		</div>
+		<SearchIcon />
 		<input name="search" placeholder="Search documentation..." />
 	</div>
 </button>
 
 <Toaster />
 
-<style>
+<style lang="scss">
 	#search-canvas {
-		display: grid;
-		grid-template-columns: 3rem 1fr;
-		border-radius: 7px;
-		width: 60rem;
-		height: 3rem;
-		gap: 5px;
-		background: var(--background-2);
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
-		justify-content: center;
-		align-items: center;
+		@media (min-width: 640px) {
+			display: flex;
+			border-radius: 7px;
+			width: 70%;
+			height: 3rem;
+			gap: 5px;
+			background: var(--background-2);
+			justify-content: start;
+			align-items: center;
+			padding-left: 0.5rem;
+		}
 	}
 
 	#tmp-search-btn {
+		display: flex;
+		flex-direction: row;
 		background-color: transparent;
 		border: none;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		align-items: center;
+		justify-content: center;
 	}
 
 	input {
@@ -42,20 +47,10 @@
 		border: none;
 		font-family: var(--f-Medium), sans-serif;
 		align-self: center;
-	}
 
-	input::placeholder {
-		color: var(--font-5);
-		font-size: 1.5rem;
-	}
-
-	.icon {
-		display: flex;
-		height: calc(3rem - 10px);
-		padding: 5px;
-		justify-content: center;
-		align-items: start;
-		margin: 0;
-		overflow: visible;
+		&::placeholder {
+			color: var(--font-5);
+			font-size: 1.5rem;
+		}
 	}
 </style>

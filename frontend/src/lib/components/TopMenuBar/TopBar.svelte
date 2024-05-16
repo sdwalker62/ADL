@@ -35,78 +35,94 @@
 	});
 </script>
 
-<div id="top-bar">
-	<div id="left-cluster">
+<div id="bar__container">
+	<div id="bar-left__cluster">
 		<slot name="left-cluster" />
 	</div>
-	<div id="center-cluster">
-		<div id="left-search">
+	<div id="bar-center__cluster">
+		<div id="bar-center__cluster--left">
 			<slot name="left-search" />
 		</div>
 		<SearchInput />
-		<div id="right-search">
+		<div id="bar-center__cluster--right">
 			<slot name="right-search" />
 		</div>
 	</div>
-	<div id="right-cluster">
+	<div id="bar-right__cluster">
 		<slot name="right-cluster" />
 	</div>
 </div>
 
-<style>
-	#top-bar {
-		display: flex;
-		flex-direction: row;
-
-		/* grid-template-columns: 1fr 1fr auto 1fr 1fr; */
-		justify-content: space-between;
+<style lang="scss">
+	#bar__container {			
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		width: 100%;
+		max-width: calc(100% - 40rem);
 		align-items: center;
 		background: var(--background-6);
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
-		margin: 0;
-		z-index: 1000;
-		min-height: 4rem;
-		max-height: 4rem;
+		height: 6rem;
+		@media (min-width: 640px) {
+			height: 4rem;
+			width: 100%;
+			min-width: 100%;
+			grid-template-columns: 320px 1fr 320px;
+		}
 	}
 
-	#center-cluster {
+	#bar-left__cluster {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
-	}
-
-	#left-cluster,
-	#left-search,
-	#right-cluster,
-	#right-search {
-		display: flex;
-		flex-direction: row;
-		gap: 2px;
-	}
-
-	#left-search,
-	#right-search {
-		gap: 0;
-	}
-
-	#left-cluster,
-	#right-search {
+		gap: 0.2rem;
 		justify-content: start;
+		margin-left: 1rem;
+		grid-area: "left-cluster";
+		width: 100%;
+		max-width: 320px;
+		@media (min-width: 640px) {
+			grid-area: "left-cluster";
+		}
 	}
 
-	#right-cluster,
-	#left-search {
+	#bar-center__cluster {
+		display: none;
+		width: 100%;
+		padding: 0 1.5rem;
+		@media (min-width: 640px) {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+	#bar-right__cluster {
+		display: flex;
+		flex-direction: row;
+		gap: 0.2rem;
 		justify-content: end;
+		margin-right: 1rem;
+		width: 100%;
+		max-width: 320px;
+		@media (min-width: 640px) {
+			padding-right: 1rem;
+			grid-area: "right-cluster";
+		}
 	}
 
-	#left-cluster,
-	#right-search {
-		margin-left: 10px;
+	#bar-center__cluster--left {
+		display: none;
+		flex-direction: row;
+		gap: 0;
+		justify-content: end;
+		margin-right: 1rem;
 	}
 
-	#right-cluster,
-	#left-search {
-		margin-right: 10px;
+	#bar-center__cluster--right {
+		display: none;
+		flex-direction: row;
+		gap: 0;
+		justify-content: start;
+		margin-left: 1rem;
 	}
 </style>

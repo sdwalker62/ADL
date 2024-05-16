@@ -22,6 +22,12 @@
 </svg>
 
 <style>
+
+	svg {
+		width: 2rem;
+		height: 2rem;
+	}
+
 	.background {
 		fill: var(--background-7);
 	}
