@@ -26,24 +26,24 @@
 } */
 
 .tippy-box[data-theme~='athena'] {
-	background-color: var(--menu-background);
-	color: var(--font-4);
+	background-color: var(--background-10);
+	color: var(--font-1);
 	font-family: 'SF Pro';
 	font-weight: 500;
 }
 
 .tippy-box[data-theme~='athena'][data-placement^='top'] > .tippy-arrow::before {
-	border-top-color: var(--menu-background);
+	border-top-color: var(--background-10);
 }
 
 .tippy-box[data-theme~='athena'][data-placement^='bottom'] > .tippy-arrow::before {
-	border-bottom-color: var(--menu-background);
+	border-bottom-color: var(--background-10);
 }
 
 .tippy-box[data-theme~='athena'][data-placement^='left'] > .tippy-arrow::before {
-	border-left-color: var(--menu-background);
+	border-left-color: var(--background-10);
 }
 
 .tippy-box[data-theme~='athena'][data-placement^='right'] > .tippy-arrow::before {
-	border-right-color: var(--menu-background);
+	border-right-color: var(--background-10);
 }

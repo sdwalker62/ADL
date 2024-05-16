@@ -67,8 +67,8 @@
         width: 100%;
         height: 100%;
         background: #0a0a0ad8;
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
+		backdrop-filter: blur(5px);
+		-webkit-backdrop-filter: blur(5px);
 		border-radius: 1rem;
     }
 
@@ -97,11 +97,15 @@
 
     video {
         position: absolute;
-        width: 100%;
+        width: 100vw;
         height: 100%;
-        background-size: cover;
-        top: 1.4rem;
+        top: 2.5rem;
         left: 0;
+        // background-size: auto;
+        margin: 0;
+        padding: 0;
+        object-fit: fill;
+        // z-index: -1;
     }
 
     p {

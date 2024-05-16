@@ -41,13 +41,14 @@
 
     video {
         position: absolute;
-        width: 100%;
+        width: 100vw;
         height: 100%;
-        top: 1.4rem;
+        top: 2.5rem;
         left: 0;
-        background-size: cover;
+        // background-size: auto;
         margin: 0;
         padding: 0;
+        object-fit: fill;
         // z-index: -1;
     }
 
