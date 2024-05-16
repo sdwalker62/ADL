@@ -56,8 +56,7 @@
         width: 33vw;
         max-width: 33vw;
         height: 100%;
-        background: #0a0a0a;
-        opacity: 0.8;
+        background: #0a0a0ad8;
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
 		border-radius: 1rem;
