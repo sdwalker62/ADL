@@ -24,8 +24,8 @@
 			max-width: 100%;
 			text-overflow: ellipsis;
 			height: 3rem;
-			gap: 5px;
-			background: var(--background-2);
+			gap: 1rem;
+			background: var(--background-9);
 			justify-content: start;
 			align-items: center;
 			padding-left: 0.5rem;

@@ -8,7 +8,7 @@
 }
 
 /* GitHub Default Dark */
-[data-theme='dark'] {
+html.dark {
 	--regular-text: #e6edf3; /* editor.foreground */
 	--background: #141414; /* editor.background */
 	--selection: #3fb95040; /* editor.selectionBackground */
@@ -47,7 +47,7 @@
 }
 
 /* Based on GitHub Light */
-[data-theme='light'] {
+html {
 	--regular-text: #24292e; /* editor.foreground */
 	--background: #ffffff; /* editor.background */
 	--selection: #0366d625; /* editor.selectionBackground */

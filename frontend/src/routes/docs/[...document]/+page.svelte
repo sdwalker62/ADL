@@ -432,6 +432,26 @@
 		max-width: 320px;
 	}
 
+	:global(#outline-container .h1 span) {
+		padding-bottom: 0.5rem;
+	}
+	:global(#outline-container .h2 span) {
+		padding-bottom: 0.5rem;
+	}
+	:global(#outline-container .h3 span) {
+		padding-bottom: 0.5rem;
+	}
+	:global(#outline-container .h4 span) {
+		padding-bottom: 0.5rem;
+	}
+	:global(#outline-container .h5 span) {
+		padding-bottom: 0.5rem;
+	}
+
+	:global(#outline-container .code-line) {
+		font-size: 1.6rem;
+	}
+
   /*noinspection ALL*/
 	:global(.table-block) {
 		display: flex;

@@ -43,7 +43,7 @@
 	--red-red-1: linear-gradient(90deg, rgba(239, 68, 68, 1) 0%, #d73a49 100%);
 }
 
-[data-theme='light'] {
+html {
 	/* Backgrounds */
 	--header-background: black;
 	--menu-background: var(--white-3);
@@ -51,9 +51,10 @@
 	--background-2: white;
 	--background-3: white;
 	--background-4: var(--white-3);
-	--background-6: var(--black-1-40);
+	--background-6: #21211c;
 	--background-7: #f5f5f5;
 	--background-8: var(--black-1-40);
+	--background-9: #e3e3de;
 
 	/* Typography */
 	--font-1: black;
@@ -61,7 +62,7 @@
 	--font-2: var(--black-2);
 	--font-3: var(--black-2);
 	--font-4: black;
-	--font-5: var(--grey-3);
+	--font-5: #00000070;
 	--highlight-font: var(--black-2);
 
 	/* Gradients */

@@ -8,6 +8,7 @@
 	import { page } from '$app/stores';
 	import MobileMainMenu from './MobileMainMenu.svelte';
 	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
+	import ColorBlind from '$lib/assets/icons/ColorBlind.svelte';
 
 	$: renderMenu = $showMainMenu;
 
@@ -21,9 +22,14 @@
 			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
 			<menuitem><a href="/courses" class:active="{$page.url.pathname.includes("/courses")}">Courses</a></menuitem>
 		</menu>
-		<button id="main-menu__theme-btn" on:click={toggleMode}>
-			<ThemeSwitcherIcon dark={$mode === 'dark'}/>
-		</button>
+		<div id="main-menu__right-cluster">
+			<!-- <button class="main-menu__btn">
+				<ColorBlind />
+			</button> -->
+			<button class="main-menu__btn" on:click={toggleMode}>
+				<ThemeSwitcherIcon dark={$mode === 'dark'}/>
+			</button>
+		</div>
 	</nav>
 	<slot />
 </main>
@@ -91,13 +97,22 @@
 		background: var(--background-4);
 	}
 
-	#main-menu__theme-btn {
+	.main-menu__btn {
 		background: none;
 		border: none;
+		padding: 0;
 
 		&:hover {
 			cursor: pointer;
 		}
+	}
+
+	#main-menu__right-cluster {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0;
+		margin-right: 1rem;
 	}
 
 </style>

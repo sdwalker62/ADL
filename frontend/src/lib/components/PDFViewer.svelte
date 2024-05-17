@@ -400,9 +400,9 @@
 				<DownloadIcon />
 			</a>
 		</div>
-		<div id="pdf-theme-switcher">
+		<!-- <div id="pdf-theme-switcher">
 			<ThemeSwitcherIcon />
-		</div>
+		</div> -->
 		<!-- Page Zoom -->
 		<div class="zoom-row">
 			<button
@@ -458,7 +458,7 @@
 	#pdf-top-bar {
 		/* Grid */
 		display: grid;
-		grid-template-columns: 60px 60px 1fr 180px;
+		grid-template-columns:  60px 1fr 180px;
 
 		/* Layout */
 		width: 100%;
@@ -608,7 +608,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
-		margin-left: -120px;
+		margin-left: -60px;
 		/* width: fit-content; */
 	}
 

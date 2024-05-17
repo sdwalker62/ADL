@@ -1,6 +1,6 @@
 <script lang="ts">
 	import markdownLogo from '$lib/assets/images/markdown.svg';
-	// import fileLogo from '$lib/assets/icons/doc.richtext.fill.svg';
+	import fileLogo from '$lib/assets/icons/doc.richtext.fill.svg';
 	import { page } from '$app/stores';
 
 	// https://codepen.io/sosuke/pen/Pjoqqp
@@ -11,6 +11,8 @@
 	if (filePath == $page.params.document) {
 		highlight = 'highlight';
 	}
+
+	console.log(docPath.endsWith(".pdf"));
 
 	function capitalizeFirstLetter(word: string) {
 		const firstLetter = word.charAt(0);
@@ -34,13 +36,22 @@
 </script>
 
 <div class={highlight} id="file-selector-canvas">
-	<img src={markdownLogo} alt="markdown" />
+	{#if docPath.endsWith(".pdf")}
+		<img id="pdf-icon" src={fileLogo} alt="pdf" />
+	{:else}
+		<img src={markdownLogo} alt="markdown" />
+	{/if}
+	<!-- <img src={markdownLogo} alt="markdown" /> -->
 	<a data-sveltekit-reload data-sveltekit-preload-data href={docPath}
 		>{formatName(name).slice(0, -3).replace('.', '')}</a
 	>
 </div>
 
 <style lang="scss">
+	#pdf-icon {
+		scale: 0.8;
+	}
+	
 	#file-selector-canvas {
 		display: flex;
 		align-items: center;
