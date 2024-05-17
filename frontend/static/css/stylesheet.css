@@ -17,6 +17,12 @@
 	--button-box-shadow: inset 5px 5px 3px #02005c, inset -5px -5px 3px #02007c;
 }
 
+body {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
 .no-scroll-bar::-webkit-scrollbar {
 	display: none;
 }

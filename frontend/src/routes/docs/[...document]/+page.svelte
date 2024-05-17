@@ -4,7 +4,6 @@
 	import _ from 'lodash';
 	import OutlineElement from '$lib/components/Outline/OutlineElement.svelte';
 	import stickybits from 'stickybits';
-	import updateImg from '$lib/assets/images/code-pull-request-solid.svg';
 	import copyImg from '$lib/assets/images/copy-solid.svg';
 	import downloadImg from '$lib/assets/images/file-code-regular.svg';
 	import { copyCode } from '$lib/utilities/copy_code';
@@ -52,10 +51,23 @@
 		}
 	}
 
+	function wrapMath(doc: Document) {
+		// in-line code blocks don't use pre
+		const codeBlocks = doc.querySelectorAll('span.katex-display');
+		for (const codeBlock of codeBlocks) {
+			codeBlock.outerHTML = `
+			<div class='math-container'>
+				${codeBlock.outerHTML}
+			</div>
+			`;
+		}
+	}
+
 	onMount(async () => {
 		if (!isPDF) {
 			stickybits('#outline-top-bar-sticky');
 			wrapCode(document);
+			wrapMath(document);
 			let codeBlocks = document.getElementsByClassName('document-code');
 			for (let i = 0; i < codeBlocks.length; i++) {
 				const preBlockParent: Element | null = codeBlocks.item(i);
@@ -140,21 +152,15 @@
 </script>
 
 {#if !isPDF}
-	<div
-		id="page-canvas"
-		class="no-scroll-bar constrained-height"
-		class:rightPanelActive={$rightPanelActive}
-	>
-		<div id="document" class="no-scroll-bar constrained-height flex-col">
+	<div id="page-canvas" class:rightPanelActive={$rightPanelActive}>
+		<div id="document">
 			<!--eslint-disable-next-line svelte/no-at-html-tags-->
 			{@html htmlDocument}
 		</div>
 		{#if $rightPanelActive}
-			<!-- <div id="outline" class="no-scroll-bar constrained-height flex-col"> -->
-			<div id="outline-container" class="no-scroll-bar">
+			<div id="outline-container">
 				<OutlineElement children={htmlOutline} />
 			</div>
-			<!-- </div> -->
 		{/if}
 	</div>
 {:else}
@@ -164,6 +170,30 @@
 {/if}
 
 <style lang="scss">
+	#page-canvas {
+		display: grid;
+		grid-template-rows: 1fr 320px;
+		align-items: start;
+		justify-content: center;
+		background-color: var(--background-1);
+		width: 100%;
+		height: calc(100vh - 2.5rem - 4rem);
+		max-height: calc(100vh - 2.5rem - 4rem);
+		overflow: hidden;
+	}
+
+	/* ====================== DOC RENDER ====================== */
+	#document {
+		display: flex;
+		flex-direction: column;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		padding: 1.5rem;
+		width: 100%;
+		height: 100%;
+		max-height: calc(100vh - 2.5rem - 4rem);
+	}
+
 	.rightPanelActive {
 		grid-template-columns: 1fr 320px;
 	}
@@ -172,6 +202,11 @@
 		height: 100%;
 		width: 100%;
 		overflow: scroll;
+	}
+
+	:global([data-heading-rank='1']) {
+		height: calc(100vh - 2.5rem - 4rem);
+		max-height: calc(100vh - 2.5rem - 4rem);
 	}
 
 	:global(#document section) {
@@ -233,31 +268,12 @@
 		cursor: pointer;
 	}
 
-	#page-canvas {
-		display: grid;
-		grid-template-rows: 1fr 320px;
-		align-items: start;
-		justify-content: center;
-		background-color: var(--background-1);
-		overflow: hidden;
-		width: 100%;
-	}
-
-	/* ====================== DOC RENDER ====================== */
-	#document {
-		display: flex;
-		flex-direction: column;
-		overflow-y: scroll;
-		overflow-x: hidden;
-		padding: 1.5rem;
-		width: 100%;
-	}
-
 	:global(#document a) {
 		color: var(--highlight);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 1.8rem;
 		align-self: start;
+		
 	}
 
 	:global(#document h1) {
@@ -314,12 +330,17 @@
 		align-self: start;
 	}
 
-  :global(.katex-display span) {
+	:global(.math-container) {
+		overflow: hidden;
+		height: 0;
+	}
+
+  	:global(.katex-display span) {
 		color: var(--font-2);
 		font-family: 'KaTeX_Main', serif;
 		font-size: 2.5rem;
 		line-height: 3;
-		text-overflow: ellipsis;
+		// text-overflow: ellipsis;
 		text-align: start;
 	}
 
@@ -421,6 +442,7 @@
 		overflow-x: hidden;
 		text-overflow: ellipsis;
 		width: 320px;
+		height: 100%;
 		max-height: calc(100vh - 2.5rem - 4rem);
 		min-height: calc(100vh - 2.5rem - 4rem);
 		padding: 1.5rem;
@@ -450,6 +472,10 @@
 
 	:global(#outline-container .code-line) {
 		font-size: 1.6rem;
+	}
+
+	:global(#document mark) {
+		color: red;
 	}
 
   /*noinspection ALL*/

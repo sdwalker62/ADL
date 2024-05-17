@@ -2,11 +2,11 @@
 
 ## Setup
 
-In this tutorial we will use Mamba to manage our Python version. Other package managers can be used, just insure you are using Python 3.8 or above and PyTorch 1.7 or above.
+==In== this tutorial we will use Mamba to manage our Python version.</mark> Other package managers can be used, just insure you are using Python 3.8 or above and PyTorch 1.7 or above.
 
 ### Mamba
 
-Assuming you already have Mamba, create a new environment for the install. If you don't have Mamba, follow any of the available guides to install Mamba on your host machine. Personally, I recommend mambaforge which can be installed using this link:
+Assuming you already have Mamba[^1], create a new environment for the install. If you don't have Mamba, follow any of the available guides to install Mamba on your host machine. Personally, I recommend mambaforge which can be installed using this link:
 
 https://github.com/conda-forge/miniforge#mambaforge
 
@@ -209,3 +209,5 @@ trained_model = YOLO('/home/dwalker/dev/work/yolov8/runs/detect/train3/weights/b
 ```python
 results = trained_model("/home/dwalker/dev/work/yolov8/6998a487-db76-4051-bb16-ce6cc9dac0fa.0919efc649321c2c244a6d84503c77c1.webp", augment=True, imgsz=640, show=True)
 ```
+
+[^1]: This is the first footnote.

@@ -43,7 +43,6 @@
 		background-color: var(--background-1);
 		grid-template: "nav" "content";
 		grid-template-rows: 8rem calc(100vh - 8rem);
-		overflow: hidden;
 		@media (min-width: 640px) {
 			grid-template-rows: 2.5rem auto;
 		}
