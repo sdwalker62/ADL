@@ -101,11 +101,9 @@
         height: 100%;
         top: 2.5rem;
         left: 0;
-        // background-size: auto;
         margin: 0;
         padding: 0;
-        object-fit: fill;
-        // z-index: -1;
+        object-fit: cover;
     }
 
     p {
