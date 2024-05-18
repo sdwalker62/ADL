@@ -12,8 +12,6 @@
 		highlight = 'highlight';
 	}
 
-	console.log(docPath.endsWith(".pdf"));
-
 	function capitalizeFirstLetter(word: string) {
 		const firstLetter = word.charAt(0);
 		const firstLetterCap = firstLetter.toUpperCase();

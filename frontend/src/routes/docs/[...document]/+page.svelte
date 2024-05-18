@@ -330,9 +330,17 @@
 		align-self: start;
 	}
 
-	:global(.math-container) {
-		overflow: hidden;
-		height: 0;
+	:global(.katex) {
+		overflow: auto hidden;
+		position: relative;
+	}
+
+	// :global(.katex-display) {
+	// 	margin: 0 !important;
+	// }
+
+	:global(.katex-display) {
+		overflow: auto hidden;
 	}
 
   	:global(.katex-display span) {

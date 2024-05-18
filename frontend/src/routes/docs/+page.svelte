@@ -30,7 +30,6 @@
 			if (form.message) {
 				$showDigitalOceanSpaceModal = !$showDigitalOceanSpaceModal;
 				if (form.message.status == 'success') {
-					console.log(form.message.files);
 					toast.success(form.message.files, {
 						style: toastStyle.join(' ')
 					});
