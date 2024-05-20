@@ -276,6 +276,34 @@
 		
 	}
 
+	#document {
+		& :global(li::marker) {
+			content: counters(item, ".", upper-roman)".";
+			text-align: center;
+   			display: inline-block;
+		}
+
+		& :global(li) {
+			counter-increment: item;
+			margin: 1.5rem 0;
+			line-height: 1.5;
+		}
+
+		& :global(em) {
+			font-style: italic;
+		}
+
+		& :global(ol) {
+			list-style-position: outside;
+			counter-reset: item;
+			padding: 0 5rem;
+		}
+
+		& :global(code:not([class])) {
+			color: var(--highlight);
+		}
+	}
+
 	:global(#document h1) {
 		color: var(--font-2);
 		font-family: var(--f-ExtraBold), sans-serif;
