@@ -24,15 +24,15 @@
 <style>
 
 	svg {
-		width: 2rem;
-		height: 2rem;
+		margin-top: 0.25rem;
+		scale: 1.0;
 	}
 
 	.background {
-		fill: var(--background-7);
+		fill: var(--background-6);
 	}
 
 	.icon {
-		fill: var(--font-2);
+		fill: var(--background-3);
 	}
 </style>

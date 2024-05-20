@@ -1,50 +1,62 @@
-// /*
-//     This file contains random utility functions that are used throughout the frontend. There is no logic for which functions are placed here.
-// */
-//
-// import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-// import dotenv from 'dotenv';
-// import { PUBLIC_BUCKET_ID, PUBLIC_BUCKET_ACCESS_KEY } from '$env/static/public';
-//
-// export interface CookieMap {
-// 	[key: string]: string;
-// }
-//
-// export function getAllCookies() {
-// 	const cookies: CookieMap = {};
-// 	const cookieString: string = document.cookie;
-//
-// 	if (cookieString) {
-// 		const cookieArray: string[] = cookieString.split('; ');
-// 		cookieArray.forEach((cookie) => {
-// 			const [name, value] = cookie.split('=');
-// 			cookies[name] = decodeURIComponent(value);
-// 		});
-// 	}
-//
-// 	return cookies;
-// }
-//
-// export function retrieveDocuments(url: string, password: string) {
-// 	console.log(url);
-// 	console.log(password);
-// 	dotenv.config();
-//
-// 	// TODO:
-// 	// 1. Check that the URL begins with https://
-// 	// 2. Password should be AccessKey since that is what will be used for auth
-// 	// 3. Figure out how to deal with region, maybe ask the user?
-// 	// 4. accessKeyId needs to be provided as well, hardcode for now
-//
-// 	const s3Client: S3Client = new S3Client({
-// 		endpoint: 'https://adl.nyc3.digitaloceanspaces.com',
-// 		forcePathStyle: false,
-// 		region: 'nyc3',
-// 		credentials: {
-// 			accessKeyId: PUBLIC_BUCKET_ID,
-// 			secretAccessKey: PUBLIC_BUCKET_ACCESS_KEY
-// 		}
-// 	});
-//
-// 	console.log(s3Client);
-// }
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { cubicOut } from "svelte/easing";
+import type { TransitionConfig } from "svelte/transition";
+
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs));
+}
+
+type FlyAndScaleParams = {
+	y?: number;
+	x?: number;
+	start?: number;
+	duration?: number;
+};
+
+export const flyAndScale = (
+	node: Element,
+	params: FlyAndScaleParams = { y: -8, x: 0, start: 0.95, duration: 150 }
+): TransitionConfig => {
+	const style = getComputedStyle(node);
+	const transform = style.transform === "none" ? "" : style.transform;
+
+	const scaleConversion = (
+		valueA: number,
+		scaleA: [number, number],
+		scaleB: [number, number]
+	) => {
+		const [minA, maxA] = scaleA;
+		const [minB, maxB] = scaleB;
+
+		const percentage = (valueA - minA) / (maxA - minA);
+		const valueB = percentage * (maxB - minB) + minB;
+
+		return valueB;
+	};
+
+	const styleToString = (
+		style: Record<string, number | string | undefined>
+	): string => {
+		return Object.keys(style).reduce((str, key) => {
+			if (style[key] === undefined) return str;
+			return str + `${key}:${style[key]};`;
+		}, "");
+	};
+
+	return {
+		duration: params.duration ?? 200,
+		delay: 0,
+		css: (t) => {
+			const y = scaleConversion(t, [0, 1], [params.y ?? 5, 0]);
+			const x = scaleConversion(t, [0, 1], [params.x ?? 0, 0]);
+			const scale = scaleConversion(t, [0, 1], [params.start ?? 0.95, 1]);
+
+			return styleToString({
+				transform: `${transform} translate3d(${x}px, ${y}px, 0) scale(${scale})`,
+				opacity: t
+			});
+		},
+		easing: cubicOut
+	};
+};

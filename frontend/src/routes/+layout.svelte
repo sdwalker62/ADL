@@ -1,17 +1,14 @@
 <script lang="ts">
 	    import {
-		colorTheme,
-		showMainMenu,
-		showCodeOutlineElements,
-		showMathOutlineElements,
-		showTableOutlineElements,
-		rightPanelActive,
-		serverVisible
+		showMainMenu
 	} from '$lib/data/shared.js';
-	import { ModeWatcher } from 'mode-watcher';
+	import { toggleMode } from "mode-watcher";
+	import { ModeWatcher, mode } from 'mode-watcher';
 	import { Menu } from 'lucide-svelte';
 	import { page } from '$app/stores';
 	import MobileMainMenu from './MobileMainMenu.svelte';
+	import ThemeSwitcherIcon from '$lib/assets/icons/ThemeSwitcherIcon.svelte';
+	import ColorBlind from '$lib/assets/icons/ColorBlind.svelte';
 
 	$: renderMenu = $showMainMenu;
 
@@ -25,6 +22,14 @@
 			<menuitem><a href="/docs" class:active="{$page.url.pathname.includes("/docs")}">Documentation</a></menuitem>
 			<menuitem><a href="/courses" class:active="{$page.url.pathname.includes("/courses")}">Courses</a></menuitem>
 		</menu>
+		<div id="main-menu__right-cluster">
+			<!-- <button class="main-menu__btn">
+				<ColorBlind />
+			</button> -->
+			<button class="main-menu__btn" on:click={toggleMode}>
+				<ThemeSwitcherIcon dark={$mode === 'dark'}/>
+			</button>
+		</div>
 	</nav>
 	<slot />
 </main>
@@ -38,7 +43,6 @@
 		background-color: var(--background-1);
 		grid-template: "nav" "content";
 		grid-template-rows: 8rem calc(100vh - 8rem);
-		overflow: hidden;
 		@media (min-width: 640px) {
 			grid-template-rows: 2.5rem auto;
 		}
@@ -49,6 +53,7 @@
 		@media (min-width: 640px) {
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 		}
 	}
 
@@ -89,6 +94,24 @@
 	.active {
 		color: var(--font-1);
 		background: var(--background-4);
+	}
+
+	.main-menu__btn {
+		background: none;
+		border: none;
+		padding: 0;
+
+		&:hover {
+			cursor: pointer;
+		}
+	}
+
+	#main-menu__right-cluster {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0;
+		margin-right: 1rem;
 	}
 
 </style>

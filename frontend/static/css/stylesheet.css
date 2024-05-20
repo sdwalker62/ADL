@@ -17,6 +17,12 @@
 	--button-box-shadow: inset 5px 5px 3px #02005c, inset -5px -5px 3px #02007c;
 }
 
+body {
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+}
+
 .no-scroll-bar::-webkit-scrollbar {
 	display: none;
 }
@@ -46,4 +52,16 @@
 
 .tippy-box[data-theme~='athena'][data-placement^='right'] > .tippy-arrow::before {
 	border-right-color: var(--background-10);
+}
+
+:global(.katex-display > .katex) {
+	white-space: normal;
+}
+/* Add space between broken lines: */
+:global(.katex-display > .base) {
+	margin: 0.25em 0;
+}
+/* Compensate by reducing space around display math */
+:global(.katex-display) {
+	margin: 0.5em 0;
 }
