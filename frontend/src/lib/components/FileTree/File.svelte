@@ -46,8 +46,7 @@
 			<img src={markdownLogo} alt="markdown" />
 		{/if}
 		<a data-sveltekit-reload data-sveltekit-preload-data href={docPath}
-			>{formatName(name).slice(0, -3).replace('.', '')}</a
-		>
+			>{name.slice(0, -3).replace('.', '').replace(/_/g, " ")}</a>
 	</div>
 {/if}
 
@@ -104,6 +103,10 @@
 
 		&:hover {
 			color: var(--font-1);
+		}
+
+		&::first-letter {
+			text-transform: uppercase;
 		}
 	}
 
