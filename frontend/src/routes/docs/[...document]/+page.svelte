@@ -18,20 +18,8 @@
 	const htmlDocument: string = data.document;
 	const htmlOutline = data.outline;
 	const root = data.root!;
-
-	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
-		const target: Element = entry.target;
-		let headingElement: HTMLElement | null = target.querySelector('h1');
-		if (headingElement) {
-			const headingID: string | null = headingElement.getAttribute('id');
-			// noinspection LoopStatementThatDoesntLoopJS
-			for (const child of dom.children) {
-				const element = child.querySelector(`[href="#${headingID}"]`);
-				return element ? element : null;
-			}
-		}
-		return null;
-	}
+	let scrollPos = 0;
+	let scrollDirecton = 'down';
 
 	function wrapCode(doc: Document) {
 		// in-line code blocks don't use pre
@@ -73,6 +61,16 @@
 	}
 
 	onMount(async () => {
+		const documentElement = document.getElementById('document');
+		documentElement!.addEventListener('scroll', ()=>{
+			let st = documentElement!.scrollTop;
+			if (st > scrollPos) {
+				scrollDirecton = 'down';
+			} else {
+				scrollDirecton = 'up';
+			}
+			scrollPos = st <= 0 ? 0 : st;
+		})
 		if (!isPDF) {
 			stickybits('#outline-top-bar-sticky');
 			wrapCode(document);
@@ -99,38 +97,29 @@
 			}
 
 			// ======================= Intersection Observer =======================
-			const doc = document.getElementById('document');
-			let options = {};
-			if (doc) {
-				const interceptHeight = 40 - 0.99 * doc.clientHeight;
-				options = {
-					root: doc,
-					thresholds: _.range(0, 1, 0.1),
-					rootMargin: `40px 0px ${interceptHeight}px 0px`
-				};
-			}
-
-			const sectionIntersectionCallback = (
-				entries: IntersectionObserverEntry[]
-			) => {
-				let outline = document.getElementById('outline-container');
-				if (outline) {
-					if (!outline.hasChildNodes()) return;
-					entries.forEach((entry) => {
-						let e = getH1Element(outline!, entry);
-						if (e) {
-							if (entry.isIntersecting) {
-								const otherHeadings = document.querySelectorAll('a.observed');
-								if (otherHeadings) {
-									otherHeadings.forEach((heading) => {
-										heading.classList.remove('observed');
-									});
-								}
-								e.classList.add('observed');
-								e.classList.remove('non-observed');
+			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
+				const outlineElement = document.getElementById('outline-container');
+				if (outlineElement) {
+					const outlineAnchors = outlineElement.querySelectorAll('a');
+					outlineAnchors.forEach((anchor) => {
+						const interectingEntries = entries.filter((entry) => entry.isIntersecting);
+						if (interectingEntries) {
+							console.log(interectingEntries);
+							let entry;
+							if (scrollDirecton === 'down') {
+								entry = interectingEntries[0];
 							} else {
-								e.classList.add('non-observed');
-								e.classList.remove('observed');
+								entry = interectingEntries[interectingEntries.length - 1];
+							}
+							if (entry != undefined) {
+								if (anchor.href.includes(entry.target.id)) {
+									console.log(entry.target);
+									anchor.classList.add('observed');
+									// anchor.scrollIntoView({block: 'center'});
+									// outlineElement.scrollBy({top: 15});
+								} else {
+									anchor.classList.remove('observed');
+								}
 							}
 						}
 					});
@@ -138,9 +127,13 @@
 			};
 			let observer = new IntersectionObserver(
 				sectionIntersectionCallback,
-				options
+				{
+					root: document.getElementById('document'),
+					// threshold: _.range(0, 1, 0.75),
+					rootMargin: `0px -15px 0px 0px`
+				}
 			);
-			let sections = document.querySelectorAll('[data-heading-rank="1"]');
+			let sections = document.querySelectorAll('h2, h3, h4, h5, h6');
 			sections.forEach((section) => {
 				observer.observe(section);
 			});
