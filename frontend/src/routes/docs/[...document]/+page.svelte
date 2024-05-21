@@ -18,20 +18,8 @@
 	const htmlDocument: string = data.document;
 	const htmlOutline = data.outline;
 	const root = data.root!;
-
-	function getH1Element(dom: HTMLElement, entry: IntersectionObserverEntry) {
-		const target: Element = entry.target;
-		let headingElement: HTMLElement | null = target.querySelector('h1');
-		if (headingElement) {
-			const headingID: string | null = headingElement.getAttribute('id');
-			// noinspection LoopStatementThatDoesntLoopJS
-			for (const child of dom.children) {
-				const element = child.querySelector(`[href="#${headingID}"]`);
-				return element ? element : null;
-			}
-		}
-		return null;
-	}
+	let scrollPos = 0;
+	let scrollDirecton = 'down';
 
 	function wrapCode(doc: Document) {
 		// in-line code blocks don't use pre
@@ -63,11 +51,31 @@
 		}
 	}
 
+	function logoClassAdder(doc: Document) {
+		const logos = doc.querySelectorAll('img');
+		for (const logo of logos) {
+			if (logo.src.includes('logo')) {
+				logo.classList.add('img-logo');
+			}
+		}
+	}
+
 	onMount(async () => {
+		const documentElement = document.getElementById('document');
+		documentElement!.addEventListener('scroll', ()=>{
+			let st = documentElement!.scrollTop;
+			if (st > scrollPos) {
+				scrollDirecton = 'down';
+			} else {
+				scrollDirecton = 'up';
+			}
+			scrollPos = st <= 0 ? 0 : st;
+		})
 		if (!isPDF) {
 			stickybits('#outline-top-bar-sticky');
 			wrapCode(document);
 			wrapMath(document);
+			logoClassAdder(document);
 			let codeBlocks = document.getElementsByClassName('document-code');
 			for (let i = 0; i < codeBlocks.length; i++) {
 				const preBlockParent: Element | null = codeBlocks.item(i);
@@ -89,38 +97,29 @@
 			}
 
 			// ======================= Intersection Observer =======================
-			const doc = document.getElementById('document');
-			let options = {};
-			if (doc) {
-				const interceptHeight = 40 - 0.99 * doc.clientHeight;
-				options = {
-					root: doc,
-					thresholds: _.range(0, 1, 0.1),
-					rootMargin: `40px 0px ${interceptHeight}px 0px`
-				};
-			}
-
-			const sectionIntersectionCallback = (
-				entries: IntersectionObserverEntry[]
-			) => {
-				let outline = document.getElementById('outline-container');
-				if (outline) {
-					if (!outline.hasChildNodes()) return;
-					entries.forEach((entry) => {
-						let e = getH1Element(outline!, entry);
-						if (e) {
-							if (entry.isIntersecting) {
-								const otherHeadings = document.querySelectorAll('a.observed');
-								if (otherHeadings) {
-									otherHeadings.forEach((heading) => {
-										heading.classList.remove('observed');
-									});
-								}
-								e.classList.add('observed');
-								e.classList.remove('non-observed');
+			const sectionIntersectionCallback = (entries: IntersectionObserverEntry[]) => {
+				const outlineElement = document.getElementById('outline-container');
+				if (outlineElement) {
+					const outlineAnchors = outlineElement.querySelectorAll('a');
+					outlineAnchors.forEach((anchor) => {
+						const interectingEntries = entries.filter((entry) => entry.isIntersecting);
+						if (interectingEntries) {
+							console.log(interectingEntries);
+							let entry;
+							if (scrollDirecton === 'down') {
+								entry = interectingEntries[0];
 							} else {
-								e.classList.add('non-observed');
-								e.classList.remove('observed');
+								entry = interectingEntries[interectingEntries.length - 1];
+							}
+							if (entry != undefined) {
+								if (anchor.href.includes(entry.target.id)) {
+									console.log(entry.target);
+									anchor.classList.add('observed');
+									// anchor.scrollIntoView({block: 'center'});
+									// outlineElement.scrollBy({top: 15});
+								} else {
+									anchor.classList.remove('observed');
+								}
 							}
 						}
 					});
@@ -128,9 +127,13 @@
 			};
 			let observer = new IntersectionObserver(
 				sectionIntersectionCallback,
-				options
+				{
+					root: document.getElementById('document'),
+					// threshold: _.range(0, 1, 0.75),
+					rootMargin: `0px -15px 0px 0px`
+				}
 			);
-			let sections = document.querySelectorAll('[data-heading-rank="1"]');
+			let sections = document.querySelectorAll('h2, h3, h4, h5, h6');
 			sections.forEach((section) => {
 				observer.observe(section);
 			});
@@ -276,58 +279,104 @@
 		
 	}
 
+	#document {
+		& :global(li::marker) {
+			content: counters(item, ".", upper-roman)".";
+			text-align: center;
+   			display: inline-block;
+		}
+
+		& :global(li) {
+			counter-increment: item;
+			margin: 1.5rem 0;
+			line-height: 1.5;
+		}
+
+		& :global(em) {
+			font-style: italic;
+		}
+
+		& :global(ol) {
+			list-style-position: outside;
+			counter-reset: item;
+			padding: 0 5rem;
+		}
+
+		& :global(code:not([class])) {
+			color: var(--highlight);
+		}
+
+		& :global(h1), :global(h2), :global(h3), :global(h4), :global(h5), :global(h6) {
+			color: var(--font-2);
+			align-self: start;
+		}
+
+		& :global(p:has(img)) {
+			display: flex;
+			justify-content: center;
+			padding: 1.5rem;
+			width: 100%;
+		}
+
+		& :global(p:has(em)) {
+			display: flex;
+			justify-content: center;
+			padding: 1.5rem;
+			width: 100%;
+		}
+
+		& :global(img.img-logo) {
+			width: 14rem;
+			height: auto;
+		}
+
+		& :global(pre) {
+			padding: 1.25em 1em;
+		}
+
+	}
+
 	:global(#document h1) {
-		color: var(--font-2);
+		
 		font-family: var(--f-ExtraBold), sans-serif;
 		font-size: 4rem;
 		font-weight: 100;
 		padding: 3rem 0;
-		align-self: start;
 	}
 
 	:global(#document h2) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 3rem;
 		opacity: 0.8;
 		padding: 2rem 0;
-		align-self: start;
 	}
 
 	:global(#document h3) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 2.3rem;
 		opacity: 0.8;
 		padding: 1.3rem 0;
-		align-self: start;
 	}
 
 	:global(#document h4) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 2rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(#document h5) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 1.5rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(#document h6) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 1.3rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(.katex) {
@@ -463,19 +512,22 @@
 	}
 
 	:global(#outline-container .h1 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h2 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h3 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h4 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h5 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
+	}
+	:global(#outline-container .h6 span) {
+		padding-bottom: 1.2rem;
 	}
 
 	:global(#outline-container .code-line) {

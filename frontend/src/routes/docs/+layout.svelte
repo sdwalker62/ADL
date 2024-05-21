@@ -190,15 +190,17 @@
 
 	button {
 		height: 30px;
+		width: 100%;
 		border: none;
 		border-radius: 5px;
 		color: var(--font-3);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 16px;
 		background: var(--background-4);
+		margin: 1.5rem;
 
 		&:hover {
-			background: var(--background-6);
+			background: var(--gradient-1);
 			cursor: pointer;
 			color: var(--font-1);
 		}

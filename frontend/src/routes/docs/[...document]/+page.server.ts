@@ -103,8 +103,14 @@ export const load: PageServerLoad = async ({ params }) => {
 		const sectionLevel = node.getAttribute('data-heading-rank')
 			? node.getAttribute('data-heading-rank')
 			: 0;
+		let headingId = '';
+		if (!heading) {
+			headingId = 'Unamed Heading';
+		} else {
+			headingId = heading.id;
+		}
 		const newNode: Node = {
-			name: heading!.id,
+			name: headingId,
 			tagName: node.tagName.toLowerCase(),
 			sectionLevel: sectionLevel,
 			html: node.innerHTML,

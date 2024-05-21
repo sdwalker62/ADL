@@ -11,6 +11,11 @@
 	if (filePath == $page.params.document) {
 		highlight = 'highlight';
 	}
+	const imageFormats = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.bmp', '.ico', '.tiff', '.tif'];
+
+	function isImage() {
+		return imageFormats.some((format) => filePath.endsWith(format));
+	}
 
 	function capitalizeFirstLetter(word: string) {
 		const firstLetter = word.charAt(0);
@@ -33,17 +38,17 @@
 	}
 </script>
 
-<div class={highlight} id="file-selector-canvas">
-	{#if docPath.endsWith(".pdf")}
-		<img id="pdf-icon" src={fileLogo} alt="pdf" />
-	{:else}
-		<img src={markdownLogo} alt="markdown" />
-	{/if}
-	<!-- <img src={markdownLogo} alt="markdown" /> -->
-	<a data-sveltekit-reload data-sveltekit-preload-data href={docPath}
-		>{formatName(name).slice(0, -3).replace('.', '')}</a
-	>
-</div>
+{#if !isImage()}
+	<div class={highlight} id="file-selector-canvas">
+		{#if docPath.endsWith(".pdf")}
+			<img id="pdf-icon" src={fileLogo} alt="pdf" />
+		{:else}
+			<img src={markdownLogo} alt="markdown" />
+		{/if}
+		<a data-sveltekit-reload data-sveltekit-preload-data href={docPath}
+			>{name.slice(0, -3).replace('.', '').replace(/_/g, " ")}</a>
+	</div>
+{/if}
 
 <style lang="scss">
 	#pdf-icon {
@@ -91,12 +96,17 @@
 		color: var(--font-2);
 		font-family: var(--f-Regular), sans-serif;
 		font-size: 1.8rem;
+		line-height: 1.5;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		text-wrap: nowrap;
 
 		&:hover {
 			color: var(--font-1);
+		}
+
+		&::first-letter {
+			text-transform: uppercase;
 		}
 	}
 

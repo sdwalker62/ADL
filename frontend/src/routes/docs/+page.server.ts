@@ -24,8 +24,6 @@ export const actions: Actions = {
 			return message(form, { status: 'failure', text: 'The form contains validation errors' });
 		}
 
-		let filesRetrieved: string[] = [];
-
 		if (form.data['password'] !== PASSWORD) {
 			return message(form, { status: 'failure', text: 'Password is incorrect' });
 		} else {
@@ -44,9 +42,15 @@ export const actions: Actions = {
 				Bucket: form.data.bucket
 			});
 			const bucketObjects = await s3Client.send(retrievalCommand);
+
+			// Instead of going through and updating each file, we will delete the repo and re-pull
+			const docsPath = repo_path + DOCS_PATH;
+			fs.rmSync(docsPath, { recursive: true, force: true });
+			fs.mkdirSync(docsPath);
+
 			for (const object of bucketObjects.Contents!) {
 				if (object.Key) {
-					const writePath = repo_path + DOCS_PATH + object.Key;
+					const writePath = docsPath + object.Key;
 					fs.access(writePath, fs.constants.F_OK, async (err) => {
 						if (err) {
 							// An error occurs if the fs.access fails to find the file at the supplied path
@@ -55,19 +59,20 @@ export const actions: Actions = {
 							const directoryPath = getDirectoryPath(writePath);
 							// Make the directory if it does not exist
 							if (!fs.existsSync(directoryPath)) {
-								fs.mkdirSync(directoryPath);
+								console.log('Directory does not exist: ' + directoryPath);
+								console.log('Creating directory: ' + directoryPath);
+								fs.mkdirSync(directoryPath, { recursive: true });
 							}
 							const getCommand = new GetObjectCommand({
 								Bucket: form.data.bucket,
 								Key: object.Key
 							});
 							const file = await s3Client.send(getCommand);
-							if (!object.Key.endsWith('/')) {
+							if (!object.Key!.endsWith('/')) {
 								const writeStream = fs.createWriteStream(writePath);
 								if (file.Body) {
 									// @ts-expect-error pipe exists, this is a problem with S3
 									file.Body.pipe(writeStream);
-									filesRetrieved.push(object.Key!);
 								}
 							}
 						}
@@ -75,7 +80,7 @@ export const actions: Actions = {
 				}
 			}
 		}
-		return message(form, { status: 'success', files: filesRetrieved.join('\n') });
+		return message(form, { status: 'success' });
 	}
 };
 

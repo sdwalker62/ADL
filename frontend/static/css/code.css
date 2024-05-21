@@ -85,6 +85,8 @@ html {
 	--builtin: #8a4600; /* entity | entity.name */
 }
 
+pre,
+code[class*='code-highlight'],
 code[class*='language-'],
 pre[class*='language-'] {
 	text-align: left;
@@ -110,6 +112,7 @@ pre[class*='language-'] {
 	hyphens: none;
 }
 
+code[class*='code-highlight']::-moz-selection,
 code[class*='language-']::-moz-selection,
 pre[class*='language-']::-moz-selection,
 code[class*='language-'] ::-moz-selection,
@@ -117,6 +120,7 @@ pre[class*='language-'] ::-moz-selection {
 	background: var(--selection); /* editor.selectionBackground */
 }
 
+code[class*='code-highlight']::selection,
 code[class*='language-']::selection,
 pre[class*='language-']::selection,
 code[class*='language-'] ::selection,
@@ -130,6 +134,7 @@ pre[class*='language-'] ::selection {
 	padding: 0.1em;
 }
 
+pre,
 pre[class*='language-'] {
 	overflow: auto;
 	position: relative;
