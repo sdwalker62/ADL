@@ -63,11 +63,21 @@
 		}
 	}
 
+	function logoClassAdder(doc: Document) {
+		const logos = doc.querySelectorAll('img');
+		for (const logo of logos) {
+			if (logo.src.includes('logo')) {
+				logo.classList.add('img-logo');
+			}
+		}
+	}
+
 	onMount(async () => {
 		if (!isPDF) {
 			stickybits('#outline-top-bar-sticky');
 			wrapCode(document);
 			wrapMath(document);
+			logoClassAdder(document);
 			let codeBlocks = document.getElementsByClassName('document-code');
 			for (let i = 0; i < codeBlocks.length; i++) {
 				const preBlockParent: Element | null = codeBlocks.item(i);
@@ -307,6 +317,26 @@
 			color: var(--font-2);
 			align-self: start;
 		}
+
+		& :global(p:has(img)) {
+			display: flex;
+			justify-content: center;
+			padding: 1.5rem;
+			width: 100%;
+		}
+
+		& :global(p:has(em)) {
+			display: flex;
+			justify-content: center;
+			padding: 1.5rem;
+			width: 100%;
+		}
+
+		& :global(img.img-logo) {
+			width: 14rem;
+			height: auto;
+		}
+
 	}
 
 	:global(#document h1) {

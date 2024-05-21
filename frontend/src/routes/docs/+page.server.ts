@@ -59,7 +59,9 @@ export const actions: Actions = {
 							const directoryPath = getDirectoryPath(writePath);
 							// Make the directory if it does not exist
 							if (!fs.existsSync(directoryPath)) {
-								fs.mkdirSync(directoryPath);
+								console.log('Directory does not exist: ' + directoryPath);
+								console.log('Creating directory: ' + directoryPath);
+								fs.mkdirSync(directoryPath, { recursive: true });
 							}
 							const getCommand = new GetObjectCommand({
 								Bucket: form.data.bucket,
