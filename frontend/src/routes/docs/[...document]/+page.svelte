@@ -330,6 +330,10 @@
 			height: auto;
 		}
 
+		& :global(pre) {
+			padding: 1.25em 1em;
+		}
+
 	}
 
 	:global(#document h1) {

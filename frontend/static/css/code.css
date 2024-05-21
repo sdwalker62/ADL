@@ -85,6 +85,7 @@ html {
 	--builtin: #8a4600; /* entity | entity.name */
 }
 
+pre,
 code[class*='code-highlight'],
 code[class*='language-'],
 pre[class*='language-'] {
@@ -133,6 +134,7 @@ pre[class*='language-'] ::selection {
 	padding: 0.1em;
 }
 
+pre,
 pre[class*='language-'] {
 	overflow: auto;
 	position: relative;
