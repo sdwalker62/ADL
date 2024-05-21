@@ -47,7 +47,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        height: 100%;
+        height: calc(100vh - 2.5rem);
         width: 100%;
         z-index: 1;
     }
@@ -98,7 +98,7 @@
     video {
         position: absolute;
         width: 100vw;
-        height: 100%;
+        height: 100vh;
         top: 2.5rem;
         left: 0;
         margin: 0;

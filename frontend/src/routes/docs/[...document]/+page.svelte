@@ -302,60 +302,54 @@
 		& :global(code:not([class])) {
 			color: var(--highlight);
 		}
+
+		& :global(h1), :global(h2), :global(h3), :global(h4), :global(h5), :global(h6) {
+			color: var(--font-2);
+			align-self: start;
+		}
 	}
 
 	:global(#document h1) {
-		color: var(--font-2);
+		
 		font-family: var(--f-ExtraBold), sans-serif;
 		font-size: 4rem;
 		font-weight: 100;
 		padding: 3rem 0;
-		align-self: start;
 	}
 
 	:global(#document h2) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 3rem;
 		opacity: 0.8;
 		padding: 2rem 0;
-		align-self: start;
 	}
 
 	:global(#document h3) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 2.3rem;
 		opacity: 0.8;
 		padding: 1.3rem 0;
-		align-self: start;
 	}
 
 	:global(#document h4) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 2rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(#document h5) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 1.5rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(#document h6) {
-		color: var(--font-2);
 		font-family: var(--f-Bold), sans-serif;
 		font-size: 1.3rem;
 		opacity: 0.8;
 		padding: 1rem 0;
-		align-self: start;
 	}
 
 	:global(.katex) {
@@ -491,19 +485,22 @@
 	}
 
 	:global(#outline-container .h1 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h2 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h3 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h4 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
 	}
 	:global(#outline-container .h5 span) {
-		padding-bottom: 0.5rem;
+		padding-bottom: 1.2rem;
+	}
+	:global(#outline-container .h6 span) {
+		padding-bottom: 1.2rem;
 	}
 
 	:global(#outline-container .code-line) {
