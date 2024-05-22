@@ -217,7 +217,7 @@
 		max-width: 100%;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		// align-items: center;
 	}
 
   /*noinspection ALL*/
@@ -325,6 +325,11 @@
 			width: 100%;
 		}
 
+		& :global(img) {
+			width: 70rem;
+			height: auto;
+		}
+
 		& :global(img.img-logo) {
 			width: 14rem;
 			height: auto;
@@ -401,10 +406,10 @@
 		text-align: start;
 	}
 
-	:global(p:has(.katex)) {
-		text-align: center;
+	// :global(p:has(.katex)) {
+	// 	text-align: center;
 	
-	}
+	// }
 
 	:global(#document p) {
 		padding: 1rem 2rem;
@@ -415,9 +420,9 @@
 		align-self: start;
 	}
 
-	:global(#document p:has( > span.katex)) {
-		align-self: center;
-	}
+	// :global(#document p:has( > span.katex)) {
+	// 	align-self: center;
+	// }
 
 	:global(#document :is(th tr)) {
 		color: var(--font-2);
