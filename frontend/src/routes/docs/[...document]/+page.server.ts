@@ -4,7 +4,6 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
-import remarkMermaid from 'remark-mermaidjs';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
 import remarkGfm from 'remark-gfm';
