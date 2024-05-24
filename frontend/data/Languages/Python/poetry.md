@@ -1,6 +1,6 @@
 # Poetry
 
-![PyTorch Logo](./pytorch-logo-flame.svg "PyTorch logo")
+![PyTorch Logo](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/poetry-logo.svg 'PyTorch logo')
 
 _Poetry is a dependency manager for Python_
 

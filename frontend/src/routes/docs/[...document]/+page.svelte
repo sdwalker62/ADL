@@ -222,11 +222,7 @@
 			brightness(89%) contrast(84%);
 	}
 
-	:global(.document-code-img):hover {
-		filter: var(--active-filter);
-		/* transition: filter 0.2s ease-in-out; */
-		cursor: pointer;
-	}
+
 
 	#document {
 		:global(img:not(.img-logo)) {
@@ -393,6 +389,7 @@
 			margin-top: 20px;
 			margin-bottom: 20px;
 			width: 100%;
+			// max-width: calc(100vw - 640px);
 		}
 
 		:global(div.document-code) {
@@ -408,8 +405,19 @@
 		:global(div.document-code-heading-container) {
 			display: flex;
 			flex-direction: row;
-			gap: 17px;
-			margin-left: 6px;
+			gap: 1rem;
+			padding-left: 6px;
+			justify-content: start;
+			align-items: center;
+		}
+
+		:global(.document-code-img) {
+			width: 3rem;
+		}
+
+		:global(.document-code-img):hover {
+			filter: var(--active-filter);
+			cursor: pointer;
 		}
 
 		:global(.language-shell) {
