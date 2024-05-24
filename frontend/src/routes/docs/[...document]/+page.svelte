@@ -178,7 +178,7 @@
 		grid-template-rows: 1fr 320px;
 		align-items: start;
 		justify-content: center;
-		background-color: var(--background-1);
+		background-color: var(--background-3);
 		width: 100%;
 		height: calc(100vh - 2.5rem - 4rem);
 		max-height: calc(100vh - 2.5rem - 4rem);
@@ -207,56 +207,13 @@
 		overflow: scroll;
 	}
 
+	:global(*)::-webkit-scrollbar {
+		display: none;
+	}
+
 	:global([data-heading-rank='1']) {
 		height: calc(100vh - 2.5rem - 4rem);
 		max-height: calc(100vh - 2.5rem - 4rem);
-	}
-
-	:global(#document section) {
-		width: 100%;
-		max-width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
-  /*noinspection ALL*/
-  :global(#document div.document-code-block-container) {
-		display: grid;
-		grid-template-rows: 3rem 1fr;
-		background: var(--background-9);
-		border-radius: 7px;
-		padding: 10px;
-		margin-top: 20px;
-		margin-bottom: 20px;
-		width: 100%;
-	}
-
-	:global(#document div.document-code) {
-		max-width: calc(100vw - 640px);
-		word-wrap: pre-wrap;
-		overflow: hidden;
-	}
-
-	:global(#document .language-shell) {
-		background: var(--background-2);
-	}
-
-	:global(#document code) {
-		word-wrap: break-word;
-		max-width: calc(100vw - 640px);
-	}
-
-  /*noinspection ALL*/
-	:global(#document div.document-code-heading-container) {
-		display: flex;
-		flex-direction: row;
-		gap: 17px;
-		margin-left: 6px;
-	}
-
-	:global(#document span.document-code-prompt) {
-		color: var(--font-5);
 	}
 
 	:global(.document-code-img) {
@@ -271,15 +228,17 @@
 		cursor: pointer;
 	}
 
-	:global(#document a) {
-		color: var(--highlight);
-		font-family: var(--f-Regular), sans-serif;
-		font-size: 1.8rem;
-		align-self: start;
-		
-	}
-
 	#document {
+		& :global(section) {
+			width: 100%;
+			max-width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		// List Styling
+
 		& :global(li::marker) {
 			content: counters(item, ".", upper-roman)".";
 			text-align: center;
@@ -290,6 +249,20 @@
 			counter-increment: item;
 			margin: 1.5rem 0;
 			line-height: 1.5;
+		}
+
+		:global(li) {
+			padding: 0 2rem;
+			font-size: 2rem;
+			color: var(--font-2);
+		}
+
+		:global(ul),
+		:global(ol) {
+			color: var(--font-2);
+			margin-left: 20px;
+			font-family: var(--f-Regular), sans-serif;
+			font-size: 2rem;
 		}
 
 		& :global(em) {
@@ -330,166 +303,193 @@
 			height: auto;
 		}
 
+		// Text Styling
+
+		& :global(p) {
+			padding: 1rem 2rem;
+			color: var(--font-2);
+			line-height: 1.5;
+			font-family: var(--f-Regular), sans-serif;
+			font-size: 2rem;
+			align-self: start;
+		}
+		
+		& :global(a) {
+			color: var(--highlight);
+			font-family: var(--f-Regular), sans-serif;
+			font-size: 1.8rem;
+			align-self: start;
+		}
+
+		:global(h1) {
+			font-family: var(--f-ExtraBold), sans-serif;
+			font-size: 4rem;
+			font-weight: 100;
+			padding: 3rem 0;
+		}
+
+		:global(h2) {
+			font-family: var(--f-Bold), sans-serif;
+			font-size: 3rem;
+			opacity: 0.8;
+			padding: 2rem 0;
+		}
+
+		:global(h3) {
+			font-family: var(--f-Bold), sans-serif;
+			font-size: 2.3rem;
+			opacity: 0.8;
+			padding: 1.3rem 0;
+		}
+
+		:global(h4) {
+			font-family: var(--f-Bold), sans-serif;
+			font-size: 2rem;
+			opacity: 0.8;
+			padding: 1rem 0;
+		}
+
+		:global(h5) {
+			font-family: var(--f-Bold), sans-serif;
+			font-size: 1.5rem;
+			opacity: 0.8;
+			padding: 1rem 0;
+		}
+
+		:global(h6) {
+			font-family: var(--f-Bold), sans-serif;
+			font-size: 1.3rem;
+			opacity: 0.8;
+			padding: 1rem 0;
+		}
+
+
+		// Code Block Styling
+
 		& :global(pre) {
 			padding: 1.25em 1em;
 		}
 
-	}
+		:global(code) {
+			word-wrap: break-word;
+			max-width: calc(100vw - 640px);
+		}
 
-	:global(#document h1) {
+		:global(div.document-code-block-container) {
+			display: grid;
+			grid-template-rows: 3rem 1fr;
+			background: var(--background-9);
+			border-radius: 7px;
+			padding: 10px;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			width: 100%;
+		}
+
+		:global(div.document-code) {
+			max-width: calc(100vw - 640px);
+			word-wrap: pre-wrap;
+			overflow: hidden;
+		}
+
+		:global(span.document-code-prompt) {
+			color: var(--font-5);
+		}
+
+		:global(div.document-code-heading-container) {
+			display: flex;
+			flex-direction: row;
+			gap: 17px;
+			margin-left: 6px;
+		}
+
+		:global(.language-shell) {
+			background: var(--background-2);
+		}
+
+		// Math Styling
+
+		:global(.katex) {
+			overflow: auto hidden;
+			position: relative;
+		}
+
+		:global(.katex-display) {
+			overflow: auto hidden;
+		}
+
+		:global(.katex-display span) {
+			color: var(--font-2);
+			font-family: 'KaTeX_Main', serif;
+			font-size: 2.5rem;
+			line-height: 3;
+			// text-overflow: ellipsis;
+			text-align: start;
+		}
+
+		:global(p:has(.katex)) {
+			text-align: center;
 		
-		font-family: var(--f-ExtraBold), sans-serif;
-		font-size: 4rem;
-		font-weight: 100;
-		padding: 3rem 0;
-	}
+		}
 
-	:global(#document h2) {
-		font-family: var(--f-Bold), sans-serif;
-		font-size: 3rem;
-		opacity: 0.8;
-		padding: 2rem 0;
-	}
+		:global(p:has( > span.katex)) {
+			align-self: center;
+		}
 
-	:global(#document h3) {
-		font-family: var(--f-Bold), sans-serif;
-		font-size: 2.3rem;
-		opacity: 0.8;
-		padding: 1.3rem 0;
-	}
+		:global(code .code-line span) {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: pre-wrap;
+		}
 
-	:global(#document h4) {
-		font-family: var(--f-Bold), sans-serif;
-		font-size: 2rem;
-		opacity: 0.8;
-		padding: 1rem 0;
-	}
+		:global(code .code-line span) {
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: pre-wrap;
+		}
 
-	:global(#document h5) {
-		font-family: var(--f-Bold), sans-serif;
-		font-size: 1.5rem;
-		opacity: 0.8;
-		padding: 1rem 0;
-	}
+		:global(li > code),
+		:global(p > code) {
+			font-family: var(--f-Mono), monospace;
+			font-size: 2rem;
+			line-height: 1.5em;
+			padding: 5px;
+			border-radius: 10px;
+			background-color: var(--background-2);
+		}
 
-	:global(#document h6) {
-		font-family: var(--f-Bold), sans-serif;
-		font-size: 1.3rem;
-		opacity: 0.8;
-		padding: 1rem 0;
-	}
+		// Table Styling
 
-	:global(.katex) {
-		overflow: auto hidden;
-		position: relative;
-	}
+		:global(:is(th tr)) {
+			color: var(--font-2);
+		}
 
-	// :global(.katex-display) {
-	// 	margin: 0 !important;
-	// }
+		:global(thead) {
+			background-color: var(--background-2);
+			font-family: var(--f-Medium), sans-serif;
+			font-size: 2rem;
+		}
 
-	:global(.katex-display) {
-		overflow: auto hidden;
-	}
+		:global(th) {
+			padding: 10px;
+			color: var(--font-3);
+			text-align: center;
+		}
 
-  	:global(.katex-display span) {
-		color: var(--font-2);
-		font-family: 'KaTeX_Main', serif;
-		font-size: 2.5rem;
-		line-height: 3;
-		// text-overflow: ellipsis;
-		text-align: start;
-	}
+		:global(tr) {
+			color: var(--font-2);
+			font-family: var(--f-Regular), sans-serif;
+			font-size: 1.8rem;
+		}
 
-	:global(p:has(.katex)) {
-		text-align: center;
-	
-	}
+		:global(td) {
+			border: solid 1px var(--background-2);
+			color: var(--font-2);
+			font-family: var(--f-Medium), sans-serif;
+			font-size: 2rem;
+			text-align: center;
+		}
 
-	:global(#document p) {
-		padding: 1rem 2rem;
-		color: var(--font-2);
-		line-height: 1.5;
-		font-family: var(--f-Regular), sans-serif;
-		font-size: 2rem;
-		align-self: start;
-	}
-
-	:global(#document p:has( > span.katex)) {
-		align-self: center;
-	}
-
-	:global(#document :is(th tr)) {
-		color: var(--font-2);
-	}
-
-	:global(#document li) {
-		padding: 0 2rem;
-		font-size: 2rem;
-		color: var(--font-2);
-	}
-
-	:global(#document ul),
-	:global(#document ol) {
-		color: var(--font-2);
-		margin-left: 20px;
-		font-family: var(--f-Regular), sans-serif;
-		font-size: 2rem;
-	}
-
-
-// ====================== TABLE ======================
-
-	:global(thead) {
-		background-color: var(--background-2);
-		font-family: var(--f-Medium), sans-serif;
-		font-size: 2rem;
-	}
-
-	:global(th) {
-		padding: 10px;
-		color: var(--font-3);
-		text-align: center;
-	}
-
-	:global(tr) {
-		color: var(--font-2);
-		font-family: var(--f-Regular), sans-serif;
-		font-size: 1.8rem;
-	}
-
-	:global(td) {
-		border: solid 1px var(--background-2);
-		color: var(--font-2);
-		font-family: var(--f-Medium), sans-serif;
-		font-size: 2rem;
-		text-align: center;
-	}
-
-	:global(code .code-line span) {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: pre-wrap;
-	}
-
-	:global(code .code-line span) {
-		text-overflow: ellipsis;
-		overflow: hidden;
-		white-space: pre-wrap;
-	}
-
-	:global(li > code),
-	:global(p > code) {
-		font-family: var(--f-Mono), monospace;
-		font-size: 2rem;
-		line-height: 1.5em;
-		padding: 5px;
-		border-radius: 10px;
-		background-color: var(--background-2);
-	}
-
-	:global(*)::-webkit-scrollbar {
-		display: none;
 	}
 
 	/* ====================== OUTLINE ====================== */
