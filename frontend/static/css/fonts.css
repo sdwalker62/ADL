@@ -1,4 +1,6 @@
 :root {
+	--f-STIX: 'STIX';
+
 	/* ========= MONOSPACE ========= */
 	--f-Mono: 'FiraCode.VF';
 
@@ -23,6 +25,16 @@
 }
 
 /* Fonts */
+
+@font-face {
+	font-family: 'STIX';
+	src: url('../fonts/STIX.woff2');
+}
+
+@font-face {
+	font-family: 'STIX-Italic';
+	src: url('../fonts/STIX-Italic.woff2');
+}
 
 /* ===================================== INTER ===================================== */
 @font-face {

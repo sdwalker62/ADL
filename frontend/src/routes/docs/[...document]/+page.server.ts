@@ -5,6 +5,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeMathjaxChtml from 'rehype-mathjax';
 import remarkGfm from 'remark-gfm';
 import rehypePrism from 'rehype-prism-plus';
 import rehypeSectionize from '@hbsnow/rehype-sectionize';
