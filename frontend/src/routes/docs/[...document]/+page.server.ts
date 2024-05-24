@@ -4,8 +4,9 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
+import remarkMermaid from 'remark-mermaidjs';
 import rehypeKatex from 'rehype-katex';
-import rehypeMathjaxChtml from 'rehype-mathjax';
+import rehypeMermaid from 'rehype-mermaid';
 import remarkGfm from 'remark-gfm';
 import rehypePrism from 'rehype-prism-plus';
 import rehypeSectionize from '@hbsnow/rehype-sectionize';
@@ -45,7 +46,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		};
 	}
 
-	const docs = unified()
+	const docs = await unified()
 		// @ts-expect-error fragment exists
 		.data('settings', { fragment: true })
 		.use(remarkParse)
@@ -55,6 +56,7 @@ export const load: PageServerLoad = async ({ params }) => {
 		.use(remarkFrontmatter)
 		.use(rehypeStringify)
 		.use(rehypeKatex)
+		.use(rehypeMermaid)
 		.use(rehypePrism)
 		.use(rehypeSectionize)
 		.use(rehypeSlug)
@@ -77,7 +79,7 @@ export const load: PageServerLoad = async ({ params }) => {
 				}
 			}
 		})
-		.processSync(contents);
+		.process(contents);
 
 	/*
     We will create a temporary DOM to walk through instead of attempting to

@@ -47,7 +47,7 @@ Deep Learning can be applied to many problem paradigms. When thinking of a use c
 
 In supervised learning, we provide the model with examples of features and labels. In a supervised setting, we have a perfect oracle that can tell the learner which labels are assigned to each input with the aim of generalizing the model to correctly operate on unseen data. The diagram below shows four examples of inputs mapped to outputs. Each of these examples will be provided to the model during training time, with a few examples set aside to test the models performance on new data.
 
-![Supervised Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/supervised-learning.svg "supervised-learning")
+![Supervised Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/supervised-learning.svg 'supervised-learning')
 
 For supervised learning to be effective, we need the training data to be properly formed, removing inconsistencies (such as one feature having multiple labels), and insuring that the training set is representative of the real-world problem we are trying to solve. Bad data is worse than no data, since we are can un-learn good weights with bad datum. When working with supervised learning, the data sets are often hand labeled by experts. In this scenario, human labelers can mistakenly introduce bias into their labels, or mis-label features in error. For this reason it is a good idea to test the quality of your training set.
 
@@ -87,7 +87,7 @@ Models that are linear perform well on data with linearities. If your data is co
 
 In semi-supervised learning you have a large number of un-labeled examples and a few labeled examples. This is a challenging paradigm, as it is far easier to work in the supervised learning domain where every example is labeled. Unfortunately, this is not often the case since labeling data is expensive and time consuming. Quickly hand labeling data leads to errors which is worse than having a set of high quality data. If data is abundant, yet labeling it all is too difficult then semi-supervised algorithms are ideal.
 
-![Semi-supervised Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/semi-supervised.svg "semi-supervised-learning")
+![Semi-supervised Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/semi-supervised.svg 'semi-supervised-learning')
 
 In the diagram above we can see a few points are labeled purple and others are pink. These points are the few examples of labeled data, where the white circles represent un-labeled examples that are more abundant. If we attempted to train a supervised model on the few examples that are labeled, we would likely produce a horizontal line that would cleanly separate the two sets. The problem is that line will mis-classify the points in the top set as being pink.
 
@@ -95,7 +95,7 @@ A better algorithm would be a clustering algorithm that (such as $k$-means) that
 
 We will not cover semi-supervised learning in this series in any real detail. We plan to add more information on semi-supervised methods in another series in the future.
 
-![Reinforcement Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/rl-loop.svg "reinforcement-learning")
+![Reinforcement Learning](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/machine_learning/deep_learning/novice/rl-loop.svg 'reinforcement-learning')
 
 In Reinforcement Learning, an agent (a robot, an animal, or even you) interacts with an environment (a game, a system, or the world) through actions. The environment responds to these actions by providing the agent a reward signal and transitioning the state of the environment through the environment's mechanics.
 
@@ -106,3 +106,9 @@ An example of this is a self-driving car. In this scenario the agent is the car 
 We will focus mainly on the supervised learning case, deviating when appropriate. We will start by discussing learning algorithms and basic modeling functions, building up to more complex model architectures later in the series. We will see how each of these functions can be decomposed into building blocks that form graphs. Then we will cover loss functions and model optimizations.
 
 [^1]: [Stack Exchange Post](https://datascience.stackexchange.com/questions/24452/in-supervised-learning-why-is-it-bad-to-have-correlated-features)
+
+```mermaid
+flowchart LR
+    A[Christmas] --> B(Go shopping)
+    B --> C
+```
