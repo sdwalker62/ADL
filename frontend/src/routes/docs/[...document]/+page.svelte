@@ -178,7 +178,7 @@
 		grid-template-rows: 1fr 320px;
 		align-items: start;
 		justify-content: center;
-		background-color: var(--background-3);
+		background-color: var(--background-1);
 		width: 100%;
 		height: calc(100vh - 2.5rem - 4rem);
 		max-height: calc(100vh - 2.5rem - 4rem);
@@ -309,7 +309,7 @@
 			padding: 1rem 2rem;
 			color: var(--font-2);
 			line-height: 1.5;
-			font-family: var(--f-Regular), sans-serif;
+			font-family: 'KaTeX_Main', sans-serif;
 			font-size: 2rem;
 			align-self: start;
 		}
@@ -322,7 +322,7 @@
 		}
 
 		:global(h1) {
-			font-family: var(--f-ExtraBold), sans-serif;
+			font-family: var(--f-STIX), sans-serif;
 			font-size: 4rem;
 			font-weight: 100;
 			padding: 3rem 0;
@@ -407,35 +407,6 @@
 			background: var(--background-2);
 		}
 
-		// Math Styling
-
-		:global(.katex) {
-			overflow: auto hidden;
-			position: relative;
-		}
-
-		:global(.katex-display) {
-			overflow: auto hidden;
-		}
-
-		:global(.katex-display span) {
-			color: var(--font-2);
-			font-family: 'KaTeX_Main', serif;
-			font-size: 2.5rem;
-			line-height: 3;
-			// text-overflow: ellipsis;
-			text-align: start;
-		}
-
-		:global(p:has(.katex)) {
-			text-align: center;
-		
-		}
-
-		:global(p:has( > span.katex)) {
-			align-self: center;
-		}
-
 		:global(code .code-line span) {
 			text-overflow: ellipsis;
 			overflow: hidden;
@@ -456,6 +427,21 @@
 			padding: 5px;
 			border-radius: 10px;
 			background-color: var(--background-2);
+		}
+
+		// Math Styling
+
+		:global(.katex) {
+			font-size: 1.1em;
+		}
+
+		:global(.katex-display) {
+			font-size: 2rem;
+		}
+
+		:global(span.katex span) {
+			color: var(--font-1);
+			// font-family: 'STIX', serif;
 		}
 
 		// Table Styling
