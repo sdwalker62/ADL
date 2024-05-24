@@ -5,7 +5,7 @@ import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import rehypeMermaid from 'rehype-mermaid';
+// import rehypeMermaid from 'rehype-mermaid';
 import remarkGfm from 'remark-gfm';
 import rehypePrism from 'rehype-prism-plus';
 import rehypeSectionize from '@hbsnow/rehype-sectionize';
@@ -55,7 +55,6 @@ export const load: PageServerLoad = async ({ params }) => {
 		.use(remarkFrontmatter)
 		.use(rehypeStringify)
 		.use(rehypeKatex)
-		.use(rehypeMermaid)
 		.use(rehypePrism)
 		.use(rehypeSectionize)
 		.use(rehypeSlug)

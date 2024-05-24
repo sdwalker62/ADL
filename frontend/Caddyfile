@@ -1,0 +1,3 @@
+www.athenalib.com, athenalib.com {
+        reverse_proxy localhost:4173
+}
