@@ -229,6 +229,10 @@
 	}
 
 	#document {
+		:global(img:not(.img-logo)) {
+			border-radius: 2rem;
+		}
+
 		& :global(section) {
 			width: 100%;
 			max-width: 100%;
@@ -309,7 +313,7 @@
 			padding: 1rem 2rem;
 			color: var(--font-2);
 			line-height: 1.5;
-			font-family: 'KaTeX_Main', sans-serif;
+			font-family: var(--f-Regular), sans-serif;
 			font-size: 2rem;
 			align-self: start;
 		}
@@ -322,7 +326,7 @@
 		}
 
 		:global(h1) {
-			font-family: var(--f-STIX), sans-serif;
+			font-family: var(--f-ExtraBold), sans-serif;
 			font-size: 4rem;
 			font-weight: 100;
 			padding: 3rem 0;
@@ -441,7 +445,6 @@
 
 		:global(span.katex span) {
 			color: var(--font-1);
-			// font-family: 'STIX', serif;
 		}
 
 		// Table Styling
