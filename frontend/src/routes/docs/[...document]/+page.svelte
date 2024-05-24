@@ -302,6 +302,11 @@
 			width: 100%;
 		}
 
+		& :global(img) {
+			width: 70rem;
+			height: auto;
+		}
+
 		& :global(img.img-logo) {
 			width: 14rem;
 			height: auto;
