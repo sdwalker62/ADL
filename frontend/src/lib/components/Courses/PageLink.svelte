@@ -18,7 +18,7 @@
     #widget-canvas {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
         background: var(--background-10);
         gap: 1.5rem;
         padding: 1rem 1rem;

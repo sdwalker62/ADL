@@ -95,6 +95,10 @@
             background: var(--gradient-1);
             cursor: pointer;
         }
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     .course-title {
