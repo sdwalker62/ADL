@@ -68,7 +68,13 @@
 		-webkit-backdrop-filter: blur(20px);
 		border-radius: 1rem;
         padding: 2rem;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
+
+
 
     #course-container__deep-learning {
         display: flex;
@@ -116,5 +122,9 @@
     .course-anchor {
         text-decoration: none;
         color: var(--font-1);
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 </style>

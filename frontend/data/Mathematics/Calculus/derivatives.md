@@ -24,15 +24,11 @@ The formal definition of a derivative is the limit definition. An interesting hi
 
 Given some function $f(x)$, we can measure a small change in the function's value given a small change in $x$ by examining the ratio of the function difference $f(x + \Delta x) - f(x)$ to the change in $x$ given by the calculation $x + \Delta x - x$:
 
-$$
-\frac{f(x+\Delta x) - f(x)}{x + \Delta x - x} = \frac{f(x+\Delta x) - f(x)}{\Delta x}
-$$
+$$ \frac{f(x+\Delta x) - f(x)}{x + \Delta x - x} = \frac{f(x+\Delta x) - f(x)}{\Delta x}$$
 
 Derivatives measure "instantaneous" change, meaning $\Delta x$ cannot be arbitrarily large, it needs to be infinitesimally small. We can achieve this by taking the limit as $\Delta x$ approaches zero:
 
-$$
-\lim_{\Delta x \rightarrow 0} \frac{f(x+\Delta x) - f(x)}{\Delta x} = \frac{df}{dx}
-$$
+$$\lim_{\Delta x \rightarrow 0} \frac{f(x+\Delta x) - f(x)}{\Delta x} = \frac{df}{dx}$$
 
 If this limit exists, then the derivative exists. There is another requirement that must be satisfied, namely that the domain must contain an open ball around $x$ that contains $x$. Our goal is not to teach Real Analysis, but it is a caveat that needs to be stated in case there are any Mathematicians reading this. Note that if a function $f$ has a derivative at $x=a$, then $f$ is continuous at $x=a$.
 
@@ -46,9 +42,7 @@ I will not exhaustively define all of the rules of differentiation here, but wil
 
 Since derivatives the change in one variable in a relation to another, the derivative of a constant must be zero. If $f(x) = c$, then
 
-$$
-\frac{df}{dx} = \frac{d}{dx} c = 0
-$$
+$$ \frac{df}{dx} = \frac{d}{dx} c = 0$$
 
 This is fairly straightforward to prove from the definition of a limit. If you feel uneasy with proofs you can feel free to skip them whenever they show up in this document, although I would encourage you to read them and even attempt them, it is the best way to learn Mathematics.
 
@@ -141,8 +135,8 @@ $$
 \end{aligned}
 $$
 
-![Epsilon-Delta Limit](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/epsilon-delta.svg 'epsilon-delta-limit')
+![Epsilon-Delta Limit](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/epsilon-delta.svg "epsilon-delta-limit")
 
-![Product Rule](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/product-rule.svg 'product-rule')
+![Product Rule](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/product-rule.svg "product-rule")
 
-![Chain Rule](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/chain-rule.svg 'chain-rule')
+![Chain Rule](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/calculus/derivatives/chain-rule.svg "chain-rule")

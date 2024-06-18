@@ -16,7 +16,9 @@ Real-valued functions of more than one variable, or **real multivariate function
 
 Suppose $D$ is a set of $n$-tuples of real numbers $(x_1, x_2, \ldots, x_n)$. A real multivariate function $f$ on $D$ is a rule that assigns a unique real number
 
-$$w=f(x_1, x_2, \ldots, x_n)$$
+$$
+w=f(x_1, x_2, \ldots, x_n)
+$$
 
 to each element in $D$. The set $D$ is the function's **domain**. The set of $w$-values taken on by $f$ if the function's **range**. The symbol $w$ if the **dependent variable** of $f$, and $f$ is said to be a function of the $n$ **independent variables** $x_1, x_2, \ldots, x_n$. We also call the $x_j$'s the function's **input variables** and call $w$ the function's **output variables**.
 
@@ -48,11 +50,15 @@ Examples of open sets are any open interval $(a, b)$ where $a, b \in \mathbb{R}$
 
 We say that a function $f(x_1, x_2)$ approaches the **limit** $L$ as $(x_1, x_2)$ approaches $(a, b)$, and write
 
-$$\lim_{(x_1, x_2) \rightarrow (a, b)} f(x_1, x_2) = L$$
+$$
+\lim_{(x_1, x_2) \rightarrow (a, b)} f(x_1, x_2) = L
+$$
 
 if, for every number $\epsilon > 0$, there exists a corresponding number $\delta > 0$ such that for all $(x_1, x_2)$ in the domain of $f$,
 
-$$\lvert f(x_1, x_2) - L \rvert < \epsilon \,\,\, \text{whenever} \,\,\, 0 < \sqrt{(x_1 - a)^2 + (x_2 - b)^2} < \delta$$
+$$
+\lvert f(x_1, x_2) - L \rvert < \epsilon \,\,\, \text{whenever} \,\,\, 0 < \sqrt{(x_1 - a)^2 + (x_2 - b)^2} < \delta
+$$
 
 ![Limit Illustration](https://adl-imgs.nyc3.cdn.digitaloceanspaces.com/limit-def.svg "limit illustration")
 
@@ -70,12 +76,16 @@ A function is **continuous** if it is continuous at every point of its domain.
 
 Composite functions are continuous at a point $(a, b)$ if the outer function is a continuous univariate function and the inner function is continuous at $(a, b)$; in other words, if $f$ is continuous at $(a, b)$ and $g$ is a univariate continuous function, then
 
-$$h(x_1, x_2) = g \circ f (x_1, x_2) = g(f(x_1, x_2))$$
+$$
+h(x_1, x_2) = g \circ f (x_1, x_2) = g(f(x_1, x_2))
+$$
 
 is continuous at $(a, b)$.
 
 For example $f(x_1, x_2) = x_1 - x_2$ is continuous at $(a, b)$ and $e^{x_1}$ is a continuous univariate function, hence
 
-$$e^{x_1 - y_1}$$
+$$
+e^{x_1 - y_1}
+$$
 
 is continuous at $(a, b)$.
